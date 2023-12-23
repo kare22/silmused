@@ -34,9 +34,23 @@ cursor = connection.cursor()
 tests = [
     ColumnDataTest(
         name='v_turniiripartiid',
-        column_name='COUNT(*)',
-        expected_value=299,
-        should_exist=False,
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 270',
+        expected_value='valge',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 241',
+        expected_value='must',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 193',
+        expected_value='viik',
         points=1,
     ),
     ColumnDataTest(

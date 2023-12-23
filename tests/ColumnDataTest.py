@@ -6,6 +6,7 @@ from tests.TestDefinition import TestDefinition
 class ColumnDataTest(TestDefinition):
     def __init__(self, name, column_name, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, points=0):
+
         if not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
         if column_name is None:
@@ -17,8 +18,9 @@ class ColumnDataTest(TestDefinition):
         if join is not None:
             query += f" JOIN {join}"
 
+        # TODO right now a single where is possible (without a hack)
         if where is not None:
-            query += f" AND ({where})"
+            query += f" WHERE ({where})"
 
         super().__init__(
             name=name,
