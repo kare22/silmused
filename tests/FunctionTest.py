@@ -11,19 +11,18 @@ class FunctionTest(TestDefinition):
             arguments=arguments,
             description=description,
             expected_value=expected_value,
-            expected_count=expected_count
+            expected_count=expected_count,
         )
+
+        self.query = f"SELECT * FROM {self.name}({self.arguments})"  # TODO implement parameters
 
     def execute(self, cursor):
         # TODO should the following be optional or added natively? ->
         # TODO * Check that function name exists
         # TODO * Check that function number of arguments is correct
         # TODO * Check that type is correct
-
-        query = f"SELECT * FROM {self.name}({self.arguments})" #TODO implement parameters
-
         try:
-            cursor.execute(query)
+            cursor.execute(self.query)
             result = cursor.fetchall()
 
             if self.expected_value is None:
