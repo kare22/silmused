@@ -3,7 +3,7 @@ from utils import list_to_string
 
 # TODO this should not be usable without a child
 class TestDefinition:
-    def __init__(self, name, points, description=None, arguments=None, expected_value=None, expected_count=None):
+    def __init__(self, name, points, query='', description=None, arguments=None, expected_value=None, expected_count=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -23,6 +23,7 @@ class TestDefinition:
         self.arguments = list_to_string(arguments)
         self.expected_value = expected_value
         self.expected_count = expected_count
+        self.query = query
 
     def execute(self, cursor):
         raise NotImplementedError('Method "execute" not implemented')
@@ -39,6 +40,7 @@ class TestDefinition:
             'message': message_statement,
             'points': self.points,
             'description': self.description,
+            'query': self.query
         }
 
     def __str__(self):
