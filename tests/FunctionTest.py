@@ -4,9 +4,15 @@ from tests.TestDefinition import TestDefinition
 
 
 class FunctionTest(TestDefinition):
-    def __init__(self, name, function_name, arguments, expected_value=None, expected_count=None, points=0):
-        super().__init__(name, points, arguments, expected_value, expected_count)
-        self.function_name = function_name
+    def __init__(self, name, arguments, description=None, expected_value=None, expected_count=None, points=0):
+        super().__init__(
+            name=name,
+            points=points,
+            arguments=arguments,
+            description=description,
+            expected_value=expected_value,
+            expected_count=expected_count
+        )
 
     def execute(self, cursor):
         # TODO should the following be optional or added natively? ->
@@ -14,7 +20,7 @@ class FunctionTest(TestDefinition):
         # TODO * Check that function number of arguments is correct
         # TODO * Check that type is correct
 
-        query = f"SELECT * FROM {self.function_name}({self.arguments})"
+        query = f"SELECT * FROM {self.name}({self.arguments})" #TODO implement parameters
 
         try:
             cursor.execute(query)

@@ -3,8 +3,8 @@ from utils import list_to_string
 
 # TODO this should not be usable without a child
 class TestDefinition:
-    def __init__(self, name, points, arguments, expected_value=None, expected_count=None):
-        if not isinstance(arguments, list):
+    def __init__(self, name, points, description=None, arguments=None, expected_value=None, expected_count=None):
+        if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
         if expected_count is not None and not isinstance(expected_count, int):
@@ -17,6 +17,7 @@ class TestDefinition:
             raise Exception('Both expected_value and check_count cannot be specified in a single test')
 
         self.name = name
+        self.description = description
         self.points = points
         self.type = "generic"
         self.arguments = list_to_string(arguments)
@@ -37,6 +38,7 @@ class TestDefinition:
             'is_success': is_success,
             'message': message_statement,
             'points': self.points,
+            'description': self.description,
         }
 
     def __str__(self):
