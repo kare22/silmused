@@ -1,5 +1,6 @@
 import psycopg2 as psycopg2
 
+from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
 from tests.FunctionTest import FunctionTest
 from tests.VIewTest import ViewTest
@@ -31,6 +32,32 @@ connection = connect(db_name='auto_test', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=299,
+        should_exist=False,
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=293,
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=299,
+        should_exist=False,
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=299,
+        points=1,
+    ),
     ColumnExistsTest(
         name='v_turniiripartiid',
         column_name='partii_id',

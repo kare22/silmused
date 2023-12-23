@@ -5,6 +5,11 @@ from tests.TestDefinition import TestDefinition
 
 class ColumnExistsTest(TestDefinition):
     def __init__(self, name, column_name, should_exist=True, where=None, description=None, points=0):
+        if not isinstance(column_name, str):
+            raise Exception('Parameter "column_name" must be a string')
+        if column_name is None:
+            raise Exception('Parameter "column_name" is required')
+
         query = f"SELECT * FROM information_schema.columns WHERE table_name = '{name}' AND column_name = '{column_name}'"
 
         if where is not None:
@@ -15,11 +20,11 @@ class ColumnExistsTest(TestDefinition):
             points=points,
             description=description,
             query=query,
+            should_exist=should_exist,
         )
 
         self.column_name = column_name
         self.where = where
-        self.should_exist = should_exist
 
     def execute(self, cursor):
         try:
