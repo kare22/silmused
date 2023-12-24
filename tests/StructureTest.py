@@ -2,14 +2,15 @@ from tests.TestDefinition import TestDefinition
 from utils import list_to_string
 
 
-class ColumnStructureTest(TestDefinition):
-    def __init__(self, name, column_name, arguments=None, expected_value=None, should_exist=True, where=None, description=None, points=0):
-        if not isinstance(column_name, str):
+class StructureTest(TestDefinition):
+    def __init__(self, name, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, points=0):
+        if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
-        if column_name is None:
-            raise Exception('Parameter "column_name" is required')
 
-        query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}' AND column_name = '{column_name}'"
+        query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}'"
+
+        if column_name is not None:
+            query += f" AND column_name = '{column_name}'"
 
         super().__init__(
             name=name,
@@ -26,6 +27,7 @@ class ColumnStructureTest(TestDefinition):
         self.where = where
 
     def execute(self, cursor):
+        # TODO feedback is really bad
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -46,12 +48,12 @@ class ColumnStructureTest(TestDefinition):
             if self.should_exist:
                 return super().response(
                     len(result) > 0,
-                    f"Correct, column {self.column_name} found in table {self.name}",
-                    f"Expected to find column {self.column_name} but none were found in table {self.name}",
+                    f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                    f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
                 )
             else:
                 return super().response(
                     len(result) == 0,
-                    f"Correct no column named {self.column_name} found in table {self.name}",
-                    f"Expected to not find column {self.column_name} in table {self.name}",
+                    f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                    f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
                 )

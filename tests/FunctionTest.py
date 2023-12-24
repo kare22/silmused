@@ -3,7 +3,7 @@ from utils import list_to_string
 
 
 class FunctionTest(TestDefinition):
-    def __init__(self, name, arguments, where=None, description=None, expected_value=None, expected_count=None, number_of_parameters=None, points=0):
+    def __init__(self, name, arguments=None, column_name=None, where=None, description=None, expected_value=None, expected_count=None, number_of_parameters=None, points=0):
         super().__init__(
             name=name,
             where=where,
@@ -12,7 +12,7 @@ class FunctionTest(TestDefinition):
             description=description,
             expected_value=expected_value,
             expected_count=expected_count,
-            query=f"SELECT * FROM {name}({list_to_string(arguments)})"  # TODO implement parameters,
+            query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"  # TODO implement parameters,
         )
 
         self.number_of_parameters = number_of_parameters
@@ -66,14 +66,15 @@ class FunctionTest(TestDefinition):
                     f"Expected count {self.expected_count} for function {self.name}({list_to_string(self.arguments)}) but got {len(result)}",
                 )
         else:
-            if type(result[0][0]) != type(self.expected_value):
-                return super().response(
-                    False,
-                    'Correct',
-                    f"Expected type {type(self.expected_value)} but got {type(result[0][0])}",
-                )
+            # TODO when type is decimal but we give float, we get an error
+            # if type(result[0][0]) != type(self.expected_value):
+            #     return super().response(
+            #         False,
+            #         'Correct',
+            #         f"Expected type {type(self.expected_value)} but got {type(result[0][0])}",
+            #     )
             return super().response(
-                result[0][0] == self.expected_value,
+                str(result[0][0]) == str(self.expected_value),
                 'Correct',
                 f"Expected {self.expected_value} but got {result[0][0]}",
             )
