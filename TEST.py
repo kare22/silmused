@@ -3,6 +3,7 @@ import psycopg2 as psycopg2
 from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
 from tests.FunctionTest import FunctionTest
+from tests.ProcedureTest import ProcedureTest
 from tests.VIewTest import ViewTest
 
 DB_HOST = "localhost"
@@ -28,10 +29,26 @@ def connect(db_name='postgres', auto_commit=False):
     return connection_layer
 
 
-connection = connect(db_name='auto_test_kodu6', auto_commit=True)
+connection = connect(db_name='auto_test', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    ProcedureTest(
+        name='sp_uus_turniir',
+        arguments=['Tartu Meister', '02.02.2022', 1, 'Tartu'],
+        number_of_columns=4,
+        pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+        after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.03.2022'",
+        points=1,
+    ),
+    ProcedureTest(
+        name='sp_uus_turniir',
+        arguments=['Tartu Meister', '02.02.2022', 2, 'Tartu'],
+        number_of_columns=4,
+        pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+        after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.04.2022'",
+        points=1,
+    ),
     ColumnDataTest(
         name='mv_partiide_arv_valgetega',
         column_name='*',
