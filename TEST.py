@@ -1,5 +1,6 @@
 import psycopg2 as psycopg2
 
+from TitleLayer import TitleLayer
 from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
 from tests.FunctionTest import FunctionTest
@@ -33,6 +34,7 @@ connection = connect(db_name='auto_test', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    TitleLayer('See on ilus tiitel'),
     ProcedureTest(
         name='sp_uus_turniir',
         arguments=['Tartu Meister', '02.02.2022', 1, 'Tartu'],
