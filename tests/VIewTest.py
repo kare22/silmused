@@ -1,9 +1,7 @@
-import sys
-
 from tests.TestDefinition import TestDefinition
 
 
-# Right now it is only possible to check the existence of a view
+# TODO Right now it is only possible to check the existence of a view
 class ViewTest(TestDefinition):
     def __init__(self, name, description=None, points=0):
         super().__init__(

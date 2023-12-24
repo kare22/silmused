@@ -27,14 +27,14 @@ class FunctionTest(TestDefinition):
             if self.expected_count is None:
                 return super().response(
                     len(result) > 0,
-                    f"Correct count > 0 for function {self.name}({self.arguments})",
-                    f"Expected count > 0 for function {self.name}({self.arguments}) but none was found",
+                    f"Correct count > 0 for function {self.name}({list_to_string(self.arguments)})",
+                    f"Expected count > 0 for function {self.name}({list_to_string(self.arguments)}) but none was found",
                 )
             else:
                 return super().response(
                     len(result) == self.expected_count,
-                    f"The count is correct for function {self.name}({self.arguments}) -> {self.expected_count}",
-                    f"Expected count {self.expected_count} for function {self.name}({self.arguments}) but got {len(result)}",
+                    f"The count is correct for function {self.name}({list_to_string(self.arguments)}) -> {self.expected_count}",
+                    f"Expected count {self.expected_count} for function {self.name}({list_to_string(self.arguments)}) but got {len(result)}",
                 )
         else:
             if type(result[0][0]) != type(self.expected_value):

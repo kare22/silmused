@@ -5,6 +5,7 @@ from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
 from tests.FunctionTest import FunctionTest
 from tests.ProcedureTest import ProcedureTest
+from tests.TriggerTest import TriggerTest
 from tests.VIewTest import ViewTest
 
 DB_HOST = "localhost"
@@ -30,10 +31,20 @@ def connect(db_name='postgres', auto_commit=False):
     return connection_layer
 
 
-connection = connect(db_name='auto_test', auto_commit=True)
+connection = connect(db_name='auto_test_kodu6', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    TriggerTest(
+        name='tg_klubi_olemasolu',
+        arguments=['UPDATE', 'INSERT', 'jifweo', 'wewwe'],
+        action_timing='BEFORE'
+    ),
+    TriggerTest(
+        name='tg_partiiaeg',
+        arguments=['UPDATE', 'INSERT'],
+        action_timing='BEFORE'
+    ),
     TitleLayer('See on ilus tiitel'),
     ProcedureTest(
         name='sp_uus_turniir',
