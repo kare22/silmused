@@ -1,9 +1,12 @@
+import sys
+
 from utils import list_to_string
 
 
 # TODO this should not be usable without a child
 class TestDefinition:
-    def __init__(self, name, points, should_exist=True, query='', description=None, arguments=None, expected_value=None, expected_count=None):
+    def __init__(self, name, points, where=None, join=None, should_exist=True, query='', description=None,
+                 arguments=None, expected_value=None, expected_count=None, pre_query=None, after_query=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -16,18 +19,44 @@ class TestDefinition:
         if expected_value is not None and expected_count is not None:
             raise Exception('Both expected_value and check_count cannot be specified in a single test')
 
+        query_builder = query
+
+        # TODO right now a single join is possible (without a hack)
+        if join is not None:
+            query_builder += f" JOIN {join}"
+
+        if where is not None:
+            query_builder += f" WHERE ({where})"
+
         self.name = name
         self.description = description
         self.points = points
-        self.type = "generic"
         self.arguments = list_to_string(arguments)
         self.expected_value = expected_value
         self.expected_count = expected_count
-        self.query = query
-        self.should_exist = should_exist # TODO should be renamed to something more descriptive (should_be_false/falsy)
+        self.query = query_builder
+        self.pre_query = pre_query
+        self.after_query = after_query
+        self.should_exist = should_exist  # TODO should be renamed to something more descriptive (should_be_false/falsy)
 
+    # TODO should be callable only inside the scope
     def execute(self, cursor):
         raise NotImplementedError('Method "execute" not implemented')
+
+    def run(self, cursor):
+        try:
+            # TODO could executing of pre and/or after queries be handled here?
+            return self.execute(cursor)
+        except:
+            # TODO better handler for rollback?
+            # TODO better error message?
+            print(sys.exc_info())  # TODO only for testing purposes
+
+            cursor.execute('ROLLBACK')
+            return self.response(
+                False,
+                message_failure=sys.exc_info()
+            )
 
     # TODO should be callable only inside the scope
     def response(self, is_success, message_success=None, message_failure=None):
@@ -42,8 +71,7 @@ class TestDefinition:
             'points': self.points,
             'description': self.description,
             'query': self.query,
+            'pre_query': self.pre_query,
+            'after_query': self.after_query,
             'should_exist': self.should_exist,
         }
-
-    def __str__(self):
-        return f"Test({self.name}, Type: {self.type}, Points: {self.points})"

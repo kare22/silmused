@@ -28,133 +28,133 @@ def connect(db_name='postgres', auto_commit=False):
     return connection_layer
 
 
-connection = connect(db_name='auto_test', auto_commit=True)
+connection = connect(db_name='auto_test_kodu6', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
-    # ColumnDataTest(
-    #     name='mv_partiide_arv_valgetega',
-    #     column_name='*',
-    #     where="eesnimi = 'Tarmo' AND perenimi = 'Kooser'",
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='LOWER(kes_voitis)',
-    #     where='partii_id = 270',
-    #     expected_value='valge',
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='LOWER(kes_voitis)',
-    #     where='partii_id = 241',
-    #     expected_value='must',
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='LOWER(kes_voitis)',
-    #     where='partii_id = 193',
-    #     expected_value='viik',
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='COUNT(*)',
-    #     expected_value=293,
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='COUNT(*)',
-    #     expected_value=299,
-    #     should_exist=False,
-    #     points=1,
-    # ),
-    # ColumnDataTest(
-    #     name='v_turniiripartiid',
-    #     column_name='COUNT(*)',
-    #     expected_value=299,
-    #     points=1,
-    # ),
-    # ColumnExistsTest(
-    #     name='v_turniiripartiid',
-    #     column_name='partii_id',
-    #     should_exist=False,
-    #     points=1,
-    # ),
-    # ColumnExistsTest(
-    #     name='v_turniiripartiid',
-    #     column_name='asdfdsa',
-    #     should_exist=False,
-    #     points=1,
-    # ),
-    # ColumnExistsTest(
-    #     name='v_turniiripartiid',
-    #     column_name='partii_id',
-    #     points=1,
-    # ),
-    # ColumnExistsTest(
-    #     name='v_turniiripartiid',
-    #     column_name='asdfdsa',
-    #     points=1,
-    # ),
-    # ColumnExistsTest(
-    #     name='v_turniiripartiid',
-    #     column_name='kes_voitis',
-    #     points=1,
-    # ),
-    # ViewTest(
-    #     name='v_turniiripartiid',
-    #     points=1,
-    # ),
-    # ViewTest(
-    #     name='v_turniiripartiidasdf',
-    #     points=1,
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[54],
-    #     expected_value=1279.6,
-    #     points=0.25,
-    #     description='tere maailm'
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[54],
-    #     points=0.25,
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[54],
-    #     expected_count=1,
-    #     points=0.25,
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[56],
-    #     expected_value=1279.6,
-    #     points=0.25,
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[54],
-    #     expected_count=3,
-    #     points=0.25,
-    # ),
-    # FunctionTest(
-    #     name='f_klubiranking',
-    #     arguments=[54],
-    #     expected_value='1279.6',
-    #     points=0.25,
-    # ),
-    # FunctionTest(
-    #     name='awewfewe',
-    #     arguments=[54],
-    #     expected_value='1279.6',
-    #     points=0.25,
-    # ),
+    ColumnDataTest(
+        name='mv_partiide_arv_valgetega',
+        column_name='*',
+        where="eesnimi = 'Tarmo' AND perenimi = 'Kooser'",
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 270',
+        expected_value='valge',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 241',
+        expected_value='must',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='LOWER(kes_voitis)',
+        where='partii_id = 193',
+        expected_value='viik',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=293,
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=299,
+        should_exist=False,
+        points=1,
+    ),
+    ColumnDataTest(
+        name='v_turniiripartiid',
+        column_name='COUNT(*)',
+        expected_value=299,
+        points=1,
+    ),
+    ColumnExistsTest(
+        name='v_turniiripartiid',
+        column_name='partii_id',
+        should_exist=False,
+        points=1,
+    ),
+    ColumnExistsTest(
+        name='v_turniiripartiid',
+        column_name='asdfdsa',
+        should_exist=False,
+        points=1,
+    ),
+    ColumnExistsTest(
+        name='v_turniiripartiid',
+        column_name='partii_id',
+        points=1,
+    ),
+    ColumnExistsTest(
+        name='v_turniiripartiid',
+        column_name='asdfdsa',
+        points=1,
+    ),
+    ColumnExistsTest(
+        name='v_turniiripartiid',
+        column_name='kes_voitis',
+        points=1,
+    ),
+    ViewTest(
+        name='v_turniiripartiid',
+        points=1,
+    ),
+    ViewTest(
+        name='v_turniiripartiidasdf',
+        points=1,
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[54],
+        expected_value=1279.6,
+        points=0.25,
+        description='tere maailm'
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[54],
+        points=0.25,
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[54],
+        expected_count=1,
+        points=0.25,
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[56],
+        expected_value=1279.6,
+        points=0.25,
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[54],
+        expected_count=3,
+        points=0.25,
+    ),
+    FunctionTest(
+        name='f_klubiranking',
+        arguments=[54],
+        expected_value='1279.6',
+        points=0.25,
+    ),
+    FunctionTest(
+        name='awewfewe',
+        arguments=[54],
+        expected_value='1279.6',
+        points=0.25,
+    ),
     FunctionTest(
         name='f_top10',
         arguments=[44],
@@ -188,7 +188,7 @@ tests = [
 results = []
 
 for test in tests:
-    results.append(test.execute(cursor))
+    results.append(test.run(cursor))
 
 cursor.close()
 connection.close()
