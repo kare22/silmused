@@ -36,6 +36,18 @@ connection = connect(db_name='auto_test_kodu6', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    TitleLayer('Praktikum 3'),
+    ColumnExistsTest(
+        name='turniirid',
+        column_name='asukoht',
+        points=2,
+    ),
+    ColumnExistsTest(
+        name='partiid',
+        column_name='vastavus',
+        points=2,
+    ),
+
     IndexTest(
         name='ewojifewoifejw',
     ),
