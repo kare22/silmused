@@ -32,13 +32,13 @@ class ColumnStructureTest(TestDefinition):
         if self.expected_value is not None:
             if self.should_exist:
                 return super().response(
-                    result[0][0] == self.expected_value,
+                    len(result) != 0 and result[0][0] == self.expected_value,
                     f"Correct, expected {self.query}", # TODO enhance feedback
                     f"Wrong, did not expect {self.query}", # TODO enhance feedback
                 )
             else:
                 return super().response(
-                    result[0][0] != self.expected_value,
+                    len(result) == 0 or result[0][0] != self.expected_value,
                     f"Correct did not want {self.query}", # TODO enhance feedback
                     f"Wrong this should not exist {self.query}", # TODO enhance feedback
                 )

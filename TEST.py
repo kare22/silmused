@@ -33,7 +33,7 @@ def connect(db_name='postgres', auto_commit=False):
     return connection_layer
 
 
-connection = connect(db_name='auto_test_kodu6', auto_commit=True)
+connection = connect(db_name='koik', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
@@ -52,14 +52,14 @@ tests = [
         name='isikud',
         constraint_name='un_isikukood',
         constraint_type='UNIQUE',
-        points=0.25,
+        points=0.5,
     ),
     ConstraintTest(
         name='isikud',
         constraint_name='nimi_unique',
         constraint_type='UNIQUE',
         should_exist=False,
-        points=0.5,
+        points=0.25,
     ),
     ColumnStructureTest(
         name='klubid',
@@ -73,6 +73,10 @@ tests = [
         column_name='asukoht',
         points=1,
     ),
+
+    TitleLayer('Praktikum 4'),
+
+
     #
     # IndexTest(
     #     name='ewojifewoifejw',
