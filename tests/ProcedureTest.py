@@ -38,6 +38,6 @@ class ProcedureTest(TestDefinition):
 
         return super().response(
             len(result) > 0,
-            f"Correct count > 0 for procedure \"{self.name}({self.arguments})\"",
-            f"Expected count > 0 for procedure \"{self.name}({self.arguments})\" but none was found",
+            f"Correct count > 0 for procedure \"{self.name}({list_to_string(self.arguments)})\"",
+            f"Expected count > 0 for procedure \"{self.name}({list_to_string(self.arguments)})\" but none was found",
         )

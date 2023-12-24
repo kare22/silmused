@@ -1,7 +1,5 @@
 import sys
 
-from utils import list_to_string
-
 
 # TODO this should not be usable without a child
 class TestDefinition:
@@ -31,7 +29,7 @@ class TestDefinition:
         self.name = name
         self.description = description
         self.points = points
-        self.arguments = list_to_string(arguments)
+        self.arguments = arguments # TODO arguments could be a class
         self.expected_value = expected_value
         self.expected_count = expected_count
         self.query = query_builder
@@ -59,7 +57,7 @@ class TestDefinition:
             )
 
     # TODO should be callable only inside the scope
-    def response(self, is_success, message_success=None, message_failure=None):
+    def response(self, is_success, message_success=None, message_failure=None, points=None):
         if is_success:
             message_statement = 'Correct' if message_success is None else message_success
         else:
@@ -68,7 +66,7 @@ class TestDefinition:
         return {
             'is_success': is_success,
             'message': message_statement,
-            'points': self.points,
+            'points': points if points is not None else self.points,
             'description': self.description,
             'query': self.query,
             'pre_query': self.pre_query,
