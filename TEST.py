@@ -3,6 +3,7 @@ import psycopg2 as psycopg2
 from TitleLayer import TitleLayer
 from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
+from tests.ConstraintTest import ConstraintTest
 from tests.FunctionTest import FunctionTest
 from tests.IndexTest import IndexTest
 from tests.ProcedureTest import ProcedureTest
@@ -45,7 +46,31 @@ tests = [
     ColumnExistsTest(
         name='partiid',
         column_name='vastavus',
-        points=2,
+        points=1,
+    ),
+    ConstraintTest(
+        name='isikud',
+        constraint_name='un_isikukood',
+        constraint_type='UNIQUE',
+        points=0.25,
+    ),
+    ConstraintTest(
+        name='isikud',
+        constraint_name='nimi_unique',
+        constraint_type='UNIQUE',
+        should_exist=False,
+        points=0.5,
+    ),
+    ColumnExistsTest(
+        name='klugid',
+        column_name='asukoht',
+        points=1,
+    ),
+    ColumnDataTest(
+        name='klubid',
+        column_name='asukoht',
+        where="eesnimi = 'Tarmo' AND perenimi = 'Kooser'",
+        points=1,
     ),
 
     IndexTest(
