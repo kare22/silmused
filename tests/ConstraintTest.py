@@ -3,7 +3,7 @@ from tests.TestDefinition import TestDefinition
 
 class ConstraintTest(TestDefinition):
     def __init__(self, name, column_name=None, constraint_name=None, constraint_type=None, description=None, should_exist=True, points=0):
-        query = f"SELECT * FROM information_schema.table_constraints WHERE table_name = '{self.name}'"
+        query = f"SELECT * FROM information_schema.table_constraints WHERE table_name = '{name}'"
 
         if column_name is not None:
             query += f" AND column_name = '{column_name}'"
@@ -43,8 +43,8 @@ class ConstraintTest(TestDefinition):
         if self.should_exist:
             return super().response(
                 len(cursor.fetchall()) == 0,
-                f"Expected to no find {self.feedback}",
                 f"Correct, {self.feedback} was not found",
+                f"Expected to no find {self.feedback}",
             )
         else:
             return super().response(
