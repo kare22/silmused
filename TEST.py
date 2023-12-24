@@ -4,6 +4,7 @@ from TitleLayer import TitleLayer
 from tests.ColumnDataTest import ColumnDataTest
 from tests.ColumnExistsTest import ColumnExistsTest
 from tests.FunctionTest import FunctionTest
+from tests.IndexTest import IndexTest
 from tests.ProcedureTest import ProcedureTest
 from tests.TriggerTest import TriggerTest
 from tests.VIewTest import ViewTest
@@ -35,6 +36,15 @@ connection = connect(db_name='auto_test_kodu6', auto_commit=True)
 cursor = connection.cursor()
 
 tests = [
+    IndexTest(
+        name='ewojifewoifejw',
+    ),
+    IndexTest(
+        name='ix_riiginimi',
+    ),
+    IndexTest(
+        name='ix_suurus',
+    ),
     TriggerTest(
         name='tg_klubi_olemasolu',
         arguments=['UPDATE', 'INSERT', 'jifweo', 'wewwe'],
