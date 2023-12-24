@@ -40,6 +40,6 @@ class TriggerTest(TestDefinition):
 
         return super().response(
             len(errors) == 0,
-            f"Correct, trigger {self.name} is working fine",
+            f"Correct, trigger {self.name} definition is correct",
             f"Trigger {self.name} had the following errors: {', '.join(errors)}",
         )
