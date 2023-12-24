@@ -14,7 +14,7 @@ class TriggerTest(TestDefinition):
         self.action_timing = action_timing
 
     def execute(self, cursor):
-        # TODO small tests in seperate functions
+        # TODO small tests in separate functions
         cursor.execute(f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}'")
 
         if len(cursor.fetchall()) <= 0:

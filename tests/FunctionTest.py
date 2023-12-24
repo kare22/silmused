@@ -3,7 +3,7 @@ from utils import list_to_string
 
 
 class FunctionTest(TestDefinition):
-    def __init__(self, name, arguments, where=None, description=None, expected_value=None, expected_count=None, points=0):
+    def __init__(self, name, arguments, where=None, description=None, expected_value=None, expected_count=None, number_of_parameters=None, points=0):
         super().__init__(
             name=name,
             where=where,
@@ -15,11 +15,40 @@ class FunctionTest(TestDefinition):
             query=f"SELECT * FROM {name}({list_to_string(arguments)})"  # TODO implement parameters,
         )
 
+        self.number_of_parameters = number_of_parameters
+
     def execute(self, cursor):
-        # TODO should the following be optional or added natively? ->
-        # TODO * Check that function name exists
-        # TODO * Check that function number of arguments is correct
-        # TODO * Check that type is correct
+        # TODO small tests in separate functions
+
+        # Check that function name exists
+        cursor.execute(f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
+        if len(cursor.fetchall()) <= 0:
+            return super().response(
+                False,
+                ''
+                f"Function {self.name} was not found"
+            )
+
+        # Check that function number of arguments is correct
+        if self.number_of_parameters is not None:
+            cursor.execute(f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.number_of_parameters}'")
+            number_of_parameters_result = cursor.fetchall()[0][0]
+
+            if not number_of_parameters_result == self.number_of_parameters:
+                return super().response(
+                    False,
+                    ''
+                    f"Expected {self.number_of_parameters} for function {self.name} but found {number_of_parameters_result}"
+                )
+        # Check that type is correct
+        cursor.execute(f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'FUNCTION' AND routine_name='{self.name}'")
+        if not len(cursor.fetchall()) > 0:
+            return super().response(
+                False,
+                ''
+                f"Expected function {self.name} to be of type FUNCTION"
+            )
+
         cursor.execute(self.query)
         result = cursor.fetchall()
 
