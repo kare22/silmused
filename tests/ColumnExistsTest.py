@@ -1,5 +1,3 @@
-import sys
-
 from tests.TestDefinition import TestDefinition
 
 
@@ -10,16 +8,12 @@ class ColumnExistsTest(TestDefinition):
         if column_name is None:
             raise Exception('Parameter "column_name" is required')
 
-        query = f"SELECT * FROM information_schema.columns WHERE table_name = '{name}' AND column_name = '{column_name}'"
-
-        if where is not None:
-            query += f" AND ({where})"
-
         super().__init__(
             name=name,
+            where=where,
             points=points,
             description=description,
-            query=query,
+            query=f"SELECT * FROM information_schema.columns WHERE table_name = '{name}' AND column_name = '{column_name}'",
             should_exist=should_exist,
         )
 
@@ -27,29 +21,18 @@ class ColumnExistsTest(TestDefinition):
         self.where = where
 
     def execute(self, cursor):
-        try:
-            cursor.execute(self.query)
-            result = cursor.fetchall()
+        cursor.execute(self.query)
+        result = cursor.fetchall()
 
-            if self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    f"Correct, column {self.column_name} found in {self.name}",
-                    f"Expected to find column {self.column_name} but none were found in {self.name}",
-                )
-            else:
-                return super().response(
-                    len(result) == 0,
-                    f"Correct no column named {self.column_name} found in {self.name}",
-                    f"Expected to not find column {self.column_name} in {self.name}",
-                )
-        except:
-            # TODO better handler for rollback?
-            # TODO better error message?
-            print(sys.exc_info())  # TODO only for testing purposes
-
-            cursor.execute('ROLLBACK')
+        if self.should_exist:
             return super().response(
-                False,
-                message_failure=sys.exc_info()
+                len(result) > 0,
+                f"Correct, column {self.column_name} found in {self.name}",
+                f"Expected to find column {self.column_name} but none were found in {self.name}",
+            )
+        else:
+            return super().response(
+                len(result) == 0,
+                f"Correct no column named {self.column_name} found in {self.name}",
+                f"Expected to not find column {self.column_name} in {self.name}",
             )
