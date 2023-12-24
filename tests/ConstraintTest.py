@@ -42,13 +42,13 @@ class ConstraintTest(TestDefinition):
 
         if self.should_exist:
             return super().response(
-                len(cursor.fetchall()) == 0,
-                f"Correct, {self.feedback} was not found",
-                f"Expected to no find {self.feedback}",
+                len(result) > 0,
+                f"Correct, {self.feedback} was found",
+                f"Expected to find {self.feedback} but none were found",
             )
         else:
             return super().response(
-                len(cursor.fetchall()) > 0,
-                f"Correct, {self.feedback} was found",
-                f"Expected to find {self.feedback} but none were found",
+                len(result) == 0,
+                f"Correct, {self.feedback} was not found",
+                f"Expected to no find {self.feedback}",
             )
