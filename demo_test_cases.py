@@ -1,5 +1,3 @@
-import psycopg2 as psycopg2
-
 from ExecuteLayer import ExecuteLayer
 from TitleLayer import TitleLayer
 from tests.DataTest import DataTest
@@ -11,35 +9,9 @@ from tests.ProcedureTest import ProcedureTest
 from tests.TriggerTest import TriggerTest
 from tests.ViewTest import ViewTest
 
-user1 = 123456
-user2 = 123457
-partiiId = 123123
-
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "postgres"
-DB_USER = "karelpaan"
-DB_PASSWORD = "postgresql"
-DB_SCHEMA = "public"
-
-
-def connect(db_name='postgres', auto_commit=False):
-    connection_layer = psycopg2.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        database=db_name,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
-
-    if auto_commit:
-        connection_layer.autocommit = True
-
-    return connection_layer
-
-
-connection = connect(db_name='koik', auto_commit=True)
-cursor = connection.cursor()
+_user1 = 123456
+_user2 = 123457
+_partii_id = 123123
 
 tests = [
     TitleLayer('Praktikum 3'),
@@ -339,21 +311,21 @@ tests = [
     ExecuteLayer("ALTER TABLE public.partiid ENABLE TRIGGER tg_partiiaeg"),
     ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
     ExecuteLayer("ALTER TABLE public.isikud ENABLE TRIGGER tg_klubi_olemasolu"),
-    ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({user1},'Man', 'Ka')"),
-    ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({user2},'Kan', 'Ma')"),
-    ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-04-22 17:45:24.000','2023-03-22 17:45:24.000',{user1},{user2},2,0, {partiiId})", ),
+    ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
+    ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user2},'Kan', 'Ma')"),
+    ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-04-22 17:45:24.000','2023-03-22 17:45:24.000',{_user1},{_user2},2,0, {_partii_id})", ),
     DataTest(
         name='isikud',
-        where=f"public.isikud.id = {user1}",
+        where=f"public.isikud.id = {_user1}",
     ),
     DataTest(
         name='isikud',
-        where=f"public.isikud.id = {user2}",
+        where=f"public.isikud.id = {_user2}",
     ),
     DataTest(
         name='partiid',
         column_name='lopphetk',
-        where=f"valge = {user1} AND must = {user2}",
+        where=f"valge = {_user1} AND must = {_user2}",
         expected_value=None,
     ),
     TriggerTest(
@@ -364,7 +336,7 @@ tests = [
     DataTest(
         name='isikud',
         join=f"public.klubid ON public.klubid.id=isikud.klubis",
-        where=f"public.isikud.id = {user1} AND public.klubid.nimi LIKE '%ubitu%'",
+        where=f"public.isikud.id = {_user1} AND public.klubid.nimi LIKE '%ubitu%'",
     ),
 
     TitleLayer('Praktikum 7'),
@@ -463,15 +435,3 @@ tests = [
         expected_value=0,
     ),
 ]
-
-results = []
-
-for test in tests:
-    results.append(test.run(cursor))
-
-cursor.close()
-connection.close()
-
-
-for result in results:
-    print(f"{result}")

@@ -2,6 +2,7 @@ from tests.TestDefinition import TestDefinition
 
 
 # TODO Right now it is only possible to check the existence of a view
+# Probably there is no need for this as it is covered by table tests
 class ViewTest(TestDefinition):
     def __init__(self, name, description=None, points=0):
         super().__init__(
