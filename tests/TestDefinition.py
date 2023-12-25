@@ -48,7 +48,6 @@ class TestDefinition:
         except:
             # TODO better handler for rollback?
             # TODO better error message?
-            print(sys.exc_info())  # TODO only for testing purposes
 
             cursor.execute('ROLLBACK')
             return self.response(
