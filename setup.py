@@ -10,6 +10,5 @@ setup(
     url='',
     install_requires=[
         'psycopg2-binary',
-        'uuid',
     ]
 )
