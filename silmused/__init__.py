@@ -8,7 +8,7 @@ from .tests.IndexTest import IndexTest
 from .tests.ProcedureTest import ProcedureTest
 from .tests.TriggerTest import TriggerTest
 from .tests.ViewTest import ViewTest
-import Runner
+import silmused.Runner
 
 __all__ = [
     'ExecuteLayer',
