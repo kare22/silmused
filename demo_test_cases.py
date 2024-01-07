@@ -1,13 +1,14 @@
-from ExecuteLayer import ExecuteLayer
-from TitleLayer import TitleLayer
-from tests.DataTest import DataTest
-from tests.StructureTest import StructureTest
-from tests.ConstraintTest import ConstraintTest
-from tests.FunctionTest import FunctionTest
-from tests.IndexTest import IndexTest
-from tests.ProcedureTest import ProcedureTest
-from tests.TriggerTest import TriggerTest
-from tests.ViewTest import ViewTest
+
+from silmused.tests.DataTest import DataTest
+from silmused.tests.StructureTest import StructureTest
+from silmused.tests.ConstraintTest import ConstraintTest
+from silmused.tests.FunctionTest import FunctionTest
+from silmused.tests.IndexTest import IndexTest
+from silmused.tests.ProcedureTest import ProcedureTest
+from silmused.tests.TriggerTest import TriggerTest
+from silmused.tests.ViewTest import ViewTest
+
+from silmused import TitleLayer, ExecuteLayer
 
 _user1 = 123456
 _user2 = 123457
