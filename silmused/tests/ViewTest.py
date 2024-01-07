@@ -1,4 +1,4 @@
-from tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition
 
 
 # TODO Right now it is only possible to check the existence of a view
