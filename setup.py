@@ -1,4 +1,5 @@
-from setuptools import setup, find_namespace_packages, __version__
+from setuptools import setup, find_namespace_packages
+exec(open('silmused/version.py').read())
 
 setup(
     name='silmused',
