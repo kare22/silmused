@@ -1,4 +1,4 @@
-from tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition
 
 
 # TODO raname to TableDataTest ??
