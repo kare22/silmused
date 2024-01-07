@@ -1,5 +1,5 @@
 from tests.TestDefinition import TestDefinition
-from utils import list_to_string
+from silmused.utils import list_to_string
 
 
 class ProcedureTest(TestDefinition):
