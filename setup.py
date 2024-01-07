@@ -7,7 +7,7 @@ setup(
     license='MIT License',
     author='Karel Paan, Martti Kakk',
     author_email='paan.karel@gmail.com',
-    packages=['silmused'],
+    packages=find_namespace_packages(),
     url='https://github.com/kare22/silmused',
     install_requires=[
         'psycopg2',
