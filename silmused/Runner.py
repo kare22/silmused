@@ -29,12 +29,16 @@ class Runner:
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
+        self.results = []
+
         if self._file_is_valid_pg_dump():
             self._create_db_from_psql_dump()
-            _results_to_string(self._run_tests())
+            self.results = self._run_tests()
+            _results_to_string(self.results)
         elif self._file_is_valid_pg_insert():
             self._create_db_from_psql_insert()
-            _results_to_string(self._run_tests())
+            self.results = self._run_tests()
+            _results_to_string(self.results)
         else:
             print('Error: File is not a valid PostgresSql dump or insert file!')
 
@@ -131,4 +135,7 @@ class Runner:
         )
 
         return connection_layer
+
+    def get_results(self):
+        return self.results
 
