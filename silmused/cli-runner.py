@@ -1,6 +1,6 @@
 import sys
 
-from silmused.Runner import Runner
+# from silmused.Runner import Runner
 
 '''
 CLI to integrate the solution with e.g. a Docker sultion.
@@ -18,4 +18,5 @@ def main():
 
     exec(tests_file_content)
 
-    Runner(sql_file_path, tests, lang, db_user=db_user)
+    print(tests)
+    # Runner(sql_file_path, tests, lang, db_user=db_user)
