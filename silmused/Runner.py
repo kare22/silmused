@@ -14,7 +14,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, file_path, tests, test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
+    def __init__(self, file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
         self.file_path = file_path
         self.tests = tests
         self.test_name = test_name
@@ -23,6 +23,7 @@ class Runner:
         self.db_password = db_password
         self.db_host = db_host
         self.db_port = db_port
+        self.lang = lang
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
