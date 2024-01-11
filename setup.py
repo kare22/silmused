@@ -14,7 +14,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'silmused=silmused.cli:main',
+            'silmused=silmused.cli-runner:main',
         ],
     },
 )
