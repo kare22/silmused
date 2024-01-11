@@ -18,5 +18,5 @@ def main():
 
     exec(tests_file_content)
 
-    print(tests)
+    # print(tests)
     # Runner(sql_file_path, tests, lang, db_user=db_user)
