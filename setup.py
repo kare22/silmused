@@ -12,9 +12,4 @@ setup(
     install_requires=[
         'psycopg2',
     ],
-    entry_points={
-        'console_scripts': [
-            'silmused=silmused.cli-runner:main',
-        ],
-    },
 )
