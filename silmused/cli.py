@@ -7,6 +7,8 @@ CLI to integrate the solution with e.g. a Docker sultion.
 
 NB! The tests file must include an array with the key "tests"!!
 '''
+
+
 def main():
     sql_file_path = sys.argv[1]
     tests_path = sys.argv[2]
@@ -16,8 +18,8 @@ def main():
     with open(tests_path, 'r') as file:
         tests_file_content = file.read()
 
-    exec(tests_file_content)
+    local_vars = {}
+    exec(tests_file_content, globals(), local_vars)
+    tests = local_vars.get('tests')
 
-    runner = Runner(sql_file_path, tests, lang, db_user=db_user)
-
-    return runner.get_results()
+    Runner(sql_file_path, tests, lang, db_user=db_user)
