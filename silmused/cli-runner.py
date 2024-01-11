@@ -16,7 +16,7 @@ def main():
     with open(tests_path, 'r') as file:
         tests_file_content = file.read()
 
-    exec(tests_file_content)
+    # exec(tests_file_content)
 
     # print(tests)
     # Runner(sql_file_path, tests, lang, db_user=db_user)
