@@ -1,5 +1,8 @@
+import json
 import os
 import subprocess
+import sys
+
 import psycopg2
 from uuid import uuid4
 
@@ -34,11 +37,11 @@ class Runner:
         if self._file_is_valid_pg_dump():
             self._create_db_from_psql_dump()
             self.results = self._run_tests()
-            _results_to_string(self.results)
+            # _results_to_string(self.results)
         elif self._file_is_valid_pg_insert():
             self._create_db_from_psql_insert()
             self.results = self._run_tests()
-            _results_to_string(self.results)
+            # _results_to_string(self.results)
         else:
             print('Error: File is not a valid PostgresSql dump or insert file!')
 
@@ -136,6 +139,58 @@ class Runner:
 
         return connection_layer
 
-    def get_results(self):
-        return self.results
+    def _results_to_object(self):
+        tests = []
 
+        points_max = 0
+        points_actual = 0
+
+        for result in self.results:
+            if result.get('type') is 'execution':
+                continue
+            elif result.get('type') is 'message':
+                tests.append({
+                    "title": str(result.get('message')),
+                    "status": 'PASS'
+                })
+                continue
+
+            points = result.get('points') if result.get('points') is not None else 0
+            points_max += points
+            points_actual += points if result.get('is_success') else 0
+
+            tests.append({
+                "title": result.get('title'), #TODO result needs a title
+                "status": 'PASS' if result.get('is_success') else 'FAIL',
+                "exception_message": 'Error msg' if not result.get('is_success') else None,
+            })
+
+        return tests, points_max, points_actual
+
+    def get_results(self):
+        # TODO add json to dependencies
+        try:
+            tests, points_max, points_actual = self._results_to_object()
+
+            message = {
+                "result_type": "OK_V3",
+                "points": (points_actual / points_max) * 100,
+                "producer": 'silmused v', #TODO add version
+                "finished_at": 'some-date', #TODO
+                "tests": tests
+            }
+
+            output = {
+                "message_type": "OK_V3",
+                "message": message,
+            }
+            return json.dumps(output)
+        except:
+            print(sys.exc_info())
+            return json.dumps({
+              "message_type": "ERROR_V3",
+              "message":
+              {
+                "error": "Failed to get results"
+              }
+            })
