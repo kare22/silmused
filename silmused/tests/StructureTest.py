@@ -3,7 +3,7 @@ from silmused.utils import list_to_string
 
 
 class StructureTest(TestDefinition):
-    def __init__(self, name, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, points=0):
+    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, points=0):
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
 
@@ -14,6 +14,7 @@ class StructureTest(TestDefinition):
 
         super().__init__(
             name=name,
+            title=title,
             where=where,
             points=points,
             arguments=arguments,

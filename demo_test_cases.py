@@ -17,6 +17,7 @@ _partii_id = 123123
 tests = [
     TitleLayer('Praktikum 3'),
     StructureTest(
+        title='Turniiril on veerg asukoht',
         name='turniirid',
         column_name='asukoht',
         points=2,
@@ -54,6 +55,7 @@ tests = [
 
     TitleLayer('Praktikum 4'),
     StructureTest(
+        title='Kas tabel asulad on olemas?',
         name='asulad',
     ),
     DataTest(

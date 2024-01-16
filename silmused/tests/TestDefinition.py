@@ -3,7 +3,7 @@ import sys
 
 # TODO this should not be usable without a child
 class TestDefinition:
-    def __init__(self, name, points, where=None, join=None, should_exist=True, query='', description=None,
+    def __init__(self, name, points, title='', where=None, join=None, should_exist=True, query='', description=None,
                  arguments=None, expected_value=None, expected_count=None, pre_query=None, after_query=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
@@ -26,6 +26,7 @@ class TestDefinition:
         if where is not None:
             query_builder += f" WHERE ({where})"
 
+        self.title = title
         self.name = name
         self.description = description
         self.points = points
@@ -71,4 +72,5 @@ class TestDefinition:
             'pre_query': self.pre_query,
             'after_query': self.after_query,
             'should_exist': self.should_exist,
+            'title': self.title,
         }
