@@ -3,12 +3,13 @@ from silmused.utils import list_to_string
 
 
 class ProcedureTest(TestDefinition):
-    def __init__(self, name, arguments, number_of_columns=None, description=None, expected_value=None, expected_count=None, pre_query=None, after_query=None, points=0):
+    def __init__(self, name, arguments, title=None, number_of_columns=None, description=None, expected_value=None, expected_count=None, pre_query=None, after_query=None, points=0):
         if after_query is None:
             raise Exception('Parameter "after_query" is required')
 
         super().__init__(
             name=name,
+            title=title,
             points=points,
             arguments=arguments,
             description=description,

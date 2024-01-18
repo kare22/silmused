@@ -3,9 +3,10 @@ from silmused.utils import list_to_string
 
 
 class FunctionTest(TestDefinition):
-    def __init__(self, name, arguments=None, column_name=None, where=None, description=None, expected_value=None, expected_count=None, number_of_parameters=None, points=0):
+    def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None, expected_value=None, expected_count=None, number_of_parameters=None, points=0):
         super().__init__(
             name=name,
+            title=title,
             where=where,
             points=points,
             arguments=arguments,

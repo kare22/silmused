@@ -11,6 +11,7 @@ setup(
     url='https://github.com/kare22/silmused',
     install_requires=[
         'psycopg2',
+        'json'
     ],
     entry_points={
         'console_scripts': [
