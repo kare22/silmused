@@ -104,7 +104,7 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-
+            cursor.execute('DROP SCHEMA public')
             cursor.execute(sql_script)
             connection.commit()
         except Exception as exception:
@@ -162,7 +162,7 @@ class Runner:
             points_actual += points if result.get('is_success') else 0
 
             tests.append({
-                "title": result.get('title'), #TODO result needs a title
+                "title": result.get('title'),
                 "status": 'PASS' if result.get('is_success') else 'FAIL',
                 "exception_message": 'Error msg' if not result.get('is_success') else None,
             })
@@ -170,7 +170,6 @@ class Runner:
         return tests, points_max, points_actual
 
     def get_results(self):
-        # TODO add json to dependencies
         try:
             tests, points_max, points_actual = self._results_to_object()
 
