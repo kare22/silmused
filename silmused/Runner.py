@@ -104,7 +104,7 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-            cursor.execute('DROP SCHEMA public')
+            cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
         except Exception as exception:
