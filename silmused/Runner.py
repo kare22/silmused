@@ -14,7 +14,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 def _results_to_string(results):
     string = ''
     for result in results:
-        if result.get('type') is not 'execution' and result.get('message') is not None:
+        if result.get('type') != 'execution' and result.get('message') is not None:
             string += str(result.get('message')) + '\n'
 
     print(string)
@@ -148,9 +148,9 @@ class Runner:
         points_actual = 0
 
         for result in self.results:
-            if result.get('type') is 'execution':
+            if result.get('type') == 'execution':
                 continue
-            elif result.get('type') is 'message':
+            elif result.get('type') == 'message':
                 tests.append({
                     "title": str(result.get('message')),
                     "status": 'PASS'
@@ -176,9 +176,9 @@ class Runner:
 
             message = {
                 "result_type": "OK_V3",
-                "points": (points_actual / points_max) * 100,
-                "producer": f"silmused {__version__}", #TODO add version
-                "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), #TODO
+                "points": round(100 * points_actual / points_max),
+                "producer": f"silmused {__version__}",
+                "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "tests": tests
             }
 
