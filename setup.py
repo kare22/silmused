@@ -10,8 +10,7 @@ setup(
     packages=find_namespace_packages(),
     url='https://github.com/kare22/silmused',
     install_requires=[
-        'psycopg2',
-        'json'
+        'psycopg2'
     ],
     entry_points={
         'console_scripts': [
