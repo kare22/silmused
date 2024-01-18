@@ -2,9 +2,10 @@ from silmused.tests.TestDefinition import TestDefinition
 
 
 class TriggerTest(TestDefinition):
-    def __init__(self, name, description=None, points=0, arguments=None, action_timing=None):
+    def __init__(self, name, title=None, description=None, points=0, arguments=None, action_timing=None):
         super().__init__(
             name=name,
+            title=title,
             points=points,
             description=description,
             arguments=arguments,

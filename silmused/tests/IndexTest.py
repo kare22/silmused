@@ -2,9 +2,10 @@ from silmused.tests.TestDefinition import TestDefinition
 
 
 class IndexTest(TestDefinition):
-    def __init__(self, name, description=None, points=0):
+    def __init__(self, name, title=None, description=None, points=0):
         super().__init__(
             name=name,
+            title=title,
             points=points,
             description=description,
             query=f"SELECT * FROM pg_indexes WHERE indexname = '{name}'",

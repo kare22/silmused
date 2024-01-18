@@ -2,7 +2,7 @@ from silmused.tests.TestDefinition import TestDefinition
 
 
 class ConstraintTest(TestDefinition):
-    def __init__(self, name, column_name=None, constraint_name=None, constraint_type=None, description=None, should_exist=True, points=0):
+    def __init__(self, name, title=None, column_name=None, constraint_name=None, constraint_type=None, description=None, should_exist=True, points=0):
         query = f"SELECT * FROM information_schema.table_constraints WHERE table_name = '{name}'"
 
         if column_name is not None:
@@ -14,6 +14,7 @@ class ConstraintTest(TestDefinition):
 
         super().__init__(
             name=name,
+            title=title,
             points=points,
             description=description,
             query=query,

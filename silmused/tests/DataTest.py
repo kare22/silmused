@@ -3,7 +3,7 @@ from silmused.tests.TestDefinition import TestDefinition
 
 # TODO raname to TableDataTest ??
 class DataTest(TestDefinition):
-    def __init__(self, name, column_name=None, should_exist=True, where=None, join=None, description=None,
+    def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
@@ -11,6 +11,7 @@ class DataTest(TestDefinition):
 
         super().__init__(
             name=name,
+            title=title,
             where=where,
             join=join,
             points=points,

@@ -5,6 +5,8 @@ import sys
 
 import psycopg2
 from uuid import uuid4
+from datetime import datetime
+from silmused.version import __version__
 
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -175,8 +177,8 @@ class Runner:
             message = {
                 "result_type": "OK_V3",
                 "points": (points_actual / points_max) * 100,
-                "producer": 'silmused v', #TODO add version
-                "finished_at": 'some-date', #TODO
+                "producer": f"silmused {__version__}", #TODO add version
+                "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), #TODO
                 "tests": tests
             }
 
