@@ -164,7 +164,7 @@ class Runner:
             tests.append({
                 "title": result.get('title'),
                 "status": 'PASS' if result.get('is_success') else 'FAIL',
-                "exception_message": "Error msg " + str(result.get('message')) if not result.get('is_success') else None,
+                "exception_message": str(result.get('message')) if not result.get('is_success') else None,
             })
 
         return tests, points_max, points_actual
