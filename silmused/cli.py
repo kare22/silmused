@@ -24,5 +24,5 @@ def main():
     exec(tests_file_content, globals(), local_vars)
     tests = local_vars.get('tests')
 
-    r=Runner(sql_file_path, tests, db_user=db_user, db_host=host, db_port=db_port, db_password=db_password)
+    r=Runner(sql_file_path, tests, db_user=db_user, db_host=db_host, db_port=db_port, db_password=db_password)
     print(r.get_results())
