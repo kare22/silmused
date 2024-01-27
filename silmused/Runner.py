@@ -142,6 +142,36 @@ class Runner:
 
         return connection_layer
 
+    def _checks_to_object(self, checks):
+        outputs = []
+
+        # TODO should be recursive
+        points_max = 0
+        points_actual = 0
+
+        for check in checks:
+            if check.get('type') == 'execution':
+                continue
+            elif check.get('type') == 'message':
+                outputs.append({
+                    "title": str(check.get('message')),
+                    "status": 'PASS'
+                })
+                continue
+
+            points = check.get('points') if check.get('points') is not None else 0
+            points_max += points
+            points_actual += points if check.get('is_success') else 0
+
+            output = {}
+            output["title"] = check.get('title')
+            output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
+            output["feedback"] = str(check.get('message')) if not check.get('is_success') else None
+
+            outputs.append(output)
+
+        return points_max, points_actual, outputs
+
     def _results_to_object(self):
         tests = []
 
@@ -158,15 +188,23 @@ class Runner:
                 })
                 continue
 
-            points = result.get('points') if result.get('points') is not None else 0
-            points_max += points
-            points_actual += points if result.get('is_success') else 0
+            output = {}
 
-            tests.append({
-                "title": result.get('title'),
-                "status": 'PASS' if result.get('is_success') else 'FAIL',
-                "exception_message": str(result.get('message')) if not result.get('is_success') else None,
-            })
+            if result.get('type') == 'checks_layer':
+                checks_points_max, checks_points_actual, checks_outputs = self._checks_to_object(result.get('checks'))
+                points_max += checks_points_max
+                points_actual += checks_points_actual
+                output["checks"] = checks_outputs
+            else:
+                points = result.get('points') if result.get('points') is not None else 0
+                points_max += points
+                points_actual += points if result.get('is_success') else 0
+
+            output["title"] = result.get('title')
+            output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
+            output["exception_message"] = str(result.get('message')) if not result.get('is_success') else None
+
+            tests.append(output)
 
         return tests, points_max, points_actual
 
@@ -189,5 +227,4 @@ class Runner:
               "producer": f"silmused {__version__}",
               "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
               "points": 0,
-              "pre_evaluate_error": message, '\n', sys.exc_info()
             })
