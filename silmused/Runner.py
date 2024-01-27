@@ -104,7 +104,7 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-            if self.db_user != 'silmused':
+            if self.db_user != 'silmus':
                 cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
@@ -166,7 +166,7 @@ class Runner:
             output = {}
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
-            output["feedback"] = str(check.get('message')) if not check.get('is_success') else None
+            output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
 
             outputs.append(output)
 
@@ -203,7 +203,9 @@ class Runner:
                 output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
             
             output["title"] = result.get('title')
-            output["exception_message"] = str(result.get('message')) if not result.get('is_success') else None
+            #print(result.get('message'))
+            if result.get('message') is not None:
+                output["exception_message"] = str(result.get('message'))
 
             tests.append(output)
         return tests, points_max, points_actual
@@ -219,7 +221,7 @@ class Runner:
                 "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "tests": tests
             }
-            return json.dumps(output)
+            return json.dumps(output, ensure_ascii=False)
         except:
             print(sys.exc_info())
             return json.dumps({
@@ -227,4 +229,4 @@ class Runner:
               "producer": f"silmused {__version__}",
               "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
               "points": 0,
-            })
+            }, ensure_ascii=False)
