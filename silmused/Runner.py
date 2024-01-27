@@ -195,17 +195,17 @@ class Runner:
                 points_max += checks_points_max
                 points_actual += checks_points_actual
                 output["checks"] = checks_outputs
+                output["status"] = 'PASS' if checks_points_actual == checks_points_max else 'FAIL'
             else:
                 points = result.get('points') if result.get('points') is not None else 0
                 points_max += points
                 points_actual += points if result.get('is_success') else 0
-
+                output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
+            
             output["title"] = result.get('title')
-            output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
             output["exception_message"] = str(result.get('message')) if not result.get('is_success') else None
 
             tests.append(output)
-
         return tests, points_max, points_actual
 
     def get_results(self):
