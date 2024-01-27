@@ -10,20 +10,12 @@ from silmused.tests.ProcedureTest import ProcedureTest
 from silmused.tests.TriggerTest import TriggerTest
 from silmused.tests.ViewTest import ViewTest
 
-"""
-ChecksLayer(
-        title='',
-        tests=[
-            
-        ]
-    ),
-"""
 _user1 = 123456
 _user2 = 123457
 _partii_id = 123123
-"""
+
 tests = [
-    TitleLayer('Praktikum 3'),
+    #TitleLayer('Praktikum 3'),
     ChecksLayer(
         title='Tabeli Turniirid kontrollid',
         tests=[
@@ -92,7 +84,7 @@ tests = [
             )
         ]
     ),
-    TitleLayer('Praktikum 4'),
+    #TitleLayer('Praktikum 4'),
     ChecksLayer(
         title='Tabeli Asulad kontrollid',
         tests=[
@@ -141,7 +133,7 @@ tests = [
             ),
         ]
     ),
-    TitleLayer('Kodutöö 3'),
+    #TitleLayer('Kodutöö 3'),
     ChecksLayer(
         title='Tabeli Isikud kontrollid ',
         tests=[
@@ -201,7 +193,7 @@ tests = [
            DataTest(
                 title='Kas veerg asula on olemas?',
                 name='turniirid',
-                column_name='asula'
+                column_name='asula',
                 points=1,
             ),
             ConstraintTest(
@@ -212,9 +204,7 @@ tests = [
             ), 
         ]
     ), 
-]"""
-tests = [
-    TitleLayer('Kodutöö 4'),
+    #TitleLayer('Kodutöö 4'),
     ChecksLayer(
         title='Vaate v_turniiripartiid kontrollid',
         tests=[
@@ -335,22 +325,26 @@ tests = [
             StructureTest(
                 title='Kas vaade v_keskminepartii on olemas?',
                 name='v_keskminepartii',
+                points=1,
             ),
             StructureTest(
                 title='Kas veerg turniiri_nimi on olemas?',
                 name='v_keskminepartii',
                 column_name='turniiri_nimi',
+                points=1,
             ),
             StructureTest(
                 title='Kas veerg keskmine_partii on olemas?',
                 name='v_keskminepartii',
                 column_name='keskmine_partii',
+                points=1,
             ),
             DataTest(
                 title='Kas vaate andmete kogus on õige?',
                 name='v_keskminepartii',
                 column_name='COUNT(*)',
                 expected_value=5,
+                points=1,
             ),
             DataTest(
                 title='Kas turniiril Plekkkarikas 2010 keskmine partii arv on õige?',
@@ -358,6 +352,7 @@ tests = [
                 column_name='ROUND(keskmine_partii, 3)',
                 where="turniiri_nimi = 'Plekkkarikas 2010'",
                 expected_value=23.765,
+                points=1,
             ),
             DataTest(
                 title='Kas turniiril Kolme klubi kohtumine keskmine partii arv on õige?',
@@ -365,6 +360,7 @@ tests = [
                 column_name='ROUND(keskmine_partii, 3)',
                 where="turniiri_nimi = 'Kolme klubi kohtumine'",
                 expected_value=23.040,
+                points=1,
             ),
         ]
     ),
@@ -376,24 +372,28 @@ tests = [
                 name='mv_partiide_arv_valgetega',
                 column_name='COUNT(*)',
                 expected_value=85,
+                points=1,
             ),
             DataTest(
                 title='Kas leidub partii ühe mängijaga?',
                 name='mv_partiide_arv_valgetega',
                 column_name='COUNT(*)',
                 where="eesnimi = 'Tarmo' AND perenimi = 'Kooser'",
+                points=1,
             ),
             DataTest(
                 title='Kas vaate kõige väikseim väärtus on õige?',
                 name='mv_partiide_arv_valgetega',
                 column_name='MIN(partiisid_valgetega)',
                 expected_value=0,
+                points=1,
             ),
             DataTest(
                 title='Kas vaate kõige suurem väärtus on õige?',
                 name='mv_partiide_arv_valgetega',
                 column_name='MAX(partiisid_valgetega)',
                 expected_value=14,
+                points=1,
             )
         ]
     ),
