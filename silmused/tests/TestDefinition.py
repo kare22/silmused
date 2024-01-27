@@ -2,7 +2,7 @@ import sys
 
 
 # TODO this should not be usable without a child
-class TestDefinition(TestCollection):
+class TestDefinition():
     def __init__(self, name, points, title='', where=None, join=None, should_exist=True, query='', description=None,
                  arguments=None, expected_value=None, expected_count=None, pre_query=None, after_query=None):
         if arguments is not None and not isinstance(arguments, list):
@@ -25,11 +25,9 @@ class TestDefinition(TestCollection):
 
         if where is not None:
             query_builder += f" WHERE ({where})"
-        
-        super().__init__(
-            title = title
-            points = points
-            cases=[]
+
+        self.title = title
+        self.points = points
         self.name = name
         self.description = description
         self.arguments = arguments # TODO arguments could be a class

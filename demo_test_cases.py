@@ -1,4 +1,4 @@
-
+from silmused.ChecksLayer import ChecksLayer
 from silmused.tests.DataTest import DataTest
 from silmused.tests.StructureTest import StructureTest
 from silmused.tests.ConstraintTest import ConstraintTest
@@ -40,26 +40,37 @@ tests = [
         should_exist=False,
         points=0.25,
     ),
-    StructureTest(
-        name='klubid',
-        column_name='asukoht',
-        arguments=['character_maximum_length'],
-        expected_value=100,
-        points=1,
+    ChecksLayer(
+        title='Tabeli klubid veerg asukoht test',
+        tests=[
+            StructureTest(
+                name='klubid',
+                column_name='asukoht',
+                arguments=['character_maximum_length'],
+                expected_value=100,
+                points=1,
+            ),
+            StructureTest(
+                name='klubid',
+                column_name='asukoht',
+                points=1,
+            ),
+        ]
     ),
-    StructureTest(
-        name='klubid',
-        column_name='asukoht',
-        points=1,
-    ),
-
     TitleLayer('Praktikum 4'),
-    StructureTest(
-        title='Kas tabel asulad on olemas?',
-        name='asulad',
-    ),
-    DataTest(
-        name='asulad',
+    ChecksLayer(
+        title='Tabeli asulad test',
+        tests=[
+            StructureTest(
+                title='Kas tabel asulad on olemas?',
+                name='asulad',
+                points=3,
+            ),
+            DataTest(
+                name='asulad',
+                points=1,
+            ),
+        ]
     ),
     StructureTest(
         name='riigid',
