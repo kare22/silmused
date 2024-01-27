@@ -104,7 +104,8 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-            cursor.execute('DROP SCHEMA IF EXISTS public')
+            if self.db_user != 'silmused':
+                cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
         except Exception as exception:
@@ -173,25 +174,20 @@ class Runner:
         try:
             tests, points_max, points_actual = self._results_to_object()
 
-            message = {
+            output = {
                 "result_type": "OK_V3",
                 "points": round(100 * points_actual / points_max),
                 "producer": f"silmused {__version__}",
                 "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "tests": tests
             }
-
-            output = {
-                "message_type": "OK_V3",
-                "message": message,
-            }
             return json.dumps(output)
         except:
             print(sys.exc_info())
             return json.dumps({
-              "message_type": "ERROR_V3",
-              "message":
-              {
-                "error": "Failed to get results"
-              }
+              "result_type": "OK_V3",
+              "producer": f"silmused {__version__}",
+              "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "points": 0,
+              "pre_evaluate_error": message, '\n', sys.exc_info()
             })
