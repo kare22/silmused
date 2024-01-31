@@ -6,7 +6,7 @@ class ConstraintTest(TestDefinition):
         query = f"SELECT * FROM information_schema.table_constraints WHERE table_name = '{name}'"
 
         if column_name is not None:
-            query += f" AND column_name = '{column_name}'"
+            query += f" AND constraint_name LIKE '%{column_name}%'"
         if constraint_name is not None:
             query += f" AND constraint_name = '{constraint_name}'"
         if constraint_type is not None:
