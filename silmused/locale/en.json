@@ -4,7 +4,7 @@
 		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $wrong_value, expected $correct_value",
 		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $correct_value",
 		"expected_value_should_not_exist_negative_feedback": "Wrong, this should not exist $wrong_value, expected $correct_value",
-		"table_column_should_exist_negative_feedback": "Correct, column or table $column_name found in table $table_name",
+		"table_column_should_exist_positive_feedback": "Correct, column or table $column_name found in table $table_name",
 		"table_column_should_exist_negative_feedback": "Expected to find column or table $column_name, but none were found in $table_name",
 		"table_column_should_not_exist_positive_feedback": "Correct no column or table named $column_name found in $table_name",
 		"table_column_should_not_exist_negative_feedback": "Expected to not find column or table $column_name in table $table_name"

@@ -36,8 +36,13 @@ class StructureTest(TestDefinition):
             if self.should_exist:
                 return super().response(
                     len(result) != 0 and result[0][0] == self.expected_value,
-                    f"Correct, expected {self.query}", # TODO enhance feedback
-                    f"Wrong, did not expect {self.query}", # TODO enhance feedback
+                    #f"Correct, expected {self.query}", # TODO enhance feedback
+                    {"test_type": "Structure_Test", "test_key": "expected_value_should_exist_positive_feedback",
+                                    "correct_value": f"{self.query}"},
+                    {"test_type": "Structure_Test", "test_key": "expected_value_should_exist_negative_feedback",
+                     "correct_value": f"{self.query}"},
+                #f"Wrong, did not expect {self.query}", # TODO enhance feedback
+                    # self.translator.translate('StructureTest', 'expected_value_should_exist_positive_feedback',correct_value=self.query)
                 )
             else:
                 return super().response(
