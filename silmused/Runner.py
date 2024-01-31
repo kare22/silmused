@@ -144,6 +144,7 @@ class Runner:
 
     def _checks_to_object(self, checks):
         outputs = []
+        output_pass = True
 
         # TODO should be recursive
         points_max = 0
@@ -166,14 +167,16 @@ class Runner:
             output = {}
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
+            output_pass = True if check.get('is_success') and output_pass else False
             output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
 
             outputs.append(output)
 
-        return points_max, points_actual, outputs
+        return points_max, points_actual, outputs, output_pass
 
     def _results_to_object(self):
         tests = []
+        result_pass = True
 
         points_max = 0
         points_actual = 0
@@ -191,16 +194,17 @@ class Runner:
             output = {}
 
             if result.get('type') == 'checks_layer':
-                checks_points_max, checks_points_actual, checks_outputs = self._checks_to_object(result.get('checks'))
+                checks_points_max, checks_points_actual, checks_outputs, output_pass = self._checks_to_object(result.get('checks'))
                 points_max += checks_points_max
                 points_actual += checks_points_actual
                 output["checks"] = checks_outputs
-                output["status"] = 'PASS' if checks_points_actual == checks_points_max else 'FAIL'
+                output["status"] = 'PASS' if output_pass else 'FAIL'
             else:
                 points = result.get('points') if result.get('points') is not None else 0
                 points_max += points
                 points_actual += points if result.get('is_success') else 0
                 output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
+
             
             output["title"] = result.get('title')
             #print(result.get('message'))
