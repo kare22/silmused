@@ -176,7 +176,6 @@ class Runner:
 
     def _results_to_object(self):
         tests = []
-        result_pass = True
 
         points_max = 0
         points_actual = 0
@@ -217,6 +216,10 @@ class Runner:
     def get_results(self):
         try:
             tests, points_max, points_actual = self._results_to_object()
+            praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
+            if praks:
+                points_max = 1
+                points_actual = 1
 
             output = {
                 "result_type": "OK_V3",
