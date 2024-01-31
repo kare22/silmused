@@ -7,7 +7,7 @@ import psycopg2
 from uuid import uuid4
 from datetime import datetime
 from silmused.version import __version__
-
+from silmused.Translator import Translator
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
@@ -21,7 +21,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
+    def __init__(self, backup_file_path, tests, lang='et', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -30,11 +30,11 @@ class Runner:
         self.db_password = db_password
         self.db_host = db_host
         self.db_port = db_port
-        self.lang = lang
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
         self.results = []
+        self.translator = Translator.Translator(locale=lang)
 
         if self._file_is_valid_pg_dump():
             self._create_db_from_psql_dump()
@@ -169,7 +169,7 @@ class Runner:
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
             output_pass = True if check.get('is_success') and output_pass else False
             output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
-
+            # self.translator.translate('StructureTest', 'expected_value_should_exist_positive_feedback',correct_value=self.query)
             outputs.append(output)
 
         return points_max, points_actual, outputs, output_pass
