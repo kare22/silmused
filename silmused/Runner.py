@@ -21,7 +21,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='et', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -34,7 +34,7 @@ class Runner:
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
         self.results = []
-        self.translator = Translator.Translator(locale=lang)
+        self.translator = Translator(locale=lang)
 
         if self._file_is_valid_pg_dump():
             self._create_db_from_psql_dump()
@@ -104,7 +104,6 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-            #if self.db_user != 'silmus':
             cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
@@ -142,9 +141,26 @@ class Runner:
 
         return connection_layer
 
+    def _message_to_feedback(self, message):
+        feedback = ''
+        feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
+        if len(feedback_params) > 0:
+            params=message['params']
+            if len(feedback_params) == 1:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0])
+            elif len(feedback_params) == 2:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0],param2=params[1])
+            elif len(feedback_params) == 3:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0],param2=params[1],param3=params[2])
+            else:
+                feedback = "Params were given, but there is more than 3"
+
+        return feedback
+
     def _checks_to_object(self, checks):
         outputs = []
         output_pass = True
+
 
         # TODO should be recursive
         points_max = 0
@@ -168,8 +184,9 @@ class Runner:
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
             output_pass = True if check.get('is_success') and output_pass else False
-            output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
-            # self.translator.translate('StructureTest', 'expected_value_should_exist_positive_feedback',correct_value=self.query)
+            #output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
+
+            output["feedback"] = self._message_to_feedback(check.get('message')) if not check.get('is_success') else ''
             outputs.append(output)
 
         return points_max, points_actual, outputs, output_pass
@@ -204,7 +221,6 @@ class Runner:
                 points_actual += points if result.get('is_success') else 0
                 output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
 
-            
             output["title"] = result.get('title')
             #print(result.get('message'))
             if result.get('message') is not None:
@@ -216,6 +232,7 @@ class Runner:
     def get_results(self):
         try:
             tests, points_max, points_actual = self._results_to_object()
+            # TODO Put all logic in points variable
             praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
             if praks:
                 points_max = 1
