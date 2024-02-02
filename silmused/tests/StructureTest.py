@@ -10,7 +10,14 @@ class StructureTest(TestDefinition):
         query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}'"
 
         if column_name is not None:
-            query += f" AND column_name = '{column_name}'"
+            if type(column_name) == str:
+                query += f" AND column_name = '{column_name}'"
+            elif type(column_name) == list:
+                for (index, name) in enumerate(column_name):
+                    operator = 'AND' if index == 0 else 'OR'
+                    query += f" {operator} column_name = '{name}'"
+            else:
+                raise AttributeError('Parameter column_name must be list or string')
 
         super().__init__(
             name=name,
