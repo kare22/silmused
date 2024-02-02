@@ -1,15 +1,19 @@
 {
-    "Structure_test" : {
-		"expected_value_should_exist_positive_feedback": "Correct, expected $correct_value",
-		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $wrong_value, expected $correct_value",
-		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $correct_value",
-		"expected_value_should_not_exist_negative_feedback": "Wrong, this should not exist $wrong_value, expected $correct_value",
-		"table_column_should_exist_positive_feedback": "Correct, column or table $column_name found in table $table_name",
-		"table_column_should_exist_negative_feedback": "Expected to find column or table $column_name, but none were found in $table_name",
-		"table_column_should_not_exist_positive_feedback": "Correct no column or table named $column_name found in $table_name",
-		"table_column_should_not_exist_negative_feedback": "Expected to not find column or table $column_name in table $table_name"
+    "structure_test" : {
+		"expected_value_should_exist_positive_feedback": "Correct, expected param1",
+		"expected_value_should_exist_negative_feedback": "Wrong, did not expect param1, expected param2",
+		"expected_value_should_not_exist_positive_feedback": "Correct, did not want param1",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, this should not exist param1, expected param2",
+		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
+		"table_should_exist_negative_feedback": "Expected to find table $param1, but none were found",
+		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",
+		"column_should_exist_negative_feedback": "Expected to find column $param1, but none were found in $param2",
+		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
+		"table_should_not_exist_negative_feedback": "Expected to not find table $param1",
+		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in $param2",
+		"column_should_not_exist_negative_feedback": "Expected to not find column $param1 in table $param2"
 	},
-	"DataTest": {
+	"data_test": {
 		"no_expected_value_should_exist_positive_feedback": "Correct, no results found for table $table_name and column(s) $column_name",
 		"no_expected_value_should_exist_negative_feedback": "Expected to find no results for table $table_name and column(s) $column_name but were found",
 		"no_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $table_name and column(s) $column_name",
@@ -19,13 +23,13 @@
 		"expected_value_should_not_exist_positive_feedback": "Correct, $expected_value does not equal $wrong_value in $table_name and column(s) $column_name",
 		"expected_value_should_not_exist_negative_feedback": "Expected $expected_value to not equal $wrong_value in table $table_name and column(s) $column_name"
 	},
-	"ConstraintTest": {
+	"constraint_test": {
 		"constraint_should_exist_positive_feedback": "Correct, $feedback was found",
 		"constraint_should_exist_negative_feedback": "Expected to find $feedback but none were found",
 		"constraint_should_not_exist_positive_feedback": "Correct, $feedback was not found",
 		"constraint_should_not_exist_negative_feedback": "Expected to not find $feedback, but was"
 	},
-	"IndexTest": {
+	"index_test": {
 		"index_positive_feedback": "Correct, index was $index_name found",
 		"index_negative_feedback": "Expected to find index $index_name but none were found"
 	}

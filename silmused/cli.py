@@ -16,7 +16,7 @@ def main():
     db_host = sys.argv[4] if len(sys.argv) > 4 else 'localhost'
     db_port = sys.argv[5] if len(sys.argv) > 5 else '5432'
     db_password = sys.argv[6] if len(sys.argv) > 6 else 'postgresql'
-    lang = sys.argv[7] if len(sys.argv) > 7 else 'et'
+    lang = sys.argv[7] if len(sys.argv) > 7 else 'en'
     
     with open(tests_path, 'r') as file:
         tests_file_content = file.read()

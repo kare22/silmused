@@ -3,7 +3,8 @@ from silmused.utils import list_to_string
 
 
 class StructureTest(TestDefinition):
-    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, points=0):
+    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True,
+                 where=None, description=None, points=0):
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
 
@@ -36,30 +37,71 @@ class StructureTest(TestDefinition):
             if self.should_exist:
                 return super().response(
                     len(result) != 0 and result[0][0] == self.expected_value,
-                    #f"Correct, expected {self.query}", # TODO enhance feedback
-                    {"test_type": "Structure_Test", "test_key": "expected_value_should_exist_positive_feedback",
-                                    "correct_value": f"{self.query}"},
-                    {"test_type": "Structure_Test", "test_key": "expected_value_should_exist_negative_feedback",
-                     "correct_value": f"{self.query}"},
-                #f"Wrong, did not expect {self.query}", # TODO enhance feedback
-                    # self.translator.translate('StructureTest', 'expected_value_should_exist_positive_feedback',correct_value=self.query)
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
+                    # f"Correct, expected {self.query}", # TODO enhance feedback
+                    # f"Wrong, did not expect {self.query}", # TODO enhance feedback
                 )
             else:
                 return super().response(
                     len(result) == 0 or result[0][0] != self.expected_value,
-                    f"Correct did not want {self.query}", # TODO enhance feedback
-                    f"Wrong this should not exist {self.query}", # TODO enhance feedback
+                    # f"Correct did not want {self.query}", # TODO enhance feedback
+                    # f"Wrong this should not exist {self.query}", # TODO enhance feedback
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
                 )
         else:
             if self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                    f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        # f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                        # f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
             else:
-                return super().response(
-                    len(result) == 0,
-                    f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                    f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        # f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                        # f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )

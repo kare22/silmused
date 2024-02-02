@@ -1,15 +1,15 @@
 {
-    "StructureTest" : {
-		"expected_value_should_exist_positive_feedback": "Õige, oodatud vastus oli $Õige_value",
-		"expected_value_should_exist_negative_feedback": "Vale, ei oodatud vastust $wrong_value, vaid $Õige_value",
-		"expected_value_should_not_exist_positive_feedback": "Õige, ei soovitud vastust $Õige_value",
-		"expected_value_should_not_exist_negative_feedback": "Vale, ei soovitud vastust $wrong_value, vaid $Õige_value",
+    "structure_test" : {
+		"expected_value_should_exist_positive_feedback": "Õige, oodatud vastus oli $expected_value",
+		"expected_value_should_exist_negative_feedback": "Vale, ei oodatud vastust $wrong_value, vaid $expected_value",
+		"expected_value_should_not_exist_positive_feedback": "Õige, ei soovitud vastust $expected_value",
+		"expected_value_should_not_exist_negative_feedback": "Vale, ei soovitud vastust $wrong_value, vaid $expected_value",
 		"no_expected_value_table_column_should_exist_positive_feedback": "Õige, tabel või veerg $column_name leitud tabelis $table_name",
 		"no_expected_value_table_column_should_exist_negative_feedback": "Vale, tabelit või veergu $column_name, ei leitud tabelis $table_name",
 		"no_expected_value_table_column_should_not_exist_positive_feedback": "Õige, tabelit või veergu $column_name ei leitud tabelis $table_name",
 		"no_expected_value_table_column_should_not_exist_negative_feedback": "Vale, ei tohiks leida tabelit või veergu $column_name tabelis $table_name"
 	},
-	"DataTest": {
+	"data_test": {
 		"no_expected_value_should_exist_positive_feedback": "Õige, ei leitud tulemusi tabelis $table_name ja veerus $column_name",
 		"no_expected_value_should_exist_negative_feedback": "Vale, leiti tulemusi tabelis $table_name ja veerus $column_name, aga ei tohiks leida",
 		"no_expected_value_should_not_exist_positive_feedback": "Õige, ei leitud tulemusi tabelis $table_name ja veerus $column_name",
@@ -19,13 +19,13 @@
 		"expected_value_should_not_exist_positive_feedback": "Õige, tulemus $expected_value ei võrdu väärtusega $wrong_value tabelis $table_name ja veerus $column_name",
 		"expected_value_should_not_exist_negative_feedback": "Vale, tulemus $Vale_value ei tohi võrduda väärtusega $wrong_value tabelis $table_name ja veerus $column_name"
 	},
-	"ConstraintTest": {
+	"constraint_test": {
 		"constraint_should_exist_positive_feedback": "Õige, kitsendus $feedback on olemas",
 		"constraint_should_exist_negative_feedback": "Vale, kitsendus $feedback ei ole olemas",
 		"constraint_should_not_exist_positive_feedback": "Õige, kitsendust $feedback ei leitud",
 		"constraint_should_not_exist_negative_feedback": "Vale, kitsendust $feedback ei tohtinud leida, aga leiti"
 	},
-	"IndexTest": {
+	"index_test": {
 		"index_positive_feedback": "Õige, indeks $index_name on olemas",
 		"index_negative_feedback": "Vale, indeks $index_name ei ole olemas"
 	}
