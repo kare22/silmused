@@ -30,6 +30,7 @@ class StructureTest(TestDefinition):
 
     def execute(self, cursor):
         # TODO feedback is really bad
+        # TODO create testcases to cover all feedbacks
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -43,14 +44,14 @@ class StructureTest(TestDefinition):
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_exist_negative_feedback",
                      "params": [self.query, self.expected_value]},
-                    # f"Correct, expected {self.query}", # TODO enhance feedback
-                    # f"Wrong, did not expect {self.query}", # TODO enhance feedback
+                    # f"Correct, expected {self.query}",
+                    # f"Wrong, did not expect {self.query}",
                 )
             else:
                 return super().response(
                     len(result) == 0 or result[0][0] != self.expected_value,
-                    # f"Correct did not want {self.query}", # TODO enhance feedback
-                    # f"Wrong this should not exist {self.query}", # TODO enhance feedback
+                    # f"Correct did not want {self.query}",
+                    # f"Wrong this should not exist {self.query}",
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_not_exist_positive_feedback",
                      "params": [self.query]},

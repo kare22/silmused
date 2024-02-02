@@ -1,9 +1,9 @@
 {
     "structure_test" : {
-		"expected_value_should_exist_positive_feedback": "Correct, expected param1",
-		"expected_value_should_exist_negative_feedback": "Wrong, did not expect param1, expected param2",
-		"expected_value_should_not_exist_positive_feedback": "Correct, did not want param1",
-		"expected_value_should_not_exist_negative_feedback": "Wrong, this should not exist param1, expected param2",
+		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
+		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $param1, expected $param2",
+		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $param1",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, $param1 should not exist, expected $param2",
 		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
 		"table_should_exist_negative_feedback": "Expected to find table $param1, but none were found",
 		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",

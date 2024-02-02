@@ -22,7 +22,7 @@ tests = [
         ]
     ),
 ]
-"""ConstraintTest(
+""" ConstraintTest(
                 title='Kas tabeli primaarvõti on olemas?',
                 name='isikud',
                 constraint_type='PRIMARY KEY',
@@ -36,9 +36,7 @@ tests = [
                 title='Kas tabelis on check kitsendus?',
                 name='isikud',
                 constraint_type='CHECK',
-            ),"""
-
-"""
+            ),
     ChecksLayer(
         title='Tabeli Klubid kontrollid',
         tests=[
