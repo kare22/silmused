@@ -1,13 +1,17 @@
 {
     "structure_test" : {
-		"expected_value_should_exist_positive_feedback": "Õige, oodatud vastus oli $expected_value",
-		"expected_value_should_exist_negative_feedback": "Vale, ei oodatud vastust $wrong_value, vaid $expected_value",
-		"expected_value_should_not_exist_positive_feedback": "Õige, ei soovitud vastust $expected_value",
-		"expected_value_should_not_exist_negative_feedback": "Vale, ei soovitud vastust $wrong_value, vaid $expected_value",
-		"no_expected_value_table_column_should_exist_positive_feedback": "Õige, tabel või veerg $column_name leitud tabelis $table_name",
-		"no_expected_value_table_column_should_exist_negative_feedback": "Vale, tabelit või veergu $column_name, ei leitud tabelis $table_name",
-		"no_expected_value_table_column_should_not_exist_positive_feedback": "Õige, tabelit või veergu $column_name ei leitud tabelis $table_name",
-		"no_expected_value_table_column_should_not_exist_negative_feedback": "Vale, ei tohiks leida tabelit või veergu $column_name tabelis $table_name"
+		"expected_value_should_exist_positive_feedback": "Õige, oodati tulemust $param1",
+		"expected_value_should_exist_negative_feedback": "Vale, $param1 on vale tulemus, oodati tulemust $param2",
+		"expected_value_should_not_exist_positive_feedback": "Õige, ei leidunud tulemust $param1",
+		"expected_value_should_not_exist_negative_feedback": "Vale, $param1 on vale tulemus, oodati tulemust $param2",
+		"table_should_exist_positive_feedback": "Õige, tabel $param1 on olemas",
+		"table_should_exist_negative_feedback": "Vale, tabel $param1 ei ole olemas",
+		"column_should_exist_positive_feedback": "Õige, veerg $param1 on olemas tabelis $param2",
+		"column_should_exist_negative_feedback": "Vale, veergu $param1 ei leitud tabelist $param2",
+		"table_should_not_exist_positive_feedback": "Õige, tabel $param1 ei ole olemas",
+		"table_should_not_exist_negative_feedback": "Vale, tabelit $param1 ei tohiks olla olemas",
+		"column_should_not_exist_positive_feedback": "Õige, veergu $param1 ei ole olemas tabelis $param2",
+		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2"
 	},
 	"data_test": {
 		"no_expected_value_should_exist_positive_feedback": "Õige, ei leitud tulemusi tabelis $table_name ja veerus $column_name",
