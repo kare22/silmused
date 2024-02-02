@@ -201,7 +201,7 @@ tests = [
            DataTest(
                 title='Kas veerg asula on olemas?',
                 name='turniirid',
-                column_name='asula'
+                column_name='asula',
                 points=1,
             ),
             ConstraintTest(
