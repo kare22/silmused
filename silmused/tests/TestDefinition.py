@@ -3,8 +3,8 @@ import sys
 
 # TODO this should not be usable without a child
 class TestDefinition():
-    def __init__(self, name, points, title='', where=None, join=None, should_exist=True, query='', description=None,
-                 arguments=None, expected_value=None, expected_count=None, pre_query=None, after_query=None):
+    def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='', description=None,
+                 arguments=None, expected_value=None, expected_character_maximum_length=None, expected_type=None, expected_count=None, pre_query=None, after_query=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -29,9 +29,12 @@ class TestDefinition():
         self.title = title
         self.points = points
         self.name = name
+        self.column_name = column_name
         self.description = description
         self.arguments = arguments # TODO arguments could be a class
         self.expected_value = expected_value
+        self.expected_character_maximum_length = expected_character_maximum_length
+        self.expected_type = expected_type
         self.expected_count = expected_count
         self.query = query_builder
         self.pre_query = pre_query
