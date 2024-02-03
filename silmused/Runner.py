@@ -155,8 +155,11 @@ class Runner:
             elif len(params) == 3:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
                                                      param1=params[0], param2=params[1], param3=params[2])
+            elif len(params) == 4:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1], param3=params[2], param4=params[3])
             else:
-                feedback = "Params were given, but there is more than 3"
+                feedback = "Params were given, but there is more than 4"
 
         return feedback
 
@@ -187,7 +190,6 @@ class Runner:
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
             output_pass = True if check.get('is_success') and output_pass else False
-            #output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
 
             output["feedback"] = self._message_to_feedback(check.get('message')) if not check.get('is_success') else ''
             outputs.append(output)
@@ -225,7 +227,6 @@ class Runner:
                 output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
 
             output["title"] = result.get('title')
-            #print(result.get('message'))
             if result.get('message') is not None:
                 output["exception_message"] = str(result.get('message'))
 
