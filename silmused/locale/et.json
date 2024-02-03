@@ -24,10 +24,26 @@
 		"expected_value_should_not_exist_negative_feedback": "Vale, tulemus $Vale_value ei tohi võrduda väärtusega $wrong_value tabelis $table_name ja veerus $column_name"
 	},
 	"constraint_test": {
-		"constraint_should_exist_positive_feedback": "Õige, kitsendus $feedback on olemas",
-		"constraint_should_exist_negative_feedback": "Vale, kitsendus $feedback ei ole olemas",
-		"constraint_should_not_exist_positive_feedback": "Õige, kitsendust $feedback ei leitud",
-		"constraint_should_not_exist_negative_feedback": "Vale, kitsendust $feedback ei tohtinud leida, aga leiti"
+		"table_constraint_should_exist_positive_feedback": "Õige, kitsendus on olemas tabelil $param1",
+		"table_constraint_should_exist_negative_feedback": "Vale, kitsendust ei ole olemas tabelil $param1, ",
+		"table_column_constraint_should_exist_positive_feedback": "Õige, kitsendus on olemas tabelil $param1 veerul $param2",
+		"table_column_constraint_should_exist_negative_feedback": "Vale, kitsendust ei ole olemas tabelil $param1 veerul $param2",
+		"table_column_constraint_name_should_exist_positive_feedback": "Õige, kitsendus on olemas tabelil $param1 veerul $param2 nimega $param3",
+		"table_column_constraint_name_should_exist_negative_feedback": "Vale, kitsendust ei ole olemas tabelil $param1 veerul $param2 nimega $param3",
+		"table_column_constraint_type_should_exist_positive_feedback": "Õige, kitsendus on olemas tabelil $param1 veerul $param2 tüübiga $param3",
+		"table_column_constraint_type_should_exist_negative_feedback": "Vale, kitsendust ei ole olemas tabelil $param1 veerul $param2 tüübiga $param3",
+		"table_column_constraint_name_and_type_should_exist_positive_feedback": "Õige, kitsendus on olemas tabelil $param1 veerul $param2 nimega $param3 ja tüübiga $param4",
+		"table_column_constraint_name_and_type_should_exist_negative_feedback": "Vale, kitsendust ei ole olemas tabelil $param1 veerul $param2 nimega $param3 ja tüübiga $param4",
+		"table_constraint_should_not_exist_positive_feedback": "Õige, kitsendust ei ole olemas tabelil $param1",
+		"table_constraint_should_not_exist_negative_feedback": "Vale, kitsendus on olemas tabelil $param1",
+		"table_column_constraint_should_not_exist_positive_feedback": "Õige, kitsendust ei ole olemas tabelil $param1 veerul $param2",
+		"table_column_constraint_should_not_exist_negative_feedback": "Vale, kitsendus on olemas tabelil $param1 veerul $param2",
+		"table_column_constraint_name_should_not_exist_positive_feedback": "Õige, kitsendust ei ole olemas tabelil $param1 veerul $param2 nimega $param3",
+		"table_column_constraint_name_should_not_exist_negative_feedback": "Vale, kitsendus on olemas tabelil $param1 veerul $param2 nimega $param3",
+		"table_column_constraint_type_should_not_exist_positive_feedback": "Õige, kitsendust ei ole olemas tabelil $param1 veerul $param2 tüübiga $param3",
+		"table_column_constraint_type_should_not_exist_negative_feedback": "Vale, kitsendus on olemas tabelil $param1 veerul $param2 tüübiga $param3",
+		"table_column_constraint_name_and_type_should_not_exist_positive_feedback": "Õige, kitsendust ei ole olemas tabelil $param1 veerul $param2 nimega $param3 ja tüübiga $param4",
+		"table_column_constraint_name_and_type_should_not_exist_negative_feedback": "Vale, kitsendus on olemas tabelil $param1 veerul $param2 nimega $param3 ja tüübiga $param4"
 	},
 	"index_test": {
 		"index_positive_feedback": "Õige, indeks $index_name on olemas",

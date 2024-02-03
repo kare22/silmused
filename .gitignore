@@ -4,3 +4,4 @@ silmused.egg-info
 venv
 demo.py
 *.sql
+*.json
