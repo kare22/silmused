@@ -146,12 +146,15 @@ class Runner:
         feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
         if len(feedback_params) > 0:
             params=message['params']
-            if len(feedback_params) == 1:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0])
-            elif len(feedback_params) == 2:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0],param2=params[1])
-            elif len(feedback_params) == 3:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],param1=params[0],param2=params[1],param3=params[2])
+            if len(params) == 1:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0])
+            elif len(params) == 2:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1])
+            elif len(params) == 3:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1], param3=params[2])
             else:
                 feedback = "Params were given, but there is more than 3"
 
