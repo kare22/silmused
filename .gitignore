@@ -3,4 +3,4 @@ __pycache__
 silmused.egg-info
 venv
 demo.py
-kodutoo3.py
+*.sql

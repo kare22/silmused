@@ -35,7 +35,10 @@ class StructureTest(TestDefinition):
         result = cursor.fetchall()
 
         if self.expected_value is not None:
+            # TODO Is this needed?
+            # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
             if self.should_exist:
+                #print(self.title, result[0][0])
                 return super().response(
                     len(result) != 0 and result[0][0] == self.expected_value,
                     {"test_type": "structure_test",
@@ -48,16 +51,17 @@ class StructureTest(TestDefinition):
                     # f"Wrong, did not expect {self.query}",
                 )
             else:
+                #print(self.title, result[0][0])
                 return super().response(
                     len(result) == 0 or result[0][0] != self.expected_value,
-                    # f"Correct did not want {self.query}",
-                    # f"Wrong this should not exist {self.query}",
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_not_exist_positive_feedback",
                      "params": [self.query]},
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_not_exist_negative_feedback",
                      "params": [self.query, self.expected_value]},
+                    # f"Correct did not want {self.query}",
+                    # f"Wrong this should not exist {self.query}",
                 )
         else:
             if self.should_exist:
