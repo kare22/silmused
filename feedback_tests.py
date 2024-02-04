@@ -76,57 +76,14 @@ tests = [
         ]
     ),
     ChecksLayer(
-        title='StructureTest feedback tests',
-        tests=[
-            # Structure tests that seem pointless
-            # expected_value_should_exist_negative_feedback
-            StructureTest(
-                title='expected_value_should_exist_negative_feedback',
-                name='isikud',
-                expected_value=80,
-            ),
-    
-            # expected_value_should_not_exist_negative_feedback
-            StructureTest(
-                title='expected_value_should_not_exist_negative_feedback',
-                name='asulad',
-                column_name='nimi',
-                expected_value='Pärnu',
-                should_exist=False
-            ),
-            # Good tests
-            # table_should_exist_negative_feedback
-            StructureTest(
-                title='table_should_exist_negative_feedback',
-                name='isikud2',
-            ),
-            # column_should_exist_negative_feedback
-            StructureTest(
-                title='column_should_exist_negative_feedback',
-                name='isikud',
-                column_name='idd',
-            ),
-
-            # table_should_not_exist_negative_feedback
-            StructureTest(
-                title='table_should_not_exist_negative_feedback',
-                name='isikud',
-                should_exist=False,
-            ),
-
-            # column_should_not_exist_negative_feedback
-            StructureTest(
-                title='column_should_not_exist_negative_feedback',
-                name='isikud',
-                column_name='id',
-                should_exist=False,
-            ),
-
-        ]
-    ),
-    ChecksLayer(
         title='ConstraintTest feedback tests',
         tests=[
+            ConstraintTest(
+                title='multi_column_name_negative_feedback',
+                name='inimesed',
+                column_name=['eesnimi', 'perenimi', 'isikukood'],
+                constraint_name='pk_inimesed',
+            ),
             ConstraintTest(
                 title='table_constraint_should_exist_negative_feedback',
                 name='riigid2',
@@ -189,6 +146,59 @@ tests = [
                 should_exist=False,
             ),
         ]
-    )
-]
+    ),
 
+    ChecksLayer(
+        title='StructureTest feedback tests',
+        tests=[
+            StructureTest(
+                title='expected_character_maximum_length_type_check_negative_feedback',
+                name='klubid',
+                column_name='asukoht',
+                expected_type='varchar',
+                expected_character_maximum_length=80,
+            ),
+            StructureTest(
+                title='expected_type_check_negative_feedback',
+                name='klubid',
+                column_name='asukoht',
+                expected_type='integer',
+            ),
+            # Structure tests that seem pointless
+            StructureTest(
+                title='expected_value_should_exist_negative_feedback',
+                name='isikud',
+                expected_value=80,
+            ),
+            StructureTest(
+                title='expected_value_should_not_exist_negative_feedback',
+                name='asulad',
+                column_name='nimi',
+                expected_value='Pärnu',
+                should_exist=False
+            ),
+            # Good tests
+            StructureTest(
+                title='table_should_exist_negative_feedback',
+                name='isikud2',
+            ),
+            StructureTest(
+                title='column_should_exist_negative_feedback',
+                name='isikud',
+                column_name='idd',
+            ),
+            StructureTest(
+                title='table_should_not_exist_negative_feedback',
+                name='isikud',
+                should_exist=False,
+            ),
+            StructureTest(
+                title='column_should_not_exist_negative_feedback',
+                name='isikud',
+                column_name='id',
+                should_exist=False,
+            ),
+
+        ]
+    ),
+]
