@@ -8,7 +8,8 @@ class DataTest(TestDefinition):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
-
+        if column_name is not None:
+            self.is_count = False if column_name.lower().find("count") == -1 else True
         super().__init__(
             name=name,
             title=title,
@@ -28,32 +29,87 @@ class DataTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-
         if self.expected_value is None:
             if self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    f"Correct, results found for table {self.name} and column(s) {self.column_name}",
-                    f"Expected to find results for table {self.name} and column(s) {self.column_name} but none were found",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "data_test",
+                         "test_key": "table_not_expected_value_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "data_test",
+                         "test_key": "table_not_expected_value_should_exist_negative_feedback",
+                         "params": [self.name]},
+
+                    )
+                else:
+                    if self.is_count:
+                        return super().response(
+                            result[0][0] > 0,
+                            {"test_type": "data_test",
+                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.name, self.column_name]},
+                            {"test_type": "data_test",
+                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.name, self.column_name]},
+
+                        )
+                    else:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "data_test",
+                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.name, self.column_name]},
+                            {"test_type": "data_test",
+                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.name, self.column_name]},
+
+                        )
+
             else:
-                return super().response(
-                    len(result) == 0,
-                    f"Correct, no results found for table {self.name} and column(s) {self.column_name} ",
-                    f"Expected to find nor results for table {self.name} and column(s) {self.column_name} but some were found",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "data_test",
+                         "test_key": "table_not_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "data_test",
+                         "test_key": "table_not_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "data_test",
+                         "test_key": "table_column_not_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.name, self.column_name]},
+                        {"test_type": "data_test",
+                         "test_key": "table_column_not_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.name, self.column_name]},
+
+                    )
+        # expected value is not None
         else:
             if self.should_exist:
                 # TODO add type check
 
                 return super().response(
                     str(result[0][0]) == str(self.expected_value),
-                    f"Correct value found for table {self.name} and column(s) {self.column_name}",
-                    f"Expected to find {self.expected_value} for table {self.name} and column(s) {self.column_name} but found {result[0][0]}",
+                    {"test_type": "data_test",
+                     "test_key": "expected_value_should_exist_positive_feedback",
+                     "params": [self.expected_value, self.name, self.column_name]},
+                    {"test_type": "data_test",
+                     "test_key": "expected_value_should_exist_negative_feedback",
+                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                 )
             else:
                 return super().response(
                     str(result[0][0]) != str(self.expected_value),
-                    f"Correct, {self.expected_value} does not equal {result[0][0]} in  table {self.name} and column(s) {self.column_name} ",
-                    f"Expected {self.expected_value} to not equal {result[0][0]} in table {self.name} and column(s) {self.column_name}",
+                    {"test_type": "data_test",
+                     "test_key": "expected_value_should_not_exist_positive_feedback",
+                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                    {"test_type": "data_test",
+                     "test_key": "expected_value_should_not_exist_negative_feedback",
+                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                 )

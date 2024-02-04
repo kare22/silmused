@@ -190,8 +190,12 @@ class Runner:
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
             output_pass = True if check.get('is_success') and output_pass else False
-
-            output["feedback"] = self._message_to_feedback(check.get('message')) if not check.get('is_success') else ''
+            if not check.get('is_success') and not check.get('is_sys_fail'):
+                output["feedback"] = self._message_to_feedback(check.get('message'))
+            elif check.get('is_sys_fail'):
+                output["feedback"] = str(check.get('message'))
+            else:
+                output["feedback"] = ''
             outputs.append(output)
 
         return points_max, points_actual, outputs, output_pass

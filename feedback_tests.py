@@ -12,6 +12,119 @@ from silmused.tests.ViewTest import ViewTest
 
 tests = [
     ChecksLayer(
+        title='DataTest feedback tests',
+        tests=[
+            DataTest(
+                title='table_not_expected_value_should_exist_negative_feedback',
+                name='inimesed'
+            ),
+            DataTest(
+                title='table_column_not_expected_value_should_exist_negative_feedback',
+                name='inimesed',
+                column_name='eesnimi',
+            ),
+            DataTest(
+                title='table_not_expected_value_should_not_exist_negative_feedback',
+                name='isikud',
+                should_exist=False,
+            ),
+            DataTest(
+                title='table_column_not_expected_value_should_not_exist_negative_feedback',
+                name='isikud',
+                column_name='eesnimi',
+                should_exist=False,
+            ),
+            DataTest(
+                title='table_column_not_expected_value_should_exist_negative_feedback',
+                name='isikud',
+                column_name='COUNT(*)',
+                where="eesnimi = 'Tarmo' AND perenimi = 'Kooserkkkk'",
+            ),
+            DataTest(
+                title='isikud count',
+                name='isikud',
+                column_name='COUNT(*)',
+                expected_value=86,
+            ),
+            DataTest(
+                title='asula id min',
+                name='asulad',
+                column_name='MIN(id)',
+                expected_value=2,
+            ),
+            DataTest(
+                title='asula id max',
+                name='asulad',
+                column_name='MAX(id)',
+                expected_value=9,
+            ),
+            DataTest(
+                title='expected_value_should_exist_negative_feedback',
+                name='isikud',
+                column_name='eesnimi',
+                where="perenimi = 'Kooser' and sugu = 'm'",
+                expected_value='Liina',
+            ),
+            DataTest(
+                title='expected_value_should_not_exist_negative_feedback',
+                name='isikud',
+                column_name='eesnimi',
+                where="perenimi = 'Kooser' and sugu = 'm'",
+                expected_value='Tarmo',
+                should_exist=False
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='StructureTest feedback tests',
+        tests=[
+            # Structure tests that seem pointless
+            # expected_value_should_exist_negative_feedback
+            StructureTest(
+                title='expected_value_should_exist_negative_feedback',
+                name='isikud',
+                expected_value=80,
+            ),
+    
+            # expected_value_should_not_exist_negative_feedback
+            StructureTest(
+                title='expected_value_should_not_exist_negative_feedback',
+                name='asulad',
+                column_name='nimi',
+                expected_value='Pärnu',
+                should_exist=False
+            ),
+            # Good tests
+            # table_should_exist_negative_feedback
+            StructureTest(
+                title='table_should_exist_negative_feedback',
+                name='isikud2',
+            ),
+            # column_should_exist_negative_feedback
+            StructureTest(
+                title='column_should_exist_negative_feedback',
+                name='isikud',
+                column_name='idd',
+            ),
+
+            # table_should_not_exist_negative_feedback
+            StructureTest(
+                title='table_should_not_exist_negative_feedback',
+                name='isikud',
+                should_exist=False,
+            ),
+
+            # column_should_not_exist_negative_feedback
+            StructureTest(
+                title='column_should_not_exist_negative_feedback',
+                name='isikud',
+                column_name='id',
+                should_exist=False,
+            ),
+
+        ]
+    ),
+    ChecksLayer(
         title='ConstraintTest feedback tests',
         tests=[
             ConstraintTest(
@@ -78,55 +191,4 @@ tests = [
         ]
     )
 ]
-"""
-ChecksLayer(
-        title='StructureTest feedback tests',
-        tests=[
-            # Structure tests that seem pointless
-            # expected_value_should_exist_negative_feedback
-            StructureTest(
-                title='expected_value_should_exist_negative_feedback',
-                name='isikud',
-                expected_value=80,
-            ),
-    
-            # expected_value_should_not_exist_negative_feedback
-            StructureTest(
-                title='expected_value_should_not_exist_negative_feedback',
-                name='asulad',
-                column_name='nimi',
-                expected_value='Pärnu',
-                should_exist=False
-            ),
-            # Good tests
-            # table_should_exist_negative_feedback
-            StructureTest(
-                title='table_should_exist_negative_feedback',
-                name='isikud2',
-            ),
-            # column_should_exist_negative_feedback
-            StructureTest(
-                title='column_should_exist_negative_feedback',
-                name='isikud',
-                column_name='idd',
-            ),
-
-            # table_should_not_exist_negative_feedback
-            StructureTest(
-                title='table_should_not_exist_negative_feedback',
-                name='isikud',
-                should_exist=False,
-            ),
-
-            # column_should_not_exist_negative_feedback
-            StructureTest(
-                title='column_should_not_exist_negative_feedback',
-                name='isikud',
-                column_name='id',
-                should_exist=False,
-            ),
-
-        ]
-    ),
-"""
 
