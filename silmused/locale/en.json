@@ -1,28 +1,5 @@
 {
-    "structure_test" : {
-		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
-		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $param1, expected $param2",
-		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $param1",
-		"expected_value_should_not_exist_negative_feedback": "Wrong, $param1 should not exist, expected $param2",
-		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
-		"table_should_exist_negative_feedback": "Wrong, expected to find table $param1, but none were found",
-		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",
-		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in $param2",
-		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
-		"table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
-		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in $param2",
-		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
-	},
-	"data_test": {
-		"no_expected_value_should_exist_positive_feedback": "Correct, no results found for table $table_name and column(s) $column_name",
-		"no_expected_value_should_exist_negative_feedback": "Expected to find no results for table $table_name and column(s) $column_name but were found",
-		"no_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $table_name and column(s) $column_name",
-		"no_expected_value_should_not_exist_negative_feedback": "Expected to find no results for table $table_name and column(s) $column_name but some were found",
-		"expected_value_should_exist_positive_feedback": "Correct value found for table $table_name and column(s) $column_name",
-		"expected_value_should_exist_negative_feedback": "Expected to find $expected_value for table $table_name and column(s) $column_name but found $wrong_value",
-		"expected_value_should_not_exist_positive_feedback": "Correct, $expected_value does not equal $wrong_value in $table_name and column(s) $column_name",
-		"expected_value_should_not_exist_negative_feedback": "Expected $expected_value to not equal $wrong_value in table $table_name and column(s) $column_name"
-	},
+
 	"constraint_test": {
 		"table_constraint_should_exist_positive_feedback": "Correct, constraint was found in table $param1",
 		"table_constraint_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1, but none were found",
@@ -45,8 +22,48 @@
 		"table_column_constraint_name_and_type_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1 with column $param2 with name $param3 and type $param4",
 		"table_column_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1 with column $param2 with name $param3 and type $param4, but was found"
 	},
+	"data_test": {
+		"table_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table $param1",
+		"table_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for table $param1, but none were found",
+		"table_column_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table $param1 and column $param2",
+		"table_column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for table $param1 and column $param2, but none were found",
+		"table_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1",
+		"table_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1",
+		"table_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1 and column $param2",
+		"table_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1 and column $param2, but were found",
+		"expected_value_should_exist_positive_feedback": "Correct value $param1 found for table $param2 and column $param3",
+		"expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for table $param3 and column $param4",
+		"expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in table $param3 and column $param4",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in table $param3 and column $param4"
+	},
+	"function_test": {
+
+	},
 	"index_test": {
 		"index_positive_feedback": "Correct, index was $param1 found",
 		"index_negative_feedback": "Expected to find index $param1 but none were found"
+	},
+	"procedure_test": {
+
+	},
+	"structure_test" : {
+		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
+		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $param1, expected $param2",
+		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $param1",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, $param1 should not exist, expected $param2",
+		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
+		"table_should_exist_negative_feedback": "Wrong, expected to find table $param1, but none were found",
+		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",
+		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in $param2",
+		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
+		"table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
+		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in $param2",
+		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
+	},
+	"trigger_test": {
+
+	},
+	"view_test": {
+
 	}
 }
