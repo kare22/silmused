@@ -5,8 +5,6 @@ class ConstraintTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, constraint_name=None, constraint_type=None, description=None, should_exist=True, points=0):
         query = f"SELECT * FROM information_schema.table_constraints WHERE table_name = '{name}'"
 
-        if column_name is not None:
-            query += f" AND constraint_name LIKE '%{column_name}%'"
         if constraint_name is not None:
             query += f" AND constraint_name = '{constraint_name}'"
         if constraint_type is not None:
@@ -14,6 +12,7 @@ class ConstraintTest(TestDefinition):
 
         super().__init__(
             name=name,
+            column_name=column_name,
             title=title,
             points=points,
             description=description,
@@ -23,7 +22,6 @@ class ConstraintTest(TestDefinition):
 
         self.constraint_name = constraint_name
         self.constraint_type = constraint_type
-        self.column_name = column_name
 
         self.feedback = f"table {self.name}"
 
@@ -38,6 +36,9 @@ class ConstraintTest(TestDefinition):
                 self.feedback += f" and type = '{self.constraint_type}'"
 
     def execute(self, cursor):
+        check_columns_result = self.check_columns(cursor)
+        if check_columns_result is not None:
+            return check_columns_result
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -148,3 +149,38 @@ class ConstraintTest(TestDefinition):
                          "test_key": "table_column_constraint_name_and_type_should_not_exist_negative_feedback",
                          "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
                     )
+
+    def check_columns(self, cursor):
+        if self.column_name is None:
+            return None
+
+        query = f"SELECT * FROM information_schema.key_column_usage WHERE table_name = '{self.name}'"
+
+        if self.constraint_name is not None:
+            query += f" AND constraint_name = '{self.constraint_name}'"
+
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        columns = [res[6] for res in result]
+
+        #print(columns)
+
+        if type(self.column_name) == str and self.column_name in columns:
+            return None
+        elif type(self.column_name) == list:
+            is_correct = True
+            for column_name in self.column_name:
+                if not column_name in columns:
+                    is_correct = False
+                    break
+            if is_correct:
+                return None
+
+        return super().response(
+            False,
+            None,
+            {"test_type": "constraint_test",
+             "test_key": "multi_column_name_negative_feedback",
+             "params": [self.column_name, columns]},
+        )
