@@ -176,11 +176,28 @@ class ConstraintTest(TestDefinition):
                     break
             if is_correct:
                 return None
-
-        return super().response(
-            False,
-            None,
-            {"test_type": "constraint_test",
-             "test_key": "multi_column_name_negative_feedback",
-             "params": [self.column_name, columns]},
-        )
+        if self.constraint_name is None:
+            return super().response(
+                False,
+                None,
+                {"test_type": "constraint_test",
+                 "test_key": "multi_column_name_negative_feedback",
+                 "params": [self.column_name, columns]},
+            )
+        else:
+            if len(columns) > 0:
+                return super().response(
+                    False,
+                    None,
+                    {"test_type": "constraint_test",
+                     "test_key": "multi_column_constraint_name_negative_feedback",
+                     "params": [self.constraint_name, self.column_name, columns]},
+                )
+            else:
+                return super().response(
+                    False,
+                    None,
+                    {"test_type": "constraint_test",
+                     "test_key": "multi_column_constraint_name_column_not_found_negative_feedback",
+                     "params": [self.constraint_name, self.column_name]},
+                )

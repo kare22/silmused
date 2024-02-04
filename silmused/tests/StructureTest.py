@@ -129,7 +129,6 @@ class StructureTest(TestDefinition):
 
         type = result[0][7]
         character_maximum_length = result[0][8]
-
         is_type_correct = True
         is_character_maximum_length_correct = True
 

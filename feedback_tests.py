@@ -1,4 +1,3 @@
-from silmused.TitleLayer import TitleLayer
 from silmused.ChecksLayer import ChecksLayer
 from silmused.ExecuteLayer import ExecuteLayer
 from silmused.tests.DataTest import DataTest
@@ -11,7 +10,62 @@ from silmused.tests.TriggerTest import TriggerTest
 from silmused.tests.ViewTest import ViewTest
 
 tests = [
+
+
     ChecksLayer(
+        title='StructureTest feedback tests',
+        tests=[
+            StructureTest(
+                title='expected_character_maximum_length_type_check_negative_feedback',
+                name='isikud',
+                column_name='eesnimi',
+                expected_type='varchar',
+                expected_character_maximum_length=80,
+            ),
+            StructureTest(
+                title='expected_type_check_negative_feedback',
+                name='isikud',
+                column_name='eesnimi',
+                expected_type='integer',
+            ),
+            StructureTest(
+                title='table_should_exist_negative_feedback',
+                name='isikud2',
+            ),
+            StructureTest(
+                title='column_should_exist_negative_feedback',
+                name='isikud',
+                column_name='idd',
+            ),
+            StructureTest(
+                title='table_should_not_exist_negative_feedback',
+                name='isikud',
+                should_exist=False,
+            ),
+            StructureTest(
+                title='column_should_not_exist_negative_feedback',
+                name='isikud',
+                column_name='id',
+                should_exist=False,
+            ),
+            # Structure tests that seem pointless
+            #StructureTest(
+            #    title='expected_value_should_exist_negative_feedback',
+            #    name='isikud',
+            #    expected_value=80,
+            #),
+            #StructureTest(
+            #    title='expected_value_should_not_exist_negative_feedback',
+            #    name='asulad',
+            #    column_name='nimi',
+            #    expected_value='Pärnu',
+            #    should_exist=False
+            #),
+        ]
+    ),
+]
+"""
+ChecksLayer(
         title='DataTest feedback tests',
         tests=[
             DataTest(
@@ -81,7 +135,12 @@ tests = [
             ConstraintTest(
                 title='multi_column_name_negative_feedback',
                 name='inimesed',
-                column_name=['eesnimi', 'perenimi', 'isikukood'],
+                column_name=['eesnimi', 'perenimi', 'synnipaev'],
+            ),
+            ConstraintTest(
+                title='multi_column_constraint_name_negative_feedback',
+                name='inimesed',
+                column_name=['eesnimi', 'perenimi', 'synnipaev'],
                 constraint_name='pk_inimesed',
             ),
             ConstraintTest(
@@ -90,8 +149,8 @@ tests = [
             ),
             ConstraintTest(
                 title='table_column_constraint_should_exist_negative_feedback',
-                name='asulad',
-                column_name='id',
+                name='klubid',
+                column_name='nimi',
             ),
             ConstraintTest(
                 title='table_column_constraint_name_should_exist_negative_feedback',
@@ -147,58 +206,4 @@ tests = [
             ),
         ]
     ),
-
-    ChecksLayer(
-        title='StructureTest feedback tests',
-        tests=[
-            StructureTest(
-                title='expected_character_maximum_length_type_check_negative_feedback',
-                name='klubid',
-                column_name='asukoht',
-                expected_type='varchar',
-                expected_character_maximum_length=80,
-            ),
-            StructureTest(
-                title='expected_type_check_negative_feedback',
-                name='klubid',
-                column_name='asukoht',
-                expected_type='integer',
-            ),
-            # Structure tests that seem pointless
-            StructureTest(
-                title='expected_value_should_exist_negative_feedback',
-                name='isikud',
-                expected_value=80,
-            ),
-            StructureTest(
-                title='expected_value_should_not_exist_negative_feedback',
-                name='asulad',
-                column_name='nimi',
-                expected_value='Pärnu',
-                should_exist=False
-            ),
-            # Good tests
-            StructureTest(
-                title='table_should_exist_negative_feedback',
-                name='isikud2',
-            ),
-            StructureTest(
-                title='column_should_exist_negative_feedback',
-                name='isikud',
-                column_name='idd',
-            ),
-            StructureTest(
-                title='table_should_not_exist_negative_feedback',
-                name='isikud',
-                should_exist=False,
-            ),
-            StructureTest(
-                title='column_should_not_exist_negative_feedback',
-                name='isikud',
-                column_name='id',
-                should_exist=False,
-            ),
-
-        ]
-    ),
-]
+    """
