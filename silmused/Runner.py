@@ -7,7 +7,7 @@ import psycopg2
 from uuid import uuid4
 from datetime import datetime
 from silmused.version import __version__
-
+from silmused.Translator import Translator
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
@@ -30,11 +30,11 @@ class Runner:
         self.db_password = db_password
         self.db_host = db_host
         self.db_port = db_port
-        self.lang = lang
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
         self.results = []
+        self.translator = Translator(locale=lang)
 
         if self._file_is_valid_pg_dump():
             self._create_db_from_psql_dump()
@@ -104,7 +104,6 @@ class Runner:
         try:
             with open(self.file_path, 'r') as file:
                 sql_script = file.read()
-            #if self.db_user != 'silmus':
             cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
@@ -142,9 +141,32 @@ class Runner:
 
         return connection_layer
 
+    def _message_to_feedback(self, message):
+        feedback = ''
+        feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
+        if len(feedback_params) > 0:
+            params=message['params']
+            if len(params) == 1:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0])
+            elif len(params) == 2:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1])
+            elif len(params) == 3:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1], param3=params[2])
+            elif len(params) == 4:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1], param3=params[2], param4=params[3])
+            else:
+                feedback = "Params were given, but there is more than 4"
+
+        return feedback
+
     def _checks_to_object(self, checks):
         outputs = []
         output_pass = True
+
 
         # TODO should be recursive
         points_max = 0
@@ -168,8 +190,12 @@ class Runner:
             output["title"] = check.get('title')
             output["status"] = 'PASS' if check.get('is_success') else 'FAIL'
             output_pass = True if check.get('is_success') and output_pass else False
-            output["feedback"] = str(check.get('message')) if not check.get('is_success') else ''
-
+            if not check.get('is_success') and not check.get('is_sys_fail'):
+                output["feedback"] = self._message_to_feedback(check.get('message'))
+            elif check.get('is_sys_fail'):
+                output["feedback"] = str(check.get('message'))
+            else:
+                output["feedback"] = ''
             outputs.append(output)
 
         return points_max, points_actual, outputs, output_pass
@@ -204,9 +230,7 @@ class Runner:
                 points_actual += points if result.get('is_success') else 0
                 output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
 
-            
             output["title"] = result.get('title')
-            #print(result.get('message'))
             if result.get('message') is not None:
                 output["exception_message"] = str(result.get('message'))
 
@@ -216,6 +240,7 @@ class Runner:
     def get_results(self):
         try:
             tests, points_max, points_actual = self._results_to_object()
+            # TODO Put all logic in points variable
             praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
             if praks:
                 points_max = 1

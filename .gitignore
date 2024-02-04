@@ -1,3 +1,7 @@
 .idea
 __pycache__
 silmused.egg-info
+venv
+demo.py
+*.sql
+*.json

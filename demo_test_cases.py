@@ -23,7 +23,7 @@ _user2 = 123457
 _partii_id = 123123
 
 tests = [
-    TitleLayer('Praktikum 3'),
+    #TitleLayer('Praktikum 3'),
     ChecksLayer(
         title='Tabeli Turniirid kontrollid',
         tests=[
@@ -33,7 +33,7 @@ tests = [
                 column_name='asukoht',
                 should_exist=False,
                 points=2,
-                )
+                ),
             ]
         ),
     ChecksLayer(
@@ -44,7 +44,7 @@ tests = [
                 name='partiid',
                 column_name='vastavus',
                 points=1,
-                )
+                ),
             ]
         ),
     ChecksLayer(
@@ -64,7 +64,7 @@ tests = [
                 constraint_type='UNIQUE',
                 should_exist=False,
                 points=0.25,
-            )
+            ),
             ]
         ),
     ChecksLayer(
@@ -89,7 +89,7 @@ tests = [
                 name='klubid',
                 constraint_type='PRIMARY KEY',
                 points=0.5,
-            )
+            ),
         ]
     ),
     TitleLayer('Praktikum 4'),

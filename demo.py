@@ -1,9 +1,11 @@
-from demo_test_cases import tests
+from feedback_tests import tests
 from silmused.Runner import Runner
 
-db_user = "karelpaan"
-file_path = "/Users/karelpaan/Projects/andmebaasid-auto-test/koik/test.backup"
+db_user = "postgres"
+#db_user = "karelpaan"
+#file_path = "kodutoo3.sql"
+file_path = "feedback_tests.sql"
 
-r = Runner(file_path, tests, test_name='unoduo', db_user=db_user)
+r = Runner(file_path, tests, db_user=db_user, lang='et')
 
 print(r.get_results())
