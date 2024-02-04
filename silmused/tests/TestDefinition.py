@@ -56,11 +56,12 @@ class TestDefinition():
             cursor.execute('ROLLBACK')
             return self.response(
                 False,
-                message_failure=sys.exc_info()
+                message_failure=sys.exc_info(),
+                is_sys_fail=True
             )
 
     # TODO should be callable only inside the scope
-    def response(self, is_success, message_success=None, message_failure=None, points=None):
+    def response(self, is_success, message_success=None, message_failure=None, points=None, is_sys_fail=None):
         if is_success:
             message_statement = 'Correct' if message_success is None else message_success
         else:
@@ -76,4 +77,5 @@ class TestDefinition():
             'after_query': self.after_query,
             'should_exist': self.should_exist,
             'title': self.title,
+            'is_sys_fail': is_sys_fail,
         }

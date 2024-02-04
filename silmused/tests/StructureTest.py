@@ -46,34 +46,84 @@ class StructureTest(TestDefinition):
             return test_type_result
 
         if self.expected_value is not None:
+            # TODO Is this needed?
+            # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
             if self.should_exist:
+                # print(self.title, result[0][0])
                 return super().response(
                     len(result) != 0 and result[0][0] == self.expected_value,
-                    f"Correct, expected {self.query}", # TODO enhance feedback
-                    f"Wrong, did not expect {self.query}", # TODO enhance feedback
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
+                    # f"Correct, expected {self.query}",
+                    # f"Wrong, did not expect {self.query}",
                 )
             else:
+                # print(self.title, result[0][0])
                 return super().response(
                     len(result) == 0 or result[0][0] != self.expected_value,
-                    f"Correct did not want {self.query}", # TODO enhance feedback
-                    f"Wrong this should not exist {self.query}", # TODO enhance feedback
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
+                    # f"Correct did not want {self.query}",
+                    # f"Wrong this should not exist {self.query}",
                 )
         else:
             if self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                    f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        # f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                        # f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
             else:
-                return super().response(
-                    len(result) == 0,
-                    f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                    f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        # f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
+                        # f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
 
     def test_type(self, result):
-        print(self.expected_type)
+        #print(self.expected_type)
         if self.expected_type is None:
             return None
 
@@ -105,9 +155,13 @@ class StructureTest(TestDefinition):
             return super().response(
                 False,
                 None,
-                f"Expected character maximum length {self.expected_character_maximum_length} but got {character_maximum_length}"
+                {"test_type": "structure_test",
+                 "test_key": "expected_character_maximum_length_type_check_negative_feedback",
+                 "params": [self.expected_character_maximum_length, character_maximum_length, self.name, self.column_name]}
                 if is_character_maximum_length_correct is False
-                else f"Expected type {self.expected_type} but got {type}",
+                else {"test_type": "structure_test",
+                      "test_key": "expected_type_check_negative_feedback",
+                      "params": [self.expected_type, type, self.name, self.column_name]},
             )
 
         return None
