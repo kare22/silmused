@@ -16,6 +16,28 @@ _partii_id = 123123
 
 tests = [
     #TitleLayer('Praktikum 3'),
+
+    ChecksLayer(
+        title='Tabeli Isikud kontrollid',
+        tests=[
+            ConstraintTest(
+                title='Kas kitsendus un_isikukood on olemas?',
+                name='isikud',
+                constraint_name='un1_isikukood',
+                constraint_type='UNIQUE',
+                points=0.5,
+            ),
+            ConstraintTest(
+                title='Kas kitsendus un_isikukood on kustutatud?',
+                name='isikud',
+                constraint_name='nimi_unique',
+                constraint_type='UNIQUE',
+                should_exist=False,
+                points=0.25,
+            ),
+        ]
+    ),
+
     ChecksLayer(
         title='Tabeli Turniirid kontrollid',
         tests=[
@@ -31,32 +53,12 @@ tests = [
     ChecksLayer(
         title='Tabeli Partiid kontrollid',
         tests=[
-            StructureTest(
-                title='Kas veerg vastavus on olemas?',
+            ConstraintTest(
+                title='Kas kitsendus vastavus on olemas?',
                 name='partiid',
-                column_name='vastavus',
+                constraint_name='vastavus',
                 points=1,
                 )
-            ]
-        ),
-    ChecksLayer(
-        title='Tabeli Isikud kontrollid',
-        tests=[
-            ConstraintTest(
-                title='Kas kitsendus un_isikukood on olemas?',
-                name='isikud',
-                constraint_name='un_isikukood',
-                constraint_type='UNIQUE',
-                points=0.5,
-            ),
-            ConstraintTest(
-                title='Kas kitsendus un_isikukood on kustutatud?',
-                name='isikud',
-                constraint_name='nimi_unique',
-                constraint_type='UNIQUE',
-                should_exist=False,
-                points=0.25,
-            )
             ]
         ),
     ChecksLayer(
@@ -72,8 +74,7 @@ tests = [
                 title='Kas veeru asukoha väärtuse maksimum suurus on õige?',
                 name='klubid',
                 column_name='asukoht',
-                arguments=['character_maximum_length'],
-                expected_value=100,
+                expected_character_maximum_length=100,
                 points=1,
             ),
             ConstraintTest(
