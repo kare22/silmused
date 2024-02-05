@@ -183,7 +183,7 @@ class ConstraintTest(TestDefinition):
             else:
                 if self.constraint_name is not None and self.constraint_type is None:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "table_constraint_name_should_not_exist_positive_feedback",
                          "params": [self.constraint_name, self.name]},
@@ -193,7 +193,7 @@ class ConstraintTest(TestDefinition):
                     )
                 elif self.constraint_name is None and self.constraint_type is not None:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "table_constraint_type_should_not_exist_positive_feedback",
                          "params": [self.constraint_type, self.name]},
@@ -203,7 +203,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "table_constraint_name_and_type_should_not_exist_positive_feedback",
                          "params": [self.constraint_name, self.constraint_type, self.name]},
