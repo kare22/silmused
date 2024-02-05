@@ -24,19 +24,16 @@ class Translator():
                     if file_format == 'json':
                         self.data[loc] = json.load(f)
         #print(self.data['et'])
+
     def set_locale(self, loc):
         if loc in self.data:
             self.locale = loc
         else:
             print('Invalid locale')
 
-    def get_locale(self):
-        return self.locale
-
     def translate(self, test_type, test_key, **kwargs):
-        # return the key instead of translation text if locale is not supported
         if self.locale not in self.data:
-            return "Locale not supported: " + self.locale + "\n " + str(self.data)
+            return "Locale not supported: " + self.locale
         if test_type not in self.data[self.locale]:
             return "Test_type not supported: " + test_type
         if test_key not in self.data[self.locale][test_type]:
