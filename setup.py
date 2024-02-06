@@ -8,8 +8,9 @@ setup(
     author='Karel Paan, Martti Kakk',
     author_email='paan.karel@gmail.com',
     packages=find_namespace_packages(),
-    package_dir={"": "silmused"},
-    package_data={"locale": ["*.json"]},
+    #package_dir={"": "silmused"},
+    include_package_data=True,
+    #package_data={"locale": ["*.json"]},
     url='https://github.com/kare22/silmused',
     install_requires=[
         'psycopg2'
