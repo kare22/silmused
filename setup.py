@@ -17,4 +17,7 @@ setup(
             'silmused=silmused.cli:main',
         ],
     },
+    data_files=[
+        ('locale', ['locale/*.json']),
+    ]
 )
