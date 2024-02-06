@@ -7,25 +7,18 @@ from string import Template
 supported_format = ['json']
 
 class Translator():
-    def __init__(self, locale='et', translations_folder='silmused\\locale', file_format='json'):
+    def __init__(self, locale='et', file_format='json'):
         # initialization
         self.data = {}
         self.locale = locale
 
         current_file_path = os.path.abspath(__file__)
-        print(current_file_path)
         root_directory = os.path.dirname(current_file_path)
-        print(root_directory)
         locale_directory = os.path.join(root_directory, 'locale')
-        print(locale_directory)
         # check if format is supported
         if file_format in supported_format:
             # get list of files with specific extensions
-            #files = glob.glob(f'{translations_folder}/'+f'*.{file_format}')
             files = glob.glob(f'{locale_directory}/'+f'*.{file_format}')
-            print(files)
-            #print(glob.glob(f'{translations_folder}/'+f'*.{file_format}'))
-            #print(glob.glob('*'))
             for fil in files:
                 # get the name of the file without extension, will be used as locale name
                 loc = os.path.splitext(os.path.basename(fil))[0]
