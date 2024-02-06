@@ -7,7 +7,7 @@ setup(
     license='MIT License',
     author='Karel Paan, Martti Kakk',
     author_email='paan.karel@gmail.com',
-    packages=find_namespace_packages(where='silmused'),
+    packages=find_namespace_packages(),
     package_dir={"": "silmused"},
     package_data={"locale": ["*.json"]},
     url='https://github.com/kare22/silmused',
