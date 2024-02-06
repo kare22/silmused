@@ -10,7 +10,7 @@ setup(
     packages=find_namespace_packages(),
     #package_dir={"": "silmused"},
     include_package_data=True,
-    #package_data={"locale": ["*.json"]},
+    package_data={"silmused.locale": ["*.json"]},
     url='https://github.com/kare22/silmused',
     install_requires=[
         'psycopg2'
