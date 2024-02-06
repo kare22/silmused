@@ -1,0 +1,91 @@
+{
+
+	"constraint_test": {
+		"multi_column_name_positive_feedback": "Correct, table column(s) $param1 have correct constraints",
+		"multi_column_name_negative_feedback": "Wrong, table has no constraints for column(s) $param1, but got $param2",
+		"multi_column_constraint_name_positive_feedback": "Correct, constraint $param1 has been found for column(s) $param2",
+		"multi_column_constraint_name_negative_feedback": "Wrong, table has no constraint $param1 for column(s) $param2, but should be for column(s) $param3",
+		"multi_column_constraint_name_column_not_found_positive_feedback": "Correct, constraint $param1 has been found for column(s) $param2",
+		"multi_column_constraint_name_column_not_found_negative_feedback": "Wrong, expected to find constraint $param1 for column(s) $param2",
+		"table_constraint_should_exist_positive_feedback": "Correct, constraint was found in table $param1",
+		"table_constraint_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1, but none were found",
+		"table_column_constraint_should_exist_positive_feedback": "Correct, constraint was found in table $param1 with column $param2",
+		"table_column_constraint_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1 with column $param2, but none were found",
+		"table_constraint_name_should_exist_positive_feedback": "Correct, constraint $param1 was found in table $param2",
+		"table_constraint_name_should_exist_negative_feedback": "Wrong, expected to find constraint $param1 in table $param2",
+		"table_constraint_type_should_exist_positive_feedback": "Correct, constraint type $param1 was found in table $param2",
+		"table_constraint_type_should_exist_negative_feedback": "Wrong, expected to find constraint type $param1 in table $param2",
+		"table_constraint_name_and_type_should_exist_positive_feedback": "Correct, constraint $param1 and constraint type $param2 was found in table $param3",
+		"table_constraint_name_and_type_should_exist_negative_feedback": "Wrong, expected to find constraint $param1 and constraint type $param2 in table $param3",
+		"table_column_constraint_name_should_exist_positive_feedback": "Correct, constraint was found in table $param1 with column $param2 with name $param3",
+		"table_column_constraint_name_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1 with column $param2 with name $param3, but none were found",
+		"table_column_constraint_type_should_exist_positive_feedback": "Correct, constraint was found in table $param1 with column $param2 with type $param3",
+		"table_column_constraint_type_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1 with column $param2 with type $param3, but none were found",
+		"table_column_constraint_name_and_type_should_exist_positive_feedback": "Correct, constraint was found in table $param1 with column $param2 with name $param3 and type $param4",
+		"table_column_constraint_name_and_type_should_exist_negative_feedback": "Wrong, expected to find constraint in table $param1 with column $param2 with name $param3 and type $param4, but none were found",
+		"table_constraint_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1",
+		"table_constraint_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1, but was found",
+		"table_column_constraint_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1 with column $param2",
+		"table_column_constraint_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1 with column $param2, but was found",
+		"table_column_constraint_name_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1 with column $param2 with name $param3",
+		"table_column_constraint_name_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1 with column $param2 with name $param3, but was found",
+		"table_column_constraint_type_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1 with column $param2 with type $param3",
+		"table_column_constraint_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1 with column $param2 with type $param3, but was found",
+		"table_column_constraint_name_and_type_should_not_exist_positive_feedback": "Correct, constraint was not found in table $param1 with column $param2 with name $param3 and type $param4",
+		"table_column_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint in table $param1 with column $param2 with name $param3 and type $param4, but was found",
+		"table_constraint_name_should_not_exist_positive_feedback": "Correct, constraint $param1 was not found in table $param2",
+		"table_constraint_name_should_not_exist_negative_feedback": "Wrong, expected to not find constraint $param1 in table $param2",
+		"table_constraint_type_should_not_exist_positive_feedback": "Correct, constraint type $param1 was not found in table $param2",
+		"table_constraint_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint type $param1 in table $param2",
+		"table_constraint_name_and_type_should_not_exist_positive_feedback": "Correct, constraint $param1 and constraint type $param2 was not found in table $param3",
+		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint $param1 and constraint type $param2 in table $param3"
+	},
+	"data_test": {
+		"table_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table $param1",
+		"table_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for table $param1, but none were found",
+		"table_column_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table $param1 and column $param2",
+		"table_column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for table $param1 and column $param2, but none were found",
+		"table_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1",
+		"table_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1",
+		"table_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1 and column $param2",
+		"table_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1 and column $param2, but were found",
+		"expected_value_should_exist_positive_feedback": "Correct value $param1 found for table $param2 and column $param3",
+		"expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for table $param3 and column $param4",
+		"expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in table $param3 and column $param4",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in table $param3 and column $param4"
+	},
+	"function_test": {
+
+	},
+	"index_test": {
+		"index_positive_feedback": "Correct, index was $param1 found",
+		"index_negative_feedback": "Wrong, expected to find index $param1 but none were found"
+	},
+	"procedure_test": {
+
+	},
+	"structure_test" : {
+		"expected_character_maximum_length_type_check_positive_feedback": "Correct, found character maximum length $param1 in table $param2 and column $param3",
+		"expected_character_maximum_length_type_check_negative_feedback": "Wrong, expected character maximum length $param1, but got $param2 in table $param3 and column $param4",
+		"expected_type_check_positive_feedback": "Correct, found type $param1 in table $param2 and column $param3",
+		"expected_type_check_negative_feedback": "Wrong, expected type $param1, but got $param2 in table $param3 and column $param4",
+		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
+		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $param1, expected $param2",
+		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $param1",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, $param1 should not exist, expected $param2",
+		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
+		"table_should_exist_negative_feedback": "Wrong, expected to find table $param1, but none were found",
+		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",
+		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in $param2",
+		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
+		"table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
+		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in $param2",
+		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
+	},
+	"trigger_test": {
+
+	},
+	"view_test": {
+
+	}
+}
