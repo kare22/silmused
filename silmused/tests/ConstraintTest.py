@@ -213,7 +213,7 @@ class ConstraintTest(TestDefinition):
                     )
 
     def check_columns(self, cursor):
-        if self.column_name is None:
+        if self.column_name is None or self.constraint_type == 'CHECK':
             return None
 
         query = f"SELECT * FROM information_schema.key_column_usage WHERE table_name = '{self.name}'"
@@ -226,7 +226,7 @@ class ConstraintTest(TestDefinition):
 
         columns = [res[6] for res in result]
 
-        #print(columns)
+        #print(self.column_name, columns)
 
         if type(self.column_name) == str and self.column_name in columns:
             return None

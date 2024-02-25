@@ -37,7 +37,6 @@ class StructureTest(TestDefinition):
         self.where = where
 
     def execute(self, cursor):
-        # TODO feedback is really bad
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -58,8 +57,6 @@ class StructureTest(TestDefinition):
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_exist_negative_feedback",
                      "params": [self.query, self.expected_value]},
-                    # f"Correct, expected {self.query}",
-                    # f"Wrong, did not expect {self.query}",
                 )
             else:
                 # print(self.title, result[0][0])
@@ -71,16 +68,12 @@ class StructureTest(TestDefinition):
                     {"test_type": "structure_test",
                      "test_key": "expected_value_should_not_exist_negative_feedback",
                      "params": [self.query, self.expected_value]},
-                    # f"Correct did not want {self.query}",
-                    # f"Wrong this should not exist {self.query}",
                 )
         else:
             if self.should_exist:
                 if self.column_name is None:
                     return super().response(
                         len(result) > 0,
-                        # f"Correct, column or table {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                        # f"Expected to find column or table {self.column_name if self.column_name is not None else self.name} but none were found in table {self.name}",
                         {"test_type": "structure_test",
                          "test_key": "table_should_exist_positive_feedback",
                          "params": [self.name]},
@@ -102,8 +95,6 @@ class StructureTest(TestDefinition):
                 if self.column_name is None:
                     return super().response(
                         len(result) == 0,
-                        # f"Correct no column or table named {self.column_name if self.column_name is not None else self.name} found in table {self.name}",
-                        # f"Expected to not find column or table {self.column_name if self.column_name is not None else self.name} in table {self.name}",
                         {"test_type": "structure_test",
                          "test_key": "table_should_not_exist_positive_feedback",
                          "params": [self.name]},
@@ -123,7 +114,6 @@ class StructureTest(TestDefinition):
                     )
 
     def test_type(self, result):
-        #print(self.expected_type)
         if self.expected_type is None:
             return None
 

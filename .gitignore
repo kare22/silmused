@@ -1,6 +1,7 @@
 .idea
 __pycache__
 silmused.egg-info
+test_cases
 venv
 demo.py
 *.sql
