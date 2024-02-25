@@ -4,7 +4,7 @@ from silmused.tests.TestDefinition import TestDefinition
 # TODO raname to TableDataTest ??
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, points=0):
+                 expected_value=None, isView=False, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -25,91 +25,180 @@ class DataTest(TestDefinition):
         self.column_name = column_name
         self.where = where
         self.join = join
+        self.isView=isView
 
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-        if self.expected_value is None:
-            if self.should_exist:
-                if self.column_name is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "data_test",
-                         "test_key": "table_not_expected_value_should_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "data_test",
-                         "test_key": "table_not_expected_value_should_exist_negative_feedback",
-                         "params": [self.name]},
-
-                    )
-                else:
-                    if self.is_count:
+        if not self.isView:
+            if self.expected_value is None:
+                if self.should_exist:
+                    if self.column_name is None:
                         return super().response(
-                            result[0][0] > 0,
+                            len(result) > 0,
                             {"test_type": "data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.name, self.column_name]},
+                             "test_key": "table_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.name]},
                             {"test_type": "data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.name, self.column_name]},
+                             "test_key": "table_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.name]},
+
+                        )
+                    else:
+                        if self.is_count:
+                            return super().response(
+                                result[0][0] > 0,
+                                {"test_type": "data_test",
+                                 "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.name, self.column_name]},
+
+                            )
+                        else:
+                            return super().response(
+                                len(result) > 0,
+                                {"test_type": "data_test",
+                                 "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.name, self.column_name]},
+
+                            )
+
+                else:
+                    if self.column_name is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "data_test",
+                             "test_key": "table_not_expected_value_should_not_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "data_test",
+                             "test_key": "table_not_expected_value_should_not_exist_negative_feedback",
+                             "params": [self.name]},
 
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                             "test_key": "table_column_not_expected_value_should_not_exist_positive_feedback",
                              "params": [self.name, self.column_name]},
                             {"test_type": "data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                             "test_key": "table_column_not_expected_value_should_not_exist_negative_feedback",
                              "params": [self.name, self.column_name]},
 
                         )
-
+            # expected value is not None
             else:
-                if self.column_name is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "data_test",
-                         "test_key": "table_not_expected_value_should_not_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "data_test",
-                         "test_key": "table_not_expected_value_should_not_exist_negative_feedback",
-                         "params": [self.name]},
+                if self.should_exist:
+                    # TODO add type check
 
+                    return super().response(
+                        str(result[0][0]) == str(self.expected_value),
+                        {"test_type": "data_test",
+                         "test_key": "table_expected_value_should_exist_positive_feedback",
+                         "params": [self.expected_value, self.name, self.column_name]},
+                        {"test_type": "data_test",
+                         "test_key": "table_expected_value_should_exist_negative_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                     )
                 else:
                     return super().response(
-                        len(result) == 0,
+                        str(result[0][0]) != str(self.expected_value),
                         {"test_type": "data_test",
-                         "test_key": "table_column_not_expected_value_should_not_exist_positive_feedback",
-                         "params": [self.name, self.column_name]},
+                         "test_key": "table_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                         {"test_type": "data_test",
-                         "test_key": "table_column_not_expected_value_should_not_exist_negative_feedback",
-                         "params": [self.name, self.column_name]},
-
+                         "test_key": "table_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                     )
-        # expected value is not None
+        # isView = True
         else:
-            if self.should_exist:
-                # TODO add type check
+            if self.expected_value is None:
+                if self.should_exist:
+                    if self.column_name is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "data_test",
+                             "test_key": "view_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "data_test",
+                             "test_key": "view_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.name]},
 
-                return super().response(
-                    str(result[0][0]) == str(self.expected_value),
-                    {"test_type": "data_test",
-                     "test_key": "expected_value_should_exist_positive_feedback",
-                     "params": [self.expected_value, self.name, self.column_name]},
-                    {"test_type": "data_test",
-                     "test_key": "expected_value_should_exist_negative_feedback",
-                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                )
+                        )
+                    else:
+                        if self.is_count:
+                            return super().response(
+                                result[0][0] > 0,
+                                {"test_type": "data_test",
+                                 "test_key": "view_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "view_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.name, self.column_name]},
+
+                            )
+                        else:
+                            return super().response(
+                                len(result) > 0,
+                                {"test_type": "data_test",
+                                 "test_key": "view_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "view_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.name, self.column_name]},
+
+                            )
+
+                else:
+                    if self.column_name is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "data_test",
+                             "test_key": "view_not_expected_value_should_not_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "data_test",
+                             "test_key": "view_not_expected_value_should_not_exist_negative_feedback",
+                             "params": [self.name]},
+
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "data_test",
+                             "test_key": "view_column_not_expected_value_should_not_exist_positive_feedback",
+                             "params": [self.name, self.column_name]},
+                            {"test_type": "data_test",
+                             "test_key": "view_column_not_expected_value_should_not_exist_negative_feedback",
+                             "params": [self.name, self.column_name]},
+
+                        )
+            # expected value is not None
             else:
-                return super().response(
-                    str(result[0][0]) != str(self.expected_value),
-                    {"test_type": "data_test",
-                     "test_key": "expected_value_should_not_exist_positive_feedback",
-                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                    {"test_type": "data_test",
-                     "test_key": "expected_value_should_not_exist_negative_feedback",
-                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                )
+                if self.should_exist:
+                    # TODO add type check
+
+                    return super().response(
+                        str(result[0][0]) == str(self.expected_value),
+                        {"test_type": "data_test",
+                         "test_key": "view_expected_value_should_exist_positive_feedback",
+                         "params": [self.expected_value, self.name, self.column_name]},
+                        {"test_type": "data_test",
+                         "test_key": "view_expected_value_should_exist_negative_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                    )
+                else:
+                    return super().response(
+                        str(result[0][0]) != str(self.expected_value),
+                        {"test_type": "data_test",
+                         "test_key": "view_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                        {"test_type": "data_test",
+                         "test_key": "view_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                    )
+
