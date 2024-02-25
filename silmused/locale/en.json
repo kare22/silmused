@@ -49,10 +49,22 @@
 		"table_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1",
 		"table_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1 and column $param2",
 		"table_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1 and column $param2, but were found",
-		"expected_value_should_exist_positive_feedback": "Correct value $param1 found for table $param2 and column $param3",
-		"expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for table $param3 and column $param4",
-		"expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in table $param3 and column $param4",
-		"expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in table $param3 and column $param4"
+		"table_expected_value_should_exist_positive_feedback": "Correct value $param1 found for table $param2 and column $param3",
+		"table_expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for table $param3 and column $param4",
+		"table_expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in table $param3 and column $param4",
+		"table_expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in table $param3 and column $param4",
+		"view_not_expected_value_should_exist_positive_feedback": "Correct, results were found for view $param1",
+		"view_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for view $param1, but none were found",
+		"view_column_not_expected_value_should_exist_positive_feedback": "Correct, results were found for view $param1 and column $param2",
+		"view_column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for view $param1 and column $param2, but none were found",
+		"view_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for view $param1",
+		"view_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for view $param1",
+		"view_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for view $param1 and column $param2",
+		"view_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for view $param1 and column $param2, but were found",
+		"view_expected_value_should_exist_positive_feedback": "Correct value $param1 found for view $param2 and column $param3",
+		"view_expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for view $param3 and column $param4",
+		"view_expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in view $param3 and column $param4",
+		"view_expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in view $param3 and column $param4"
 	},
 	"function_test": {
 
@@ -76,16 +88,31 @@
 		"table_should_exist_positive_feedback": "Correct, table $param1 was found",
 		"table_should_exist_negative_feedback": "Wrong, expected to find table $param1, but none were found",
 		"column_should_exist_positive_feedback": "Correct, column $param1 found in table $param2",
-		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in $param2",
+		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in table $param2",
 		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
 		"table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
-		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in $param2",
+		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in table $param2",
 		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
 	},
 	"trigger_test": {
 
 	},
 	"view_test": {
-
+		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
+		"expected_value_should_exist_negative_feedback": "Wrong, did not expect $param1, expected $param2",
+		"expected_value_should_not_exist_positive_feedback": "Correct, did not want $param1",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, $param1 should not exist, expected $param2",
+		"view_should_exist_positive_feedback": "Correct, view $param1 was found",
+		"view_should_exist_negative_feedback": "Wrong, expected to find view $param1, but none were found",
+		"column_should_exist_positive_feedback": "Correct, column $param1 found in view $param2",
+		"column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in view $param2",
+		"view_should_not_exist_positive_feedback": "Correct no view named $param1 was found",
+		"view_should_not_exist_negative_feedback": "Wrong, expected to not find view $param1",
+		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in view $param2",
+		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in view $param2",
+		"mat_view_should_exist_positive_feedback": "Correct, materialized view $param1 was found",
+		"mat_view_should_exist_negative_feedback": "Wrong, expected to find materialized view $param1, but none were found",
+		"mat_view_should_not_exist_positive_feedback": "Correct no materialized view named $param1 was found",
+		"mat_view_should_not_exist_negative_feedback": "Wrong, expected to not find materialized view $param1"
 	}
 }
