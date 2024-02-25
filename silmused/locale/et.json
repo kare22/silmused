@@ -49,10 +49,22 @@
 		"table_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas tabelis $param1",
 		"table_column_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas tabelis $param1 ja veerus $param2",
 		"table_column_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas tabelis $param1 ja veerus $param2",
-		"expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 tabelis $param2 ja veerus $param2",
-		"expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust $param1, leiti hoopis $param2 tabelis $param3 ja veerus $param4",
-		"expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus $param1 ei võrdu $param2 tabelis $param3 ja veerus $param4",
-		"expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 tabelis $param3 ja veerus $param4"
+		"table_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 tabelis $param2 ja veerus $param2",
+		"table_expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust $param1, leiti hoopis $param2 tabelis $param3 ja veerus $param4",
+		"table_expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus $param1 ei võrdu $param2 tabelis $param3 ja veerus $param4",
+		"table_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 tabelis $param3 ja veerus $param4",
+		"view_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas vaates $param1",
+		"view_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas vaates $param1",
+		"view_column_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas vaates $param1 ja veerus $param2",
+		"view_column_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas vaates $param1 ja veerus $param2",
+		"view_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas vaates $param1",
+		"view_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas vaates $param1",
+		"view_column_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas vaates $param1 ja veerus $param2",
+		"view_column_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas vaates $param1 ja veerus $param2",
+		"view_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 vaates $param2 ja veerus $param2",
+		"view_expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust $param1, leiti hoopis $param2 vaates $param3 ja veerus $param4",
+		"view_expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus $param1 ei võrdu $param2 vaates $param3 ja veerus $param4",
+		"view_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 vaates $param3 ja veerus $param4"
 	},
 	"function_test": {
 
@@ -86,6 +98,21 @@
 
 	},
 	"view_test": {
-
+		"expected_value_should_exist_positive_feedback": "Õige, oodati tulemust $param1",
+		"expected_value_should_exist_negative_feedback": "Vale, $param1 on vale tulemus, oodati tulemust $param2",
+		"expected_value_should_not_exist_positive_feedback": "Õige, ei leidunud tulemust $param1",
+		"expected_value_should_not_exist_negative_feedback": "Vale, $param1 on vale tulemus, oodati tulemust $param2",
+		"view_should_exist_positive_feedback": "Õige, vaade $param1 on olemas",
+		"view_should_exist_negative_feedback": "Vale, vaadet $param1 ei ole olemas",
+		"column_should_exist_positive_feedback": "Õige, veerg $param1 on olemas vaates $param2",
+		"column_should_exist_negative_feedback": "Vale, veergu $param1 ei leitud vaatest $param2",
+		"view_should_not_exist_positive_feedback": "Õige, vaade $param1 ei ole olemas",
+		"view_should_not_exist_negative_feedback": "Vale, vaadet $param1 ei tohiks olla olemas",
+		"column_should_not_exist_positive_feedback": "Õige, veergu $param1 ei ole olemas vaates $param2",
+		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas vaatest $param2",
+		"mat_view_should_exist_positive_feedback": "Õige, materialiseeritud vaade $param1 on olemas",
+		"mat_view_should_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei ole olemas",
+		"mat_view_should_not_exist_positive_feedback": "Õige, aterialiseeritud vaade $param1 ei ole olemas",
+		"mat_view_should_not_exist_negative_feedback": "Vale, aterialiseeritud vaadet $param1 ei tohiks olla olemas"
 	}
 }
