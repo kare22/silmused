@@ -14,11 +14,12 @@ class StructureTest(TestDefinition):
                 query += f" AND column_name = '{column_name}'"
             elif type(column_name) == list:
                 for (index, name) in enumerate(column_name):
-                    operator = 'AND' if index == 0 else 'OR'
+                    operator = 'AND (' if index == 0 else 'OR'
                     query += f" {operator} column_name = '{name}'"
             else:
                 raise AttributeError('Parameter column_name must be list or string')
-
+        if type(column_name) == list:
+            query += ")"
         super().__init__(
             name=name,
             title=title,

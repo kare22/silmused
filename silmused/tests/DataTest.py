@@ -58,7 +58,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) > 0 and result[0][0] is not None, # HERE
                                 {"test_type": "data_test",
                                  "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
                                  "params": [self.name, self.column_name]},
@@ -144,7 +144,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) > 0 and result[0][0] is not None,
                                 {"test_type": "data_test",
                                  "test_key": "view_column_not_expected_value_should_exist_positive_feedback",
                                  "params": [self.name, self.column_name]},
