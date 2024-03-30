@@ -359,8 +359,10 @@ tests = [
     ),
 ]
 """
+"""
 # Praktikum 8 100p
 tests = [
+    # 4p
     ChecksLayer(
         title='Tabeli Institutes kontrollid',
         tests=[
@@ -388,6 +390,7 @@ tests = [
             ),
         ]
     ),
+    # 5p
     ChecksLayer(
         title='Tabeli Persons kontrollid',
         tests=[
@@ -405,10 +408,11 @@ tests = [
                 title='Kas välisvõti on olemas?',
                 name='persons',
                 constraint_type='FOREIGN KEY',
-                points=10,
+                points=3,
             ),
         ]
     ),
+    # 4p
     ChecksLayer(
         title='Tabeli Registrations kontrollid',
         tests=[
@@ -426,16 +430,17 @@ tests = [
                 title='Kas välisvõti on olemas?',
                 name='registrations',
                 constraint_type='FOREIGN KEY',
-                points=10,
+                points=1,
             ),
             ConstraintTest(
                 title='Kas välisvõti on olemas?',
                 name='registrations',
                 constraint_type='FOREIGN KEY',
-                points=10,
+                points=1,
             ),
         ]
     ),
+    # 3p
     ChecksLayer(
         title='Tabeli Lecturers kontrollid',
         tests=[
@@ -453,10 +458,11 @@ tests = [
                 title='Kas välisvõti on olemas?',
                 name='lecturers',
                 constraint_type='FOREIGN KEY',
-                points=10,
+                points=1,
             ),
         ]
     ),
+    # 5p
     ChecksLayer(
         title='Tabeli Courses kontrollid',
         tests=[
@@ -474,12 +480,13 @@ tests = [
                 title='Kas välisvõti on olemas?',
                 name='courses',
                 constraint_type='FOREIGN KEY',
-                points=10,
+                points=3,
             ),
         ],
     ),
+    # 2p
     ChecksLayer(
-        title='Tabeli v_oigusteaduskonna_inimesed  kontrollid',
+        title='Vaate v_oigusteaduskonna_inimesed kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_oigusteaduskonna_inimesed on olemas?',
@@ -496,8 +503,9 @@ tests = [
             ),
         ],
     ),
+    # 2p
     ChecksLayer(
-        title='Tabeli v_persons_institute kontrollid',
+        title='Vaate v_persons_institute kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_persons_institute on olemas?',
@@ -514,8 +522,9 @@ tests = [
             ),
         ],
     ),
+    # 3p
     ChecksLayer(
-        title='Tabeli v_institute_deans kontrollid',
+        title='Vaate v_institute_deans kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_institute_deans on olemas?',
@@ -541,8 +550,9 @@ tests = [
             ),
         ],
     ),
+    # 4p
     ChecksLayer(
-        title='Tabeli v_top20students kontrollid',
+        title='Vaate v_top20students kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_top20students on olemas?',
@@ -577,6 +587,7 @@ tests = [
             ),
         ],
     ),
+    # 2p - total 34p
     ChecksLayer(
         title='Kursus Sissejuhatus informaatikasse',
         tests=[
@@ -598,13 +609,14 @@ tests = [
             ),
         ],
     ),
+    # 13p
     ChecksLayer(
-        title='Tabeli v_persons_atleast_4eap kontrollid',
+        title='Vaate v_persons_atleast_4eap kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_persons_atleast_4eap on olemas?',
                 name='v_persons_atleast_4eap',
-                points=1,
+                points=5,
             ),
             ViewTest(
                 title='Kas veerg FirstName on olemas?',
@@ -624,17 +636,18 @@ tests = [
                 column_name='COUNT(*)',
                 expected_value=135,
                 isView=True,
-                points=1,
+                points=6,
             ),
         ],
     ),
+    # 23p
     ChecksLayer(
-        title='Tabeli v_countOfA kontrollid',
+        title='Vaate v_countOfA kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_countOfA on olemas?',
                 name='v_countofa',
-                points=1,
+                points=5,
             ),
             ViewTest(
                 title='Kas veerg FirstName on olemas?',
@@ -660,7 +673,7 @@ tests = [
                 column_name='COUNT(*)',
                 expected_value=119,
                 isView=True,
-                points=1,
+                points=5,
             ),
             DataTest(
                 title='Kas suurim A-de kogus on 5?',
@@ -668,7 +681,7 @@ tests = [
                 column_name='MAX(countofa)',
                 expected_value=5,
                 isView=True,
-                points=1,
+                points=5,
             ),
             DataTest(
                 title='Kas väikseim A-de kogus on 1?',
@@ -676,17 +689,18 @@ tests = [
                 column_name='MIN(countofa)',
                 expected_value=1,
                 isView=True,
-                points=1,
+                points=5,
             ),
         ],
     ),
+    # 30p
     ChecksLayer(
-        title='Tabeli v_top40A kontrollid',
+        title='Vaate v_top40A kontrollid',
         tests=[
             ViewTest(
                 title='Kas vaade v_top40A on olemas?',
                 name='v_top40a',
-                points=1,
+                points=10,
             ),
             ViewTest(
                 title='Kas veerg FirstName on olemas?',
@@ -712,7 +726,7 @@ tests = [
                 column_name='COUNT(*)',
                 expected_value=40,
                 isView=True,
-                points=1,
+                points=2,
             ),
             DataTest(
                 title='Kas suurim A-de kogus on 6?',
@@ -720,7 +734,7 @@ tests = [
                 column_name='MAX(countofa)',
                 expected_value=6,
                 isView=True,
-                points=1,
+                points=10,
             ),
             DataTest(
                 title='Kas väikseim A-de kogus on 4?',
@@ -728,8 +742,439 @@ tests = [
                 column_name='MIN(countofa)',
                 expected_value=4,
                 isView=True,
+                points=5,
+            ),
+        ],
+    ),
+]"""
+# Praktikum 9 100p
+tests = [
+    # 1; 2p
+    ChecksLayer(
+        title='Vaate v_isikudklubid kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_isikudklubid on olemas?',
+                name='v_isikudklubid',
                 points=1,
             ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_isikudklubid',
+                isView=True,
+                points=1,
+            )
+        ],
+    ),
+    # 2; 2p
+    ChecksLayer(
+        title='Vaate v_partiid kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_partiid on olemas?',
+                name='v_partiid',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_partiid',
+                isView=True,
+                points=1,
+            )
+        ],
+    ),
+    # 5; 11p
+    ChecksLayer(
+        title='Vaate v_partiidpisi kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_isikudklubid on olemas?',
+                name='v_partiidpisi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg id on olemas?',
+                name='v_partiidpisi',
+                column_name='id',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg valge_mangija on olemas?',
+                name='v_partiidpisi',
+                column_name='valge_mangija',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg valge_punkt on olemas?',
+                name='v_partiidpisi',
+                column_name='valge_punkt',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg must_mangija on olemas?',
+                name='v_partiidpisi',
+                column_name='must_mangija',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg must_punkt on olemas?',
+                name='v_partiidpisi',
+                column_name='must_punkt',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_partiidpisi',
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas partiis 1 on valge ja musta mängijate nimed õigel kujul?',
+                name='v_partiidpisi',
+                column_name='COUNT(*)',
+                where="id = 1 and valge_mangija = 'Katrin Kask' and must_mangija = 'Malle Maasikas'",
+                expected_value=1,
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas partiis 61 valge mängija sai 1 punkti?',
+                name='v_partiidpisi',
+                column_name='round(valge_punkt,0)',
+                where="id = 61 and valge_mangija = 'Jelena Pirn'",
+                expected_value=1,
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas partiis 61 must mängija sai 0 punkti?',
+                name='v_partiidpisi',
+                column_name='round(must_punkt,0)',
+                where="id = 61 and must_mangija = 'Henno Hiis'",
+                expected_value=0,
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas partiis 83 saadi viigi eest 0.5 punkti?',
+                name='v_partiidpisi',
+                column_name='COUNT(*)',
+                where="id = 83 and must_punkt = 0.5 and valge_punkt = 0.5",
+                expected_value=1,
+                isView=True,
+                points=1,
+            ),
+        ],
+    ),
+    # 6; 20p - total 35
+    ChecksLayer(
+        title='Vaate v_punktid kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_punktid on olemas?',
+                name='v_punktid',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg partii on olemas?',
+                name='v_punktid',
+                column_name='partii',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg turniir on olemas?',
+                name='v_punktid',
+                column_name='turniir',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg mangija on olemas?',
+                name='v_punktid',
+                column_name='mangija',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg varv on olemas?',
+                name='v_punktid',
+                column_name='varv',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg punkt on olemas?',
+                name='v_punktid',
+                column_name='punkt',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_punktid',
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas mängija on V värvi?',
+                name='v_punktid',
+                column_name='varv',
+                where="partii=51 and mangija=198",
+                expected_value='V',
+                isView=True,
+                points=2,
+            ),
+            DataTest(
+                title='Kas partii kaotaja sai 0 punkti?',
+                name='v_punktid',
+                column_name='round(punkt,0)',
+                where="partii=51 and mangija=198",
+                expected_value=0,
+                isView=True,
+                points=3,
+            ),
+            DataTest(
+                title='Kas mängija on M värvi?',
+                name='v_punktid',
+                column_name='varv',
+                where="partii=51 and mangija=82",
+                expected_value='M',
+                isView=True,
+                points=2,
+            ),
+            DataTest(
+                title='Kas partii võitja sai 1 punkti?',
+                name='v_punktid',
+                column_name='round(punkt,0)',
+                where="partii=51 and mangija=82",
+                expected_value=1,
+                isView=True,
+                points=3,
+            ),
+            DataTest(
+                title='Kas viigi korral saadi 0.5 punkti?',
+                name='v_punktid',
+                column_name='round(punkt,1)',
+                where="partii=54 and mangija=75",
+                expected_value=0.5,
+                isView=True,
+                points=3,
+            ),
+        ],
+    ),
+    # 7; 25p -- total 60
+    ChecksLayer(
+        title='Vaate v_edetabelid kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_edetabelid on olemas?',
+                name='v_edetabelid',
+                points=7,
+            ),
+            ViewTest(
+                title='Kas veerg id on olemas?',
+                name='v_edetabelid',
+                column_name='id',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg mangija on olemas?',
+                name='v_edetabelid',
+                column_name='mangija',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg synniaeg on olemas?',
+                name='v_edetabelid',
+                column_name='synniaeg',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg ranking on olemas?',
+                name='v_edetabelid',
+                column_name='ranking',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg klubi on olemas?',
+                name='v_edetabelid',
+                column_name='klubi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg turniir on olemas?',
+                name='v_edetabelid',
+                column_name='turniir',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg punkte on olemas?',
+                name='v_edetabelid',
+                column_name='punkte',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_edetabelid',
+                isView=True,
+                points=1,
+            ),
+            DataTest(
+                title='Kas on turniiril 42 kõige suurem punktide arv õige?',
+                name='v_edetabelid',
+                column_name='round(MAX(punkte),0)',
+                where='turniir=42',
+                expected_value=7,
+                isView=True,
+                points=5,
+            ),
+            DataTest(
+                title='Kas on turniiril 41 kõige väiksem punktide arv õige?',
+                name='v_edetabelid',
+                column_name='round(MIN(punkte),1)',
+                where='turniir=41',
+                expected_value=0.5,
+                isView=True,
+                points=5,
+            ),
+        ],
+    ),
+    # 10; 10p -- total 70p
+    ChecksLayer(
+        title='Vaate mv_edetabelid kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade mv_edetabelid on olemas?',
+                name='mv_edetabelid',
+                isMaterialized=True,
+                points=5,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='mv_edetabelid',
+                isView=True,
+                points=5,
+            )
+        ],
+    ),
+    # 11 ja 12; 20p -- total 90
+    ChecksLayer(
+        title='Vaate v_klubi54 kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_klubi54 on olemas?',
+                name='v_klubi54',
+                points=5,
+            ),
+            ViewTest(
+                title='Kas veerg eesnimi on olemas?',
+                name='v_klubi54',
+                column_name='eesnimi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg perenimi on olemas?',
+                name='v_klubi54',
+                column_name='perenimi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg synniaeg on olemas?',
+                name='v_klubi54',
+                column_name='synniaeg',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg ranking on olemas?',
+                name='v_klubi54',
+                column_name='ranking',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg klubi_id on olemas?',
+                name='v_klubi54',
+                column_name='klubi_id',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_klubi54',
+                isView=True,
+                points=5,
+            ),
+            #12 insert
+            DataTest(
+                title='Kas Piibe Leht on lisatud vaate kaudu?',
+                name='v_klubi54',
+                column_name='COUNT(*)',
+                where="eesnimi = 'Piibe' and perenimi = 'Leht'",
+                expected_value=1,
+                isView=True,
+                points=5,
+            ),
+        ],
+    ),
+    # 13; 10p -- total 100
+    ChecksLayer(
+        title='Vaate v_maletaht kontrollid',
+        tests=[
+            ViewTest(
+                title='Kas vaade v_maletaht on olemas?',
+                name='v_maletaht',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg id on olemas?',
+                name='v_maletaht',
+                column_name='id',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg eesnimi on olemas?',
+                name='v_maletaht',
+                column_name='eesnimi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg perenimi on olemas?',
+                name='v_maletaht',
+                column_name='perenimi',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg isikukood on olemas?',
+                name='v_maletaht',
+                column_name='isikukood',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg klubis on olemas?',
+                name='v_maletaht',
+                column_name='klubis',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg synniaeg on olemas?',
+                name='v_maletaht',
+                column_name='synniaeg',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg sugu on olemas?',
+                name='v_maletaht',
+                column_name='sugu',
+                points=1,
+            ),
+            ViewTest(
+                title='Kas veerg ranking on olemas?',
+                name='v_maletaht',
+                column_name='ranking',
+                points=1,
+            ),
+            DataTest(
+                title='Kas andmed on olemas?',
+                name='v_maletaht',
+                column_name='COUNT(*)',
+                expected_value=9,
+                isView=True,
+                points=1,
+            )
         ],
     ),
 ]

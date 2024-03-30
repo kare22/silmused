@@ -90,6 +90,7 @@ tests = [
                 column_name='asula',
                 points=10,
             ),
+
             # Ülesande 4
             DataTest(
                 title='Kas veergu asula on väärtused sisestatud?',
@@ -115,6 +116,7 @@ tests = [
         ]
     ),
 ]
+"""
 """
 tests = [
     # Kodutöö 4 kontrollid
@@ -330,3 +332,88 @@ tests = [
         ]
     ),
 ]
+"""
+tests = [
+    # Kodutöö 5 kontrollid
+    ChecksLayer(
+        title='Funktsiooni f_vanus kontrollid',
+        tests=[
+            FunctionTest(
+                title='',
+                name='f_vanus',
+                arguments=['09.09.2000'],
+                expected_value=23,
+                points=1,
+            ),
+            FunctionTest(
+                title='',
+                name='f_vanus',
+                arguments=['01.01.2000'],
+                expected_value=24,
+                points=1,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Funktsiooni f_klubiranking kontrollid',
+        tests=[
+            FunctionTest(
+                title='',
+                name='f_klubiranking',
+                arguments=[54],
+                expected_value=1279.6,
+                points=1,
+            ),
+            FunctionTest(
+                title='',
+                name='f_klubiranking',
+                arguments=[59],
+                expected_value=1407.0,
+                points=1,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Funktsiooni f_top10 kontrollid',
+        tests=[
+            FunctionTest(
+                title='',
+                name='f_top10',
+                arguments=[44],
+                expected_count=10,
+                points=1,
+            ),
+            FunctionTest(
+                title='',
+                name='f_top10',
+                where="mangija LIKE 'Murakas%'",
+                arguments=[44],
+                points=1,
+            ),
+        ]
+    ),
+]
+"""ChecksLayer(
+        title='Protseduuri sp_uus_turniir kontrollid',
+        tests=[
+            ProcedureTest(
+                title='',
+                name='sp_uus_turniir',
+                arguments=['Tartu Meister', '02.02.2022',1,'Tartu'],
+                number_of_columns=4,
+                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.02.2022'",
+                points=1,
+            ),
+            ProcedureTest(
+                title='',
+                name='sp_uus_turniir',
+                arguments=['Tartu Meister', '02.02.2022',2,'Tartu'],
+                number_of_columns=4,
+                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '03.02.2022'",
+                points=1,
+            ),
+        ]
+    ),
+]"""

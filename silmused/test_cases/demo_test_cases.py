@@ -444,14 +444,14 @@ tests = [
     ProcedureTest(
         name='sp_uus_turniir',
         arguments=['Tartu Meister', '02.02.2022',1,'Tartu'],
-        number_of_columns=4,
+        number_of_parameters=4,
         pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
         after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.02.2022'",
     ),
     ProcedureTest(
         name='sp_uus_turniir',
         arguments=['Tartu Meister', '02.02.2022',2,'Tartu'],
-        number_of_columns=4,
+        number_of_parameters=4,
         pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
         after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '03.02.2022'",
     ),

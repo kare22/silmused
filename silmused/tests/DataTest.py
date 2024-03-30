@@ -57,8 +57,9 @@ class DataTest(TestDefinition):
 
                             )
                         else:
+                            # TODO Should check if all results are not None, line 148 also
                             return super().response(
-                                len(result) > 0 and result[0][0] is not None, # HERE
+                                len(result) > 0 and result[0][0] is not None,
                                 {"test_type": "data_test",
                                  "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
                                  "params": [self.name, self.column_name]},
