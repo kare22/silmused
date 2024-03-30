@@ -16,8 +16,11 @@ This is the heart and soul of `Silmused` and defines how tests should behave.
 * ExecuteLayer
 * TitleLayer
 * ChecksLayer
-
+## Tests
+These are the classes used for writing tests
 ### ConstraintTest
+Used for testing table or column constraints
+
 ### DataTest
 ### FunctionTest
 ### IndexText
@@ -27,7 +30,20 @@ This is the heart and soul of `Silmused` and defines how tests should behave.
 ### ViewTest
 
 ### ChecksLayer
+This is a Test Layer that can be used to hold together a group of tests and give an overall Title for that group.
+ex.
+```
+ChecksLayer(
+  title='Checks for table X'
+  tests=[
+    StructureTest(...),
+  ],
+),
+ChecksLayer(...)
+```
+
 ### ExecuteLayer
+Used to RUN extra querys between or before tests
 ### TitleLayer
 
 ## Runner
