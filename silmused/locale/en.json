@@ -81,8 +81,8 @@
 		"function_expected_value_negative_feedback": "Wrong, expected $param1, but got $param2"
 	},
 	"index_test": {
-		"index_positive_feedback": "Correct, index was $param1 found",
-		"index_negative_feedback": "Wrong, expected to find index $param1 but none were found"
+		"index_positive_feedback": "Correct, index $param1 was found",
+		"index_negative_feedback": "Wrong, expected to find index $param1, but none were found"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Correct, procedure $param1 was found",
@@ -115,7 +115,10 @@
 		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
 	},
 	"trigger_test": {
-
+		"trigger_exists_positive_feedback": "Correct, trigger $param1 was found",
+		"trigger_exists_negative_feedback": "Wrong, expected to find trigger $param1, but none were found",
+		"trigger_definition_positive_feedback": "Correct, trigger $param1 definition is correct",
+		"trigger_definition_negative_feedback": "Wrong, trigger $param1 had the following errors: $param2"
 	},
 	"view_test": {
 		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",

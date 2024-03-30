@@ -15,32 +15,55 @@ class TriggerTest(TestDefinition):
         self.action_timing = action_timing
 
     def execute(self, cursor):
-        # TODO small tests in separate functions
+
+        # Check that trigger name exists
+        test_trigger_exists_result = self.test_trigger_exists(cursor)
+        if test_trigger_exists_result is not None:
+            return test_trigger_exists_result
+
+        # Check trigger event manipulation on arguments and trigger action timing
+        errors = self.test_trigger_manipulation(cursor) if len(self.arguments) > 0 else []
+
+        return super().response(
+            len(errors) == 0,
+            {"test_type": "function_test",
+             "test_key": "function_exists_positive_feedback",
+             "params": [self.name]},
+            {"test_type": "function_test",
+             "test_key": "function_exists_negative_feedback",
+             "params": [self.name, {', '.join(errors)}]},
+        )
+
+    def test_trigger_exists(self, cursor):
         cursor.execute(f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}'")
 
         if len(cursor.fetchall()) <= 0:
             return super().response(
                 False,
-                ''
-                f"Trigger {self.name} was not found",
+                {"test_type": "trigger_test",
+                 "test_key": "trigger_exists_positive_feedback",
+                 "params": [self.name]},
+                {"test_type": "trigger_test",
+                 "test_key": "trigger_exists_negative_feedback",
+                 "params": [self.name]},
             )
+        return None
 
+    def test_trigger_manipulation(self, cursor):
         errors = []
+        for manipulation in self.arguments:
+            cursor.execute(
+                f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
+                f"AND event_manipulation = '{manipulation}'")
 
-        if len(self.arguments) > 0:
-            for manipulation in self.arguments:
-                cursor.execute(
-                    f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' AND event_manipulation = '{manipulation}'")
-                if len(cursor.fetchall()) <= 0:
-                    errors.append(f"manipulation {manipulation} was not found")
+            if len(cursor.fetchall()) <= 0:
+                errors.append(f"manipulation {manipulation} was not found")
 
-        # TODO this is a bit of a copy-paste
-        cursor.execute(f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' AND action_timing = '{self.action_timing}'")
+        cursor.execute(
+            f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
+            f"AND action_timing = '{self.action_timing}'")
+
         if len(cursor.fetchall()) <= 0:
             errors.append(f"action timing {self.action_timing} was not found")
 
-        return super().response(
-            len(errors) == 0,
-            f"Correct, trigger {self.name} definition is correct",
-            f"Trigger {self.name} had the following errors: {', '.join(errors)}",
-        )
+        return errors

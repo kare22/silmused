@@ -333,87 +333,201 @@ tests = [
     ),
 ]
 """
+"""
 tests = [
     # Kodutöö 5 kontrollid
+    # 25p
     ChecksLayer(
         title='Funktsiooni f_vanus kontrollid',
         tests=[
             FunctionTest(
-                title='',
+                title='Kas kuupäevaga 09.09.2000 on vanus õige?',
                 name='f_vanus',
                 arguments=['09.09.2000'],
                 expected_value=23,
-                points=1,
+                points=12,
             ),
             FunctionTest(
-                title='',
+                title='Kas kuupäevaga 01.01.2000 on vanus õige?',
                 name='f_vanus',
                 arguments=['01.01.2000'],
                 expected_value=24,
-                points=1,
+                points=13,
             ),
         ]
     ),
+    # 25p
     ChecksLayer(
         title='Funktsiooni f_klubiranking kontrollid',
         tests=[
             FunctionTest(
-                title='',
+                title='Kas klubi Ajurebend ranking on õige?',
                 name='f_klubiranking',
                 arguments=[54],
                 expected_value=1279.6,
-                points=1,
+                points=12,
             ),
             FunctionTest(
-                title='',
+                title='Kas klubi Musta kivi kummardajad ranking on õige?',
                 name='f_klubiranking',
                 arguments=[59],
                 expected_value=1407.0,
-                points=1,
+                points=13,
             ),
         ]
     ),
+    # 25p
     ChecksLayer(
         title='Funktsiooni f_top10 kontrollid',
         tests=[
             FunctionTest(
-                title='',
+                title='Kas on õige tulemuste arv?',
                 name='f_top10',
                 arguments=[44],
                 expected_count=10,
-                points=1,
+                points=10,
             ),
             FunctionTest(
-                title='',
+                title='Kas leidub mangija Murakas?',
                 name='f_top10',
                 where="mangija LIKE 'Murakas%'",
                 arguments=[44],
-                points=1,
+                points=5,
+            ),
+            FunctionTest(
+                title='Kas mangijal on õige paunktide arv?',
+                name='f_top10',
+                column_name='round(punkte,1)',
+                where="mangija LIKE 'Muld%'",
+                expected_value=5.5,
+                arguments=[47],
+                points=10,
+            ),
+        ]
+    ),
+    # 25p
+    ChecksLayer(
+        title='Protseduuri sp_uus_turniir kontrollid',
+        tests=[
+            ProcedureTest(
+                title='Kas on õige lõppkuupäev ühe päevasel turniiril?',
+                name='sp_uus_turniir',
+                arguments=['Tartu Meister', '02.02.2022',1,'Tartu'],
+                number_of_parameters=4,
+                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.02.2022'",
+                points=13,
+            ),
+            ProcedureTest(
+                title='Kas on õige lõppkuupäev kahe päevasel turniiril?',
+                name='sp_uus_turniir',
+                arguments=['Tartu Meister', '02.02.2022',2,'Tartu'],
+                number_of_parameters=4,
+                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
+                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '03.02.2022'",
+                points=12,
             ),
         ]
     ),
 ]
-"""ChecksLayer(
-        title='Protseduuri sp_uus_turniir kontrollid',
+"""
+_user1 = 123456
+_user2 = 123457
+_partii_id = 123123
+tests = [
+    # Kodutöö 6 kontrollid
+    # 10p + 10p
+    ChecksLayer(
+        title='Indeksite kontrollid',
         tests=[
-            ProcedureTest(
-                title='',
-                name='sp_uus_turniir',
-                arguments=['Tartu Meister', '02.02.2022',1,'Tartu'],
-                number_of_columns=4,
-                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
-                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.02.2022'",
-                points=1,
+            IndexTest(
+                title='Kas on olemas ix_riiginimi?',
+                name='ix_riiginimi',
+                points=10,
             ),
-            ProcedureTest(
-                title='',
-                name='sp_uus_turniir',
-                arguments=['Tartu Meister', '02.02.2022',2,'Tartu'],
-                number_of_columns=4,
-                pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
-                after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '03.02.2022'",
-                points=1,
+            IndexTest(
+                title='Kas on olemas ix_suurus?',
+                name='ix_suurus',
+                points=10,
+            ),
+        ],
+    ),
+    # 25p
+    ChecksLayer(
+        title='Trigger tg_partiiaeg kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_partiiaeg?',
+                name='tg_partiiaeg',
+                arguments=['UPDATE', 'INSERT'],
+                action_timing='BEFORE',
+                points=10,
+            ),
+            ExecuteLayer("ALTER TABLE public.partiid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.partiid ENABLE TRIGGER tg_partiiaeg"),
+            ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
+            ExecuteLayer(f"DELETE FROM public.isikud WHERE id in ({_user1},{_user2})"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user2},'Kan', 'Ma')"),
+            ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-04-22 17:45:24.000','2023-03-22 17:45:24.000',{_user1},{_user2},2,0, {_partii_id})", ),
+            DataTest(
+                title='Kas testimiseks õnnestus lisada test_isik1?',
+                name='isikud',
+                where=f"public.isikud.id = {_user1}",
+                points=2,
+            ),
+            DataTest(
+                title='Kas testimiseks õnnestus lisada test_isik2?',
+                name='isikud',
+                where=f"public.isikud.id = {_user2}",
+                points=2,
+            ),
+            DataTest(
+                title='Kas testimiseks lisatud isikute partii lõpphetk on õige?',
+                name='partiid',
+                column_name='lopphetk',
+                where=f"valge = {_user1} AND must = {_user2}",
+                expected_value=None,
+                points=11,
+            ),
+        ],
+    ),
+    # 25p
+    ChecksLayer(
+        title='Trigger tg_klubi_olemasolu kontrollid',
+        tests=[
+            ExecuteLayer("ALTER TABLE public.partiid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.isikud ENABLE TRIGGER tg_klubi_olemasolu"),
+            ExecuteLayer(f"DELETE FROM public.isikud WHERE id in ({_user1},{_user2})"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
+            TriggerTest(
+                title='Kas on õige definitsioon tg_klubi_olemasolu?',
+                name='tg_klubi_olemasolu',
+                arguments=['UPDATE', 'INSERT'],
+                action_timing='AFTER',
+                points=10,
+            ),
+            DataTest(
+                title='Kas on olemas klubi Klubitud?',
+                name='klubid',
+                column_name='COUNT(*)',
+                where="lower(nimi) = 'klubitud'",
+                points=3,
+            ),
+            DataTest(
+                title='Kas testimiseks õnnestus lisada test_isik1?',
+                name='isikud',
+                where=f"public.isikud.id = {_user1}",
+                points=2,
+            ),
+            DataTest(
+                title='Kas lisatud isik on klubis Klubitud?',
+                name='isikud',
+                join=f"public.klubid ON public.klubid.id=isikud.klubis",
+                where=f"public.isikud.id = {_user1} AND public.klubid.nimi LIKE '%ubitu%'",
+                points=10,
             ),
         ]
-    ),
-]"""
+    )
+]
