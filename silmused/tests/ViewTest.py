@@ -1,10 +1,6 @@
 from silmused.tests.TestDefinition import TestDefinition
 from silmused.utils import list_to_string
 
-# TODO Right now it is only possible to check the existence of a view
-# Probably there is no need for this as it is covered by table tests
-
-# We can use it to test the existence of materialized views
 class ViewTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, isMaterialized=False, points=0):
         if isMaterialized:

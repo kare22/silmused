@@ -17,6 +17,10 @@ class IndexTest(TestDefinition):
 
         return super().response(
             len(result) > 0,
-            f"Correct, index was {self.name} found",
-            f"Expected to find index {self.name} but none were found",
+            {"test_type": "index_test",
+             "test_key": "index_positive_feedback",
+             "params": [self.name]},
+            {"test_type": "index_test",
+             "test_key": "index_negative_feedback",
+             "params": [self.name]}
         )
