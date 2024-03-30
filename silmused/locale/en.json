@@ -67,14 +67,34 @@
 		"view_expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in view $param3 and column $param4"
 	},
 	"function_test": {
-
+		"function_exists_positive_feedback": "Correct, function $param1 was found",
+		"function_exists_negative_feedback": "Wrong, expected to find function $param1, but none were found",
+		"function_type_positive_feedback": "Correct, function $param1 is type FUNCTION",
+		"function_type_negative_feedback": "Wrong, expected function $param1 to be of type FUNCTION",
+		"function_parameters_amount_positive_feedback": "Correct, function $param1 parameter amount is correct",
+		"function_parameters_amount_negative_feedback": "Wrong, expected parameter amount $param1 for function $param2, but found parameter amount $param3",
+		"function_not_expected_value_not_expected_result_count_positive_feedback": "Correct, result count for function $param1($param2) is correct",
+		"function_not_expected_value_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for function $param1($param2), but none was found",
+		"function_not_expected_value_expected_result_count_positive_feedback": "Correct, result count $param1 for function $param2($param3) is correct",
+		"function_not_expected_value_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for function $param2($param3), but got $param4",
+		"function_expected_value_positive_feedback": "Correct, found value $param1",
+		"function_expected_value_negative_feedback": "Wrong, expected $param1, but got $param2"
 	},
 	"index_test": {
 		"index_positive_feedback": "Correct, index was $param1 found",
 		"index_negative_feedback": "Wrong, expected to find index $param1 but none were found"
 	},
 	"procedure_test": {
-
+		"procedure_exists_positive_feedback": "Correct, procedure $param1 was found",
+		"procedure_exists_negative_feedback": "Wrong, expected to find procedure $param1, but none were found",
+		"procedure_type_positive_feedback": "Correct procedure $param1 is type PROCEDURE",
+		"procedure_type_negative_feedback": "Wrong, expected procedure $param1 to be of type PROCEDURE",
+		"procedure_parameters_exists_positive_feedback": "Correct, procedure $param1 parameter amount is correct",
+		"procedure_parameters_exists_negative_feedback": "Wrong, expected parameter amount $param1 for procedure $param2, but found parameter amount $param3",
+		"procedure_not_expected_result_count_positive_feedback": "Correct, result count for procedure $param1($param2) is correct",
+		"procedure_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for procedure $param1($param2), but none was found",
+		"procedure_expected_result_count_positive_feedback": "Correct, result count $param1 for procedure $param2($param3) is correct",
+		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for procedure $param2($param3), but got $param4"
 	},
 	"structure_test" : {
 		"expected_character_maximum_length_type_check_positive_feedback": "Correct, found character maximum length $param1 in table $param2 and column $param3",
