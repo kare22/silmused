@@ -31,7 +31,7 @@ class TriggerTest(TestDefinition):
              "params": [self.name]},
             {"test_type": "function_test",
              "test_key": "function_exists_negative_feedback",
-             "params": [self.name, {', '.join(errors)}]},
+             "params": [self.name, {', '.join(errors)}]},  # TODO errorid on hetkel inglise keeles
         )
 
     def test_trigger_exists(self, cursor):

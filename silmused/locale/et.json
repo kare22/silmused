@@ -67,14 +67,34 @@
 		"view_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 vaates $param3 ja veerus $param4"
 	},
 	"function_test": {
-
+		"function_exists_positive_feedback": "Õige, funktsioon $param1 on olemas",
+		"function_exists_negative_feedback": "Vale, funktsiooni $param1 ei ole olemas",
+		"function_type_positive_feedback": "Õige, funktsioon $param1 on FUNCTION tüüpi",
+		"function_type_negative_feedback": "Vale, funktsioon $param1 ei ole FUNCTION tüüpi",
+		"function_parameters_amount_positive_feedback": "Õige, funktsiooni $param1 parameetrite arv on õige",
+		"function_parameters_amount_negative_feedback": "Vale, oodati parameetrite arvuks $param1 funktsioonil $param2, aga leiti kogus $param3",
+		"function_not_expected_value_not_expected_result_count_positive_feedback": "Õige, funktsiooni $param1($param2) tulemuste arv on õige",
+		"function_not_expected_value_not_expected_result_count_negative_feedback": "Vale, tulemuste arv on vale funktsioonil $param1($param2)",
+		"function_not_expected_value_expected_result_count_positive_feedback": "Õige, tulemuste arv $param1 on õige funktsioonil $param2($param3)",
+		"function_not_expected_value_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida funktsioonile $param2($param3), aga leiti $param4",
+		"function_expected_value_positive_feedback": "Õige, saadi väärtus $param1",
+		"function_expected_value_negative_feedback": "Vale, oodati väärtust $param1, aga saadi $param2"
 	},
 	"index_test": {
-		"index_positive_feedback": "Õige, indeks $index_name on olemas",
-		"index_negative_feedback": "Vale, indeks $index_name ei ole olemas"
+		"index_positive_feedback": "Õige, indeks $param1 on olemas",
+		"index_negative_feedback": "Vale, indeks $param1 ei ole olemas"
 	},
 	"procedure_test": {
-
+		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",
+		"procedure_exists_negative_feedback": "Vale, protseduuri $param1 ei ole olemas",
+		"procedure_type_positive_feedback": "Õige protseduur $param1 on PROCEDURE tüüpi",
+		"procedure_type_negative_feedback": "Vale, protseduur $param1 ei ole PROCEDURE tüüpi",
+		"procedure_parameters_exists_positive_feedback": "Õige, protseduuri $param1 parameetrite arv on õige",
+		"procedure_parameters_exists_negative_feedback": "Vale, oodati parameetrite arvuks $param1 protseduuril $param2, aga leiti kogus $param3",
+		"procedure_not_expected_result_count_positive_feedback": "Õige, protseduuri $param1($param2) tulemuste arv on õige",
+		"procedure_not_expected_result_count_negative_feedback": "Vale, tulemuste arv on vale protseduuril $param1($param2)",
+		"procedure_expected_result_count_positive_feedback": "Õige, tulemuste arv $param1 on õige protseduuril $param2($param3)",
+		"procedure_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida protseduurile $param2($param3), aga leiti $param4"
 	},
 	"structure_test" : {
 		"expected_character_maximum_length_type_check_positive_feedback": "Õige, on olemas veeru suurus $param1 tabelis $param2 ja veerus $param3",
@@ -95,7 +115,10 @@
 		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2"
 	},
 	"trigger_test": {
-
+		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
+		"trigger_exists_negative_feedback": "Vale, triger $param1 ei ole olemas",
+		"trigger_definition_positive_feedback": "Õige, trigeri $param1 on koostatud õigesti",
+		"trigger_definition_negative_feedback": "Vale, trigeril $param1 on järgmised probleemid: $param2"
 	},
 	"view_test": {
 		"expected_value_should_exist_positive_feedback": "Õige, oodati tulemust $param1",
