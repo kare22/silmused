@@ -37,6 +37,10 @@ class FunctionTest(TestDefinition):
             if test_function_args_result is not None:
                 return test_function_args_result
 
+        # TODO Add a test to check output arguments
+        # cursor.execute("SELECT proargnames FROM pg_catalog.pg_proc WHERE proname='f_voit_viik_kaotus'")
+        # test_tesult = cursor.fetchall()[0][0]
+        # print(len(test_tesult)-(self.number_of_parameters if self.number_of_parameters is not None else 0))
 
         cursor.execute(self.query)
         result = cursor.fetchall()

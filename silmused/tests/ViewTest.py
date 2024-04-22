@@ -1,8 +1,10 @@
 from silmused.tests.TestDefinition import TestDefinition
 from silmused.utils import list_to_string
 
+
 class ViewTest(TestDefinition):
-    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True, where=None, description=None, isMaterialized=False, points=0):
+    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True,
+                 where=None, description=None, isMaterialized=False, points=0):
         if isMaterialized:
             query = f"SELECT * FROM pg_matviews WHERE matviewname = '{name}'"
         else:
@@ -30,7 +32,6 @@ class ViewTest(TestDefinition):
             should_exist=should_exist,
         )
 
-
         self.column_name = column_name
         self.where = where
         self.isMaterialized = isMaterialized
@@ -39,11 +40,6 @@ class ViewTest(TestDefinition):
         cursor.execute(self.query)
         result = cursor.fetchall()
 
-        #return super().response(
-        #    len(result) > 0,
-        #    f"Correct, view {self.name} found",
-        #    f"Expected to find view {self.name} but none were found",
-        #)
         if self.isMaterialized:
             if self.should_exist:
                 return super().response(
