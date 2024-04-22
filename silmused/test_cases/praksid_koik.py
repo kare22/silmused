@@ -747,6 +747,7 @@ tests = [
         ],
     ),
 ]"""
+"""
 # Praktikum 9 100p
 tests = [
     # 1; 2p
@@ -1176,5 +1177,410 @@ tests = [
                 points=1,
             )
         ],
+    ),
+]
+"""
+"""
+tests = [
+    # 1, 10p
+    ChecksLayer(
+        title='Funktsiooni f_mangija_punktid_turniiril kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas mängija punktid turniiril on õige?',
+                name='f_mangija_punktid_turniiril',
+                arguments=[92,42],
+                number_of_parameters=2,
+                expected_value=5.5,
+                points=10,
+            ),
+        ],
+    ),
+    # 2.1 5p
+    ChecksLayer(
+        title='Funktsiooni f_nimi kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas nimekuju on õige?',
+                name='f_nimi',
+                arguments=['test', 'kesk'],
+                number_of_parameters=2,
+                expected_value='kesk, test',
+                points=5,
+            ),
+        ],
+    ),
+    # 2.2 5p
+    ChecksLayer(
+        title='Funktsiooni f_klubisuurus kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas klubisuurus on õige?',
+                name='f_klubisuurus',
+                arguments=[50],
+                number_of_parameters=1,
+                expected_value=9,
+                points=5,
+            ),
+        ],
+    ),
+    # 3, 10p (30p)
+    ChecksLayer(
+        title='Funktsiooni f_mangija_koormus kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas mängija koormus on õige?',
+                name='f_mangija_koormus',
+                arguments=[73],
+                number_of_parameters=1,
+                expected_value=18,
+                points=10,
+            ),
+        ],
+    ),
+    # 4, 10p (40p)
+    ChecksLayer(
+        title='Funktsiooni f_mangija_voite_turniiril kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas mängija võitude arv on õige?',
+                name='f_mangija_voite_turniiril',
+                arguments=[197, 43],
+                number_of_parameters=2,
+                expected_value=3,
+                points=5,
+            ),
+            FunctionTest(
+                title='Kas mängija võitude arv on 0?',
+                name='f_mangija_voite_turniiril',
+                arguments=[75, 44],
+                number_of_parameters=2,
+                expected_value=0,
+                points=5,
+            ),
+        ],
+    ),
+    # 5.1, 10 (50p)
+    ChecksLayer(
+        title='Funktsiooni f_mangija_viike_turniiril kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas mängija viikide arv on õige?',
+                name='f_mangija_viike_turniiril',
+                arguments=[197, 43],
+                number_of_parameters=2,
+                expected_value=1,
+                points=5,
+            ),
+            FunctionTest(
+                title='Kas mängija viikide arv on 0?',
+                name='f_mangija_viike_turniiril',
+                arguments=[75, 44],
+                number_of_parameters=2,
+                expected_value=0,
+                points=5,
+            ),
+        ],
+    ),
+    # 5.2, 10 (60p)
+    ChecksLayer(
+        title='Funktsiooni f_mangija_kaotusi_turniiril kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas mängija kaotuste arv on õige?',
+                name='f_mangija_kaotusi_turniiril',
+                arguments=[75, 44],
+                number_of_parameters=2,
+                expected_value=2,
+                points=5,
+            ),
+            FunctionTest(
+                title='Kas mängija kaotuste arv on 0?',
+                name='f_mangija_kaotusi_turniiril',
+                arguments=[197, 43],
+                number_of_parameters=2,
+                expected_value=0,
+                points=5,
+            ),
+        ],
+    ),
+    # 6, 10p (70p)
+    ChecksLayer(
+        title='Funktsiooni f_voit_viik_kaotus kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas on õige tulemuste arv?',
+                name='f_voit_viik_kaotus',
+                arguments=[44],
+                number_of_parameters=1,
+                expected_count=63,
+                points=4,
+            ),
+            FunctionTest(
+                title='Kas mängijal on õige võitude arv?',
+                name='f_voit_viik_kaotus',
+                column_name='voite',
+                where="id = 193",
+                arguments=[44],
+                number_of_parameters=1,
+                expected_value=1,
+                points=2,
+            ),
+            FunctionTest(
+                title='Kas mängijal on õige viikide arv?',
+                name='f_voit_viik_kaotus',
+                column_name='viike',
+                where="id = 193",
+                arguments=[44],
+                number_of_parameters=1,
+                expected_value=1,
+                points=2,
+            ),
+            FunctionTest(
+                title='Kas mängijal on õige kaotuste arv?',
+                name='f_voit_viik_kaotus',
+                column_name='kaotusi',
+                where="id = 193",
+                arguments=[44],
+                number_of_parameters=1,
+                expected_value=0,
+                points=2,
+            ),
+        ],
+    ),
+    # 7, 10p (80p)
+    ChecksLayer(
+        title='Protseduuri sp_uus_isik kontrollid',
+        tests=[
+            ProcedureTest(
+                title='Kas uus isik sai lisatud?',
+                name='sp_uus_isik',
+                arguments=['Uus', 'Isik', 51, 'm'],
+                number_of_parameters=4,
+                pre_query="DELETE FROM isikud WHERE eesnimi = 'Uus' and perenimi = 'Isik'",
+                after_query="SELECT * FROM isikud WHERE eesnimi = 'Uus' and perenimi = 'Isik' and klubis = 51",
+                points=8,
+            ),
+            DataTest(
+                title='Kas klubiliikmete arv suurenes?',
+                name='isikud',
+                column_name='COUNT(*)',
+                where="klubis=51",
+                expected_value=5,
+                points=2,
+            ),
+            ExecuteLayer("DELETE FROM isikud WHERE eesnimi = 'Uus' and pernimi = 'Isik'"),
+        ],
+    ),
+    # 8, 10p (90p)
+    ChecksLayer(
+        title='Funktsiooni f_klubiparimad kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas on õige kirjete arv?',
+                name='f_klubiparimad',
+                arguments=['Areng'],
+                number_of_parameters=1,
+                expected_count=3,
+                points=5,
+            ),
+            FunctionTest(
+                title='Kas on õige mängija tulemus?',
+                name='f_klubiparimad',
+                column_name='ROUND(punktisumma,1)',
+                arguments=['Areng'],
+                number_of_parameters=1,
+                where="isik = 'Põder, Priit'",
+                expected_value=4.5,
+                points=5,
+            ),
+        ],
+    ),
+    # 11, 10p, (100p)
+    ChecksLayer(
+        title='Funktsiooni f_infopump kontrollid',
+        tests=[
+            FunctionTest(
+                title='Kas on õige kirjete arv?',
+                name='f_infopump',
+                expected_count=105,
+                points=10,
+            ),
+        ]
+    ),
+]
+"""
+_user1 = 123456
+_user2 = 123457
+_partii_id = 123123
+_asula_id = 200
+_asula_nimi='Test_asula'
+_klubi_id = 201
+_klubi_nimi = 'Klubi kustutamiseks'
+tests = [
+    ChecksLayer(
+        title='Trigeri tg_ajakontroll kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_ajakontroll?',
+                name='tg_ajakontroll',
+                arguments=['UPDATE', 'INSERT'],
+                action_timing='BEFORE',
+                points=10,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Indeksi ix_nimed kontroll',
+        tests=[
+            IndexTest(
+                title='Kas on olemas indeks ix_nimed?',
+                name='ix_nimed',
+                points=10,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Trigeri tg_riigid kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_riigid?',
+                name='tg_riigid',
+                arguments=['INSERT'],
+                action_timing='BEFORE',
+                points=10,
+            ),
+            ExecuteLayer("ALTER TABLE public.riigid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.riigid ENABLE TRIGGER tg_riigid"),
+            ExecuteLayer(f"DELETE FROM public.riigid WHERE id in (3000, 3001)"),
+            ExecuteLayer(f"INSERT INTO public.riigid (id, nimi, pealinn) VALUES (3000,'Bulgaaria1','Sofia1')"),
+            ExecuteLayer(f"INSERT INTO public.riigid (id, nimi, pealinn) VALUES (3001,'Bulgaaria','Sofia2')"),
+
+            DataTest(
+                title='Kas uue nimega riik lisati?',
+                name='riigid',
+                where="id=3000",
+                should_exist=True,
+                points=10,
+            ),
+            DataTest(
+                title='Kas sama nimega riiki ei lisatud?',
+                name='riigid',
+                where="id=3001",
+                should_exist=False,
+                points=10,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Trigeri tg_ajakontroll1 kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_ajakontroll1?',
+                name='tg_ajakontroll1',
+                arguments=['UPDATE', 'INSERT'],
+                action_timing='BEFORE',
+                points=10,
+            ),
+            ExecuteLayer("ALTER TABLE public.partiid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.partiid ENABLE TRIGGER tg_ajakontroll1"),
+            ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
+            ExecuteLayer(f"DELETE FROM public.isikud WHERE id in ({_user1},{_user2})"),
+            ExecuteLayer(f"DELETE FROM public.partiid where id in ({_partii_id},{_partii_id+1})"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user2},'Kan', 'Ma')"),
+            ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-03-22 17:45:24.000','2023-03-22 17:47:24.000',{_user1},{_user2},2,0, {_partii_id})", ),
+            ExecuteLayer(f"INSERT INTO partiid (turniir, algushetk, valge, must, valge_tulemus, musta_tulemus) VALUES (41, '2005-01-12 08:05:00.000', 73, 92, 1, 1, {_partii_id+1})", ),
+            DataTest(
+                title='Kas partii lisamine õnnestus?',
+                name='partiid',
+                where=f"id={_partii_id}",
+                points=10,
+            ),
+            DataTest(
+                title='Kas partii lisamine ebaõnnestus?',
+                name='partiid',
+                where=f"id={_partii_id+1}",
+                points=10,
+                should_exist=False,
+            ),
+        ]
+    ),
+    ChecksLayer(
+        title='Trigeri tg_kustuta_klubi kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_kustuta_klubi?',
+                name='tg_kustuta_klubi',
+                arguments=['DELETE'],
+                action_timing='AFTER',
+                points=20,
+            ),
+            ExecuteLayer("ALTER TABLE public.klubid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.klubid ENABLE TRIGGER tg_kustuta_klubi"),
+            ExecuteLayer("ALTER TABLE public.asulad DISABLE TRIGGER ALL"),
+            ExecuteLayer(f"DELETE FROM public.asulad WHERE id in ({_asula_id})"),
+            ExecuteLayer(f"DELETE FROM public.klubid WHERE id in ({_klubi_id})"),
+            ExecuteLayer(f"INSERT INTO public.asulad VALUES ({_asula_id},{_asula_nimi})"),
+            ExecuteLayer(f"INSERT INTO public.klubid (id, nimi, asula) VALUES ({_klubi_id},{_klubi_nimi},{_asula_id}"),
+            ExecuteLayer(f"DELETE FROM klubid WHERE nimi={_klubi_nimi}"),
+            DataTest(
+                title='Kas klubi kustutamisel kustus ka asula?',
+                name='asulad',
+                where=f"nimi='{_asula_nimi}'",
+                should_exist=False,
+                points=1,
+            )
+        ]
+    ),
+    ChecksLayer(
+        title='Trigeri tg_partiiaeg1 kontrollid',
+        tests=[
+            TriggerTest(
+                title='Kas on õige definitsioon tg_partiiaeg1?',
+                name='tg_partiiaeg1',
+                arguments=['UPDATE', 'INSERT'],
+                action_timing='BEFORE',
+                points=12,
+            ),
+            ExecuteLayer("ALTER TABLE public.partiid DISABLE TRIGGER ALL"),
+            ExecuteLayer("ALTER TABLE public.partiid ENABLE TRIGGER tg_partiiaeg1"),
+            ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
+            ExecuteLayer(f"DELETE FROM public.isikud WHERE id in ({_user1},{_user2})"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user2},'Kan', 'Ma')"),
+            ExecuteLayer(f"INSERT INTO Partiid(turniir, algushetk, valge, must, id) VALUES (41, '2005-01-22 08:04', {_user1},{_user2},{_partii_id+2})"),
+            ExecuteLayer(f"INSERT INTO Partiid(turniir, algushetk, valge, must, id) VALUES (41, '2005-01-10 08:04', {_user1},{_user2},{_partii_id+3})"),
+            ExecuteLayer(f"INSERT INTO Partiid(turniir, algushetk, lopphetk, valge, must, id) VALUES (41, '2005-01-12 08:04', '2005-01-22 09:10', {_user1},{_user2},{_partii_id+4})"),
+            ExecuteLayer(f"INSERT INTO Partiid(turniir, algushetk, lopphetk, valge, must, id) VALUES (41, '2005-01-12 08:04', '2005-01-01 09:10', {_user1},{_user2},{_partii_id+5})"),
+            DataTest(
+                title='Kas partii lisamine ebaõnnestus, kui algusaeg enne turniiri?',
+                name='partiid',
+                where=f"id={_partii_id+2}",
+                points=2,
+                should_exist=False,
+            ),
+            DataTest(
+                title='Kas partii lisamine ebaõnnestus, kui algusaeg peale turniiri?',
+                name='partiid',
+                where=f"id={_partii_id+3}",
+                points=2,
+                should_exist=False,
+            ),
+            DataTest(
+                title='Kas partii lisamine ebaõnnestus, kui lõppaeg enne turniiri?',
+                name='partiid',
+                where=f"id={_partii_id+4}",
+                points=2,
+                should_exist=False,
+            ),
+            DataTest(
+                title='Kas partii lisamine ebaõnnestus, kui lõppaeg peale turniiri?',
+                name='partiid',
+                where=f"id={_partii_id+5}",
+                points=2,
+                should_exist=False,
+            ),
+        ]
     ),
 ]

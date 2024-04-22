@@ -332,9 +332,7 @@ tests = [
         ]
     ),
 ]
-"""
-"""
-tests = [
+
     # Kodutöö 5 kontrollid
     # 25p
     ChecksLayer(
@@ -405,6 +403,7 @@ tests = [
             ),
         ]
     ),
+tests = [
     # 25p
     ChecksLayer(
         title='Protseduuri sp_uus_turniir kontrollid',
@@ -416,7 +415,13 @@ tests = [
                 number_of_parameters=4,
                 pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
                 after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '02.02.2022'",
-                points=13,
+                points=11,
+            ),
+            DataTest(
+                title='Kas turniiriga lisati ka uus asula?',
+                name='asulad',
+                where="nimi = 'Haapsalu'",
+                points=2,
             ),
             ProcedureTest(
                 title='Kas on õige lõppkuupäev kahe päevasel turniiril?',
@@ -426,6 +431,13 @@ tests = [
                 pre_query="DELETE FROM turniirid WHERE nimi='Tartu Meister'",
                 after_query="select * from turniirid where nimi = 'Tartu Meister' and loppkuupaev = '03.02.2022'",
                 points=12,
+            ),
+            DataTest(
+                title='uus turniir',
+                name='turniirid',
+                column_name='count(*)',
+                where="nimi='Tartu Meister'",
+                expected_value=0,
             ),
         ]
     ),
@@ -473,21 +485,21 @@ tests = [
             DataTest(
                 title='Kas testimiseks õnnestus lisada test_isik1?',
                 name='isikud',
-                where=f"public.isikud.id = {_user1}",
+                where=f"public.isikud.id = {_user1} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
                 points=2,
             ),
             DataTest(
                 title='Kas testimiseks õnnestus lisada test_isik2?',
                 name='isikud',
-                where=f"public.isikud.id = {_user2}",
+                where=f"public.isikud.id = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
                 points=2,
             ),
             DataTest(
                 title='Kas testimiseks lisatud isikute partii lõpphetk on õige?',
                 name='partiid',
                 column_name='lopphetk',
-                where=f"valge = {_user1} AND must = {_user2}",
-                expected_value=None,
+                where=f"valge = {_user1} AND must = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
+                expected_value='None',
                 points=11,
             ),
         ],
@@ -512,20 +524,20 @@ tests = [
                 title='Kas on olemas klubi Klubitud?',
                 name='klubid',
                 column_name='COUNT(*)',
-                where="lower(nimi) = 'klubitud'",
+                where="lower(nimi) = 'klubitud' and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_klubi_olemasolu')",
                 points=3,
             ),
             DataTest(
                 title='Kas testimiseks õnnestus lisada test_isik1?',
                 name='isikud',
-                where=f"public.isikud.id = {_user1}",
+                where=f"public.isikud.id = {_user1} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_klubi_olemasolu')",
                 points=2,
             ),
             DataTest(
                 title='Kas lisatud isik on klubis Klubitud?',
                 name='isikud',
                 join=f"public.klubid ON public.klubid.id=isikud.klubis",
-                where=f"public.isikud.id = {_user1} AND public.klubid.nimi LIKE '%ubitu%'",
+                where=f"public.isikud.id = {_user1} AND public.klubid.nimi LIKE '%ubitu%' and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_klubi_olemasolu')",
                 points=10,
             ),
         ]

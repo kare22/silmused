@@ -26,11 +26,11 @@ class TriggerTest(TestDefinition):
 
         return super().response(
             len(errors) == 0,
-            {"test_type": "function_test",
-             "test_key": "function_exists_positive_feedback",
+            {"test_type": "trigger_test",
+             "test_key": "trigger_definition_positive_feedback",
              "params": [self.name]},
-            {"test_type": "function_test",
-             "test_key": "function_exists_negative_feedback",
+            {"test_type": "trigger_test",
+             "test_key": "trigger_definition_negative_feedback",
              "params": [self.name, {', '.join(errors)}]},  # TODO errorid on hetkel inglise keeles
         )
 
