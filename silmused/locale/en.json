@@ -84,6 +84,12 @@
 		"index_positive_feedback": "Correct, index $param1 was found",
 		"index_negative_feedback": "Wrong, expected to find index $param1, but none were found"
 	},
+	"query_structure_test": {
+
+	},
+	"query_data_test": {
+
+	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Correct, procedure $param1 was found",
 		"procedure_exists_negative_feedback": "Wrong, expected to find procedure $param1, but none were found",
