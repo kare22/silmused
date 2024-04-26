@@ -37,10 +37,10 @@ class Translator():
         if self.locale not in self.data:
             return "Locale not supported: " + self.locale
         if test_type not in self.data[self.locale]:
-            return "Test_type not supported: " + test_type
+            return "Test_type not supported: " + test_type + " FOR locale: " + self.locale
         if test_key not in self.data[self.locale][test_type]:
-            return "Test_key not supported: " + test_key
-        #print(self.data[self.locale][test_type][test_key])
+            return "Test_key not supported: " + test_key + " FOR test_type: " + test_type
+        # print(self.data[self.locale][test_type])
         text = self.data[self.locale][test_type].get(test_key, test_key)
 
         # string interpolation
