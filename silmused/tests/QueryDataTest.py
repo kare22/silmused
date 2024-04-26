@@ -37,11 +37,9 @@ class QueryDataTest(TestDefinition):
                     return super().response(
                         len(result) > 0,
                         {"test_type": "query_data_test",
-                         "test_key": "table_not_expected_value_should_exist_positive_feedback",
-                         "params": [self.name]},
+                         "test_key": "query_not_expected_value_should_exist_positive_feedback"},
                         {"test_type": "query_data_test",
-                         "test_key": "table_not_expected_value_should_exist_negative_feedback",
-                         "params": [self.name]},
+                         "test_key": "query_not_expected_value_should_exist_negative_feedback"},
 
                     )
                 else:
@@ -49,11 +47,11 @@ class QueryDataTest(TestDefinition):
                         return super().response(
                             result[0][0] > 0,
                             {"test_type": "query_data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.name, self.column_name]},
+                             "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.column_name]},
                             {"test_type": "query_data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.name, self.column_name]},
+                             "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.column_name]},
 
                         )
                     else:
@@ -61,10 +59,10 @@ class QueryDataTest(TestDefinition):
                         return super().response(
                             len(result) > 0 and result[0][0] is not None,
                             {"test_type": "query_data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
+                             "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
                              "params": [self.name, self.column_name]},
                             {"test_type": "query_data_test",
-                             "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
+                             "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
                              "params": [self.name, self.column_name]},
 
                         )
@@ -74,10 +72,10 @@ class QueryDataTest(TestDefinition):
                     return super().response(
                         len(result) == 0,
                         {"test_type": "query_data_test",
-                         "test_key": "table_not_expected_value_should_not_exist_positive_feedback",
+                         "test_key": "query_not_expected_value_should_not_exist_positive_feedback",
                          "params": [self.name]},
                         {"test_type": "query_data_test",
-                         "test_key": "table_not_expected_value_should_not_exist_negative_feedback",
+                         "test_key": "query_not_expected_value_should_not_exist_negative_feedback",
                          "params": [self.name]},
 
                     )
@@ -85,10 +83,10 @@ class QueryDataTest(TestDefinition):
                     return super().response(
                         len(result) == 0,
                         {"test_type": "query_data_test",
-                         "test_key": "table_column_not_expected_value_should_not_exist_positive_feedback",
+                         "test_key": "query_column_not_expected_value_should_not_exist_positive_feedback",
                          "params": [self.name, self.column_name]},
                         {"test_type": "query_data_test",
-                         "test_key": "table_column_not_expected_value_should_not_exist_negative_feedback",
+                         "test_key": "query_column_not_expected_value_should_not_exist_negative_feedback",
                          "params": [self.name, self.column_name]},
 
                     )
@@ -100,20 +98,20 @@ class QueryDataTest(TestDefinition):
                 return super().response(
                     str(result[0][0]) == str(self.expected_value),
                     {"test_type": "query_data_test",
-                     "test_key": "table_expected_value_should_exist_positive_feedback",
+                     "test_key": "query_expected_value_should_exist_positive_feedback",
                      "params": [self.expected_value, self.name, self.column_name]},
                     {"test_type": "query_data_test",
-                     "test_key": "table_expected_value_should_exist_negative_feedback",
+                     "test_key": "query_expected_value_should_exist_negative_feedback",
                      "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                 )
             else:
                 return super().response(
                     str(result[0][0]) != str(self.expected_value),
                     {"test_type": "query_data_test",
-                     "test_key": "table_expected_value_should_not_exist_positive_feedback",
+                     "test_key": "query_expected_value_should_not_exist_positive_feedback",
                      "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                     {"test_type": "query_data_test",
-                     "test_key": "table_expected_value_should_not_exist_negative_feedback",
+                     "test_key": "query_expected_value_should_not_exist_negative_feedback",
                      "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                 )
 
