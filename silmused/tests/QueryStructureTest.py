@@ -36,3 +36,80 @@ class QueryStructureTest(TestDefinition):
 
         self.column_name = column_name
         self.where = where
+
+    def execute(self, cursor):
+        cursor.execute(self.query)
+        result = cursor.fetchall()
+
+        test_type_result = self.test_type(result)
+        if test_type_result is not None:
+            return test_type_result
+
+        if self.expected_value is not None:
+            # TODO Is this needed?
+            # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
+            if self.should_exist:
+                # print(self.title, result[0][0])
+                return super().response(
+                    len(result) != 0 and result[0][0] == self.expected_value,
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
+                )
+            else:
+                # print(self.title, result[0][0])
+                return super().response(
+                    len(result) == 0 or result[0][0] != self.expected_value,
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_positive_feedback",
+                     "params": [self.query]},
+                    {"test_type": "structure_test",
+                     "test_key": "expected_value_should_not_exist_negative_feedback",
+                     "params": [self.query, self.expected_value]},
+                )
+        else:
+            if self.should_exist:
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
+            else:
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "table_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": "structure_test",
+                         "test_key": "column_should_not_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
