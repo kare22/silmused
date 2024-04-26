@@ -1,7 +1,8 @@
 from silmused.tests.TestDefinition import TestDefinition
 
 
-# TODO raname to TableDataTest ??
+# TODO split this into TableDataTest and ViewDataTest, so that feedback would be more
+# TODO expected_value - add option to check the value between a set of data ex. 105-108
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, isView=False, points=0):

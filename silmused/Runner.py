@@ -21,7 +21,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432'):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432', test_query='test', query_sql=None):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -30,22 +30,38 @@ class Runner:
         self.db_password = db_password
         self.db_host = db_host
         self.db_port = db_port
+        self.test_query = test_query
+        self.query_sql = query_sql
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
         self.results = []
         self.translator = Translator(locale=lang)
-
-        if self._file_is_valid_pg_dump():
-            self._create_db_from_psql_dump()
-            self.results = self._run_tests()
-            # _results_to_string(self.results)
-        elif self._file_is_valid_pg_insert():
-            self._create_db_from_psql_insert()
-            self.results = self._run_tests()
-            # _results_to_string(self.results)
+        if self.test_query == 'test':
+            if self._file_is_valid_pg_dump():
+                self._create_db_from_psql_dump()
+                self.results = self._run_tests()
+                # _results_to_string(self.results)
+            elif self._file_is_valid_pg_insert():
+                self._create_db_from_psql_insert()
+                self.results = self._run_tests()
+                # _results_to_string(self.results)
+            else:
+                print('Error: File is not a valid PostgresSql dump or insert file!')
+        elif self.test_query == 'query':
+            # print('Query Test is selected!')
+            if self._file_is_valid_pg_dump():
+                self._create_db_from_psql_dump()
+                self._create_query_view()
+                self.results = self._run_tests()
+            elif self._file_is_valid_pg_insert():
+                self._create_db_from_psql_insert()
+                self._create_query_view()
+                self.results = self._run_tests()
+            else:
+                print('Error: File is not a valid PostgresSql dump or insert file!')
         else:
-            print('Error: File is not a valid PostgresSql dump or insert file!')
+            print('Error: Choose Test or Query format!')
 
     def _file_is_valid_pg_dump(self):
         if not os.path.isfile(self.file_path):
@@ -130,6 +146,18 @@ class Runner:
             cursor.close()
             connection.close()
 
+    def _create_query_view(self):
+        connection = self._connect()
+        cursor = connection.cursor()
+        try:
+            cursor.execute("CREATE VIEW test AS " + self.query_sql)
+            connection.commit()
+        except Exception as exception:
+            print(f"Running SQL failed: {exception}")
+        finally:
+            cursor.close()
+            connection.close()
+
     def _connect(self, db_name=None):
         connection_layer = psycopg2.connect(
             host=self.db_host,
@@ -145,8 +173,11 @@ class Runner:
         feedback = ''
         feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
         if len(feedback_params) > 0:
-            params=message['params']
-            if len(params) == 1:
+            params = message['params']
+            if len(params) == 0:
+                feedback = self.translator.translate(message['test_type'], message['test_key'])
+
+            elif len(params) == 1:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
                                                      param1=params[0])
             elif len(params) == 2:
