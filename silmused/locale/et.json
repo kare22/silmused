@@ -84,6 +84,12 @@
 		"index_positive_feedback": "Õige, indeks $param1 on olemas",
 		"index_negative_feedback": "Vale, indeks $param1 ei ole olemas"
 	},
+	"query_structure_test": {
+
+	},
+	"query_data_test": {
+
+	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",
 		"procedure_exists_negative_feedback": "Vale, protseduuri $param1 ei ole olemas",

@@ -49,7 +49,7 @@ class Runner:
             else:
                 print('Error: File is not a valid PostgresSql dump or insert file!')
         elif self.test_query == 'query':
-            print('Query Test is selected!')
+            # print('Query Test is selected!')
             if self._file_is_valid_pg_insert():
                 self._create_db_from_psql_insert()
                 self._create_query_view()
@@ -174,8 +174,11 @@ class Runner:
         feedback = ''
         feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
         if len(feedback_params) > 0:
-            params=message['params']
-            if len(params) == 1:
+            params = message['params']
+            if len(params) == 0:
+                feedback = self.translator.translate(message['test_type'], message['test_key'])
+
+            elif len(params) == 1:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
                                                      param1=params[0])
             elif len(params) == 2:
