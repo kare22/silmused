@@ -1,7 +1,7 @@
 # from silmused.test_cases.feedback_tests import tests
 from silmused.test_cases.praksid_koik import tests
 #from silmused.test_cases.kodutood_koik import tests
-from silmused.test_cases.query_koik import tests
+from silmused.test_cases.paring_koik import tests
 # from silmused.test_cases.demo_test_cases import tests
 from silmused.Runner import Runner
 import sys
@@ -24,6 +24,6 @@ if test_query == 'query':
     # query_sql = query_sql_path
 
 
-r = Runner(file_path, tests, db_user=db_user, lang='et', test_query=test_query, query_sql=query_sql)
+r = Runner(file_path, tests, db_user=db_user, lang='en', test_query=test_query, query_sql=query_sql)
 
 print(r.get_results())

@@ -85,10 +85,28 @@
 		"index_negative_feedback": "Vale, indeks $param1 ei ole olemas"
 	},
 	"query_structure_test": {
-
+		"query_table_should_exist_positive_feedback": "Õige, päring on olemas",
+		"query_table_should_exist_negative_feedback": "Vale, päringut ei ole olemas",
+		"query_column_should_exist_positive_feedback": "Õige, veerg $param1 on päringus olemas",
+		"query_column_should_exist_negative_feedback": "Vale, veergu $param1 ei leitud päringust",
+		"query_table_should_not_exist_positive_feedback": "Õige päringut pole olemas",
+		"query_table_should_not_exist_negative_feedback": "Vale, päringut ei tohi olla, aga on",
+		"query_column_should_not_exist_positive_feedback": "Õige veerg $param1 ei ole päringus olemas",
+		"query_column_should_not_exist_negative_feedback": "Vale, veergu $param1 ei tohiks olla päringus olemas"
 	},
 	"query_data_test": {
-
+		"query_not_expected_value_should_exist_positive_feedback": "Õige, päringul leiti tulemus",
+		"query_not_expected_value_should_exist_negative_feedback": "Vale, päringul ei leitud tulemust",
+		"query_column_not_expected_value_should_exist_positive_feedback": "Õige, päringu tulemus on olemas veerus $param1",
+		"query_column_not_expected_value_should_exist_negative_feedback": "Vale, päringu tulemust ei ole olemas veerus $param1",
+		"query_not_expected_value_should_not_exist_positive_feedback": "Õige, päringul ei leitud tulemust",
+		"query_not_expected_value_should_not_exist_negative_feedback": "Vale, päringul ei tohiks leida tulemust",
+		"query_column_not_expected_value_should_not_exist_positive_feedback": "Õige, päringu veerul $param1 ei leitud tulemust",
+		"query_column_not_expected_value_should_not_exist_negative_feedback": "Vale, päringu veerul $param1ei tohiks leida tulemust",
+		"query_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 leiti päringu veerus $param2",
+		"query_expected_value_should_exist_negative_feedback": "Vale, ei ole väärtust $param1, leiti hoopis $param2 päringu veerus $param3",
+		"query_expected_value_should_not_exist_positive_feedback": "Õige, väärtus $param1 ei võrdu $param2 päringu veerus $param3",
+		"query_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda $param2 päringu veerus $param3"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",
