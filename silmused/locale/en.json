@@ -85,21 +85,28 @@
 		"index_negative_feedback": "Wrong, expected to find index $param1, but none were found"
 	},
 	"query_structure_test": {
-
+		"query_table_should_exist_positive_feedback": "Correct, query was found",
+		"query_table_should_exist_negative_feedback": "Wrong, expected to find query, but none were found",
+		"query_column_should_exist_positive_feedback": "Correct, column $param1 found in query",
+		"query_column_should_exist_negative_feedback": "Wrong, expected to find column $param1, but none were found in query",
+		"query_table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
+		"query_table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
+		"query_column_should_not_exist_positive_feedback": "Correct no column named $param1 found in query",
+		"query_column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in query"
 	},
 	"query_data_test": {
 		"query_not_expected_value_should_exist_positive_feedback": "Correct, results were found for query",
 		"query_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for query, but none were found",
 		"query_column_not_expected_value_should_exist_positive_feedback": "Correct, results were found in column $param1",
 		"query_column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for query in column $param1, but none were found",
-		"query_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1",
-		"query_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1",
-		"query_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for table $param1 and column $param2",
-		"query_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for table $param1 and column $param2, but were found",
-		"query_expected_value_should_exist_positive_feedback": "Correct value $param1 found for table $param2 and column $param3",
-		"query_expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for table $param3 and column $param4",
-		"query_expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in table $param3 and column $param4",
-		"query_expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in table $param3 and column $param4"
+		"query_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for query",
+		"query_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for query",
+		"query_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for query in column $param1",
+		"query_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for query in column $param1, but were found",
+		"query_expected_value_should_exist_positive_feedback": "Correct value $param1 found for query in column $param2",
+		"query_expected_value_should_exist_negative_feedback": "Wrong, expected to find $param1 instead of $param2 for query in column $param3",
+		"query_expected_value_should_not_exist_positive_feedback": "Correct, $param1 does not equal $param2 in query column $param3",
+		"query_expected_value_should_not_exist_negative_feedback": "Wrong, expected $param1 to not equal $param2 in query column $param3"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Correct, procedure $param1 was found",

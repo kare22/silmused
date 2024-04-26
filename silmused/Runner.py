@@ -50,17 +50,16 @@ class Runner:
                 print('Error: File is not a valid PostgresSql dump or insert file!')
         elif self.test_query == 'query':
             # print('Query Test is selected!')
-            if self._file_is_valid_pg_insert():
+            if self._file_is_valid_pg_dump():
+                self._create_db_from_psql_dump()
+                self._create_query_view()
+                self.results = self._run_tests()
+            elif self._file_is_valid_pg_insert():
                 self._create_db_from_psql_insert()
                 self._create_query_view()
                 self.results = self._run_tests()
             else:
                 print('Error: File is not a valid PostgresSql dump or insert file!')
-
-            # TODO How to get blank DB
-            # TODO Create Private method for making views from text
-
-            pass
         else:
             print('Error: Choose Test or Query format!')
 
