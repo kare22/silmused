@@ -43,7 +43,6 @@ class DataTest(TestDefinition):
                             {"test_type": "data_test",
                              "test_key": "table_not_expected_value_should_exist_negative_feedback",
                              "params": [self.name]},
-
                         )
                     else:
                         if self.is_count:

@@ -9,6 +9,8 @@ from silmused.tests.IndexTest import IndexTest
 from silmused.tests.ProcedureTest import ProcedureTest
 from silmused.tests.TriggerTest import TriggerTest
 from silmused.tests.ViewTest import ViewTest
+from silmused.tests.QueryStructureTest import QueryStructureTest
+from silmused.tests.QueryDataTest import QueryDataTest
 
 """
 # Praktikum 3
@@ -1410,6 +1412,7 @@ tests = [
     ),
 ]
 """
+"""
 _user1 = 123456
 _user2 = 123457
 _partii_id = 123123
@@ -1583,4 +1586,58 @@ tests = [
             ),
         ]
     ),
+]
+"""
+"""
+tests = [
+    ChecksLayer(
+        title='Tabeli Tooted kontroll',
+        tests=[
+            StructureTest(
+                title='Kas on olemas tabel Tooted?',
+                name='tooted',
+                points=30,
+            ),
+            StructureTest(
+                title='Kas on olemas veerg id?',
+                name='tooted',
+                column_name='id',
+                points=20,
+            ),
+            StructureTest(
+                title='Kas on olemas veerg nimi?',
+                name='tooted',
+                column_name='nimi',
+                points=20,
+            ),
+            DataTest(
+                title='Kas on lisatud toode tugitool?',
+                name='tooted',
+                column_name='nimi',
+                where="lower(nimi)='tugitool'",
+                points=30,
+            )
+        ]
+    )
+]
+"""
+
+tests=[
+    ChecksLayer(
+        title='Rollid ja userid',
+        tests=[
+            QueryDataTest(
+                name='information_schema.role_column_grants',
+                column_name='grantee',
+                where="grantee='tudeng'",
+                expected_value='tudeng',
+            ),
+            QueryDataTest(
+                name='information_schema.role_column_grants',
+                column_name='grantee',
+                where="grantee='readonly'",
+                expected_value='readonly',
+            ),
+        ]
+    )
 ]

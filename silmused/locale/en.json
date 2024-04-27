@@ -138,6 +138,9 @@
 		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in table $param2",
 		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
 	},
+	"sys_fail": {
+		"undefined_column": "Cannot be tested, because column $param1 does not exist"
+	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Correct, trigger $param1 was found",
 		"trigger_exists_negative_feedback": "Wrong, expected to find trigger $param1, but none were found",

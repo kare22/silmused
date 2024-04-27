@@ -9,6 +9,13 @@ from silmused.tests.ProcedureTest import ProcedureTest
 from silmused.tests.TriggerTest import TriggerTest
 from silmused.tests.ViewTest import ViewTest
 # TODO Add PASS tests
+# TODO Add Function tests
+# TODO Add Index tests
+# TODO Add Procedure tests
+# TODO Add QueryData tests
+# TODO Add QueryStructure tests
+# TODO Add Trigger tests
+# TODO Add View tests
 tests = [
 ChecksLayer(
         title='DataTest feedback tests',

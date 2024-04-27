@@ -55,6 +55,12 @@ class TestDefinition():
             # TODO better error message?
 
             cursor.execute('ROLLBACK')
+            #print(sys.exc_info())
+            # column_name.lower().find("count") == -1
+            #print(sys.exc_info()[1])
+            #print('UndefinedColumn' in str(sys.exc_info()[0]))
+            if 'UndefinedColumn' in str(sys.exc_info()[0]):
+                return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
             return self.response(
                 False,
                 message_failure=sys.exc_info(),
@@ -80,3 +86,14 @@ class TestDefinition():
             'title': self.title,
             'is_sys_fail': is_sys_fail,
         }
+
+    def _undefined_column_error_feedback(self,sysfeedback):
+        split_sys_feedback = sysfeedback.split('"')
+
+        return self.response(
+            False,
+            '',
+            {"test_type": "sys_fail",
+             "test_key": "undefined_column",
+             "params": [split_sys_feedback[1]]},
+        )
