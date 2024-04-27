@@ -53,14 +53,15 @@ class TestDefinition():
         except:
             # TODO better handler for rollback?
             # TODO better error message?
-
             cursor.execute('ROLLBACK')
-            #print(sys.exc_info())
-            # column_name.lower().find("count") == -1
-            #print(sys.exc_info()[1])
-            #print('UndefinedColumn' in str(sys.exc_info()[0]))
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
+            if 'UndefinedTable' in str(sys.exc_info()[0]):
+                return self._undefined_table_error_feedback(str(sys.exc_info()[1]))
+            if 'AmbiguousColumn' in str(sys.exc_info()[0]):
+                return self._ambiguous_column_error_feedback(str(sys.exc_info()[1]))
+            if 'UndefinedFunction' in str(sys.exc_info()[0]):
+                return self._undefined_function_error_feedback(str(sys.exc_info()[1]))
             return self.response(
                 False,
                 message_failure=sys.exc_info(),
@@ -97,3 +98,45 @@ class TestDefinition():
              "test_key": "undefined_column",
              "params": [split_sys_feedback[1]]},
         )
+
+    def _undefined_table_error_feedback(self,sysfeedback):
+        split_sys_feedback = sysfeedback.split('"')
+
+        return self.response(
+            False,
+            '',
+            {"test_type": "sys_fail",
+             "test_key": "undefined_table",
+             "params": [split_sys_feedback[1]]},
+        )
+    def _ambiguous_column_error_feedback(self, sysfeedback):
+        split_sys_feedback = sysfeedback.split('"')
+        # print(sysfeedback)
+        return self.response(
+            False,
+            '',
+            {"test_type": "sys_fail",
+             "test_key": "ambiguous_column",
+             "params": [split_sys_feedback[1]]},
+        )
+
+    def _undefined_function_error_feedback(self, sysfeedback):
+        split_sys_feedback = sysfeedback.split('\n')
+        find_round = split_sys_feedback[1].split('round')
+        find_column = find_round[1].split(')')
+        column = find_column[0].strip('(').split(',')
+
+        if 'round' in sysfeedback:
+            return self.response(
+                False,
+                '',
+            {"test_type": "sys_fail",
+             "test_key": "undefined_function_round",
+             "params": [column[0]]},
+            )
+
+        return self.response(
+                False,
+                message_failure=sysfeedback,
+                is_sys_fail=True
+            )
