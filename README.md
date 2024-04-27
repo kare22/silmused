@@ -17,11 +17,11 @@ This is the heart and soul of `Silmused` and defines how tests should behave.
 * TitleLayer
 * ChecksLayer
 
-All arguments that are used for all of the different tests:
-* name
-* points
-* title=''
-* where=None
+All arguments and their requirements that are used for all of the different tests:
+* name - string | must be lowercased | the name of table, view, function etc. that is testes
+* points - integer, numeric | default is 0 | the amount of points of given for a specific test
+* title - string | default is None | tests can be given a short description or what was tested
+* where - string | default is None | can be used to specify test queries
 * join=None
 * column_name=None
 * should_exist=True
@@ -96,16 +96,16 @@ Used to insert extra titles if needed.
 ## Runner
 The bread and butter of Silmused. That does lots of stuff.
 ### Initialize
-backup_file_path - path to the file that creates the database that will be tested or where the queries will be executed on.
-tests - list of tests
-lang - language, which will be used for test feedbacks, default is english 
-test_name - if given, then it is used in database creation, so different test databases could be differentiated
-db_user - user used for connecting to database, default is postgres
-db_host - host used for connecting to database, default is localhost 
-db_password - password used fo connecting to database, default is postgresql
-db_port - port used for connecting to database, default is 5432 
-test_query - parameter that decides if query tests or database tests are executed, default is database tests 
-query_sql - when test_query='test', then this query will be used to create view, where the tests will be executed on.
+* backup_file_path - path to the file that creates the database that will be tested or where the queries will be executed on. 
+* tests - list of tests 
+* lang - language, which will be used for test feedbacks, default is english 
+* test_name - if given, then it is used in database creation, so different test databases could be differentiated 
+* db_user - user used for connecting to database, default is postgres 
+* db_host - host used for connecting to database, default is localhost 
+* db_password - password used fo connecting to database, default is postgresql 
+* db_port - port used for connecting to database, default is 5432 
+* test_query - parameter that decides if query tests or database tests are executed, default is database tests 
+* query_sql - when test_query='test', then this query will be used to create view, where the tests will be executed on.
 ### Database creation
 Creates a random named database based on random string and current datetime and connects to it.
 For database creation it accepts pg_dump or SQL script.
