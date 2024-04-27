@@ -139,7 +139,10 @@
 		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2"
 	},
 	"sys_fail": {
-		"undefined_column": "Ei saa testida, sest veergu $param1 ei ole olemas"
+		"undefined_column": "Ei saa testida, sest veergu $param1 ei ole olemas",
+		"undefined_table": "Ei saa testida, sest tabel $param1 ei ole olemas",
+		"ambiguous_column": "Ei saa testida, sest veergu $param1 saab kasutada mitmes päringu objektis",
+		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
