@@ -138,6 +138,9 @@
 		"column_should_not_exist_positive_feedback": "Õige, veergu $param1 ei ole olemas tabelis $param2",
 		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2"
 	},
+	"sys_fail": {
+		"undefined_column": "Ei saa testida, sest veergu $param1 ei ole olemas"
+	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
 		"trigger_exists_negative_feedback": "Vale, triger $param1 ei ole olemas",
