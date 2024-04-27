@@ -31,7 +31,6 @@ class QueryDataTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-
         if self.expected_value is None:
             if self.should_exist:
                 if self.column_name is None:
@@ -92,6 +91,7 @@ class QueryDataTest(TestDefinition):
         # expected value is not None
         else:
             if self.should_exist:
+                # TODO No result found should have a feedback
                 # TODO add type check
                 return super().response(
                     str(result[0][0]) == str(self.expected_value),
