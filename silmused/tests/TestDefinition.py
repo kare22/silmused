@@ -1,4 +1,5 @@
 import sys
+import re
 
 
 # TODO this should not be usable without a child
@@ -49,10 +50,12 @@ class TestDefinition():
     def run(self, cursor):
         try:
             # TODO could executing of pre and/or after queries be handled here?
+            #print(self.query)
             return self.execute(cursor)
         except:
             # TODO better handler for rollback?
             # TODO better error message?
+            #print(sys.exc_info())
             cursor.execute('ROLLBACK')
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
@@ -109,6 +112,7 @@ class TestDefinition():
              "test_key": "undefined_table",
              "params": [split_sys_feedback[1]]},
         )
+
     def _ambiguous_column_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
         # print(sysfeedback)
@@ -121,19 +125,17 @@ class TestDefinition():
         )
 
     def _undefined_function_error_feedback(self, sysfeedback):
-        split_sys_feedback = sysfeedback.split('\n')
-        find_round = split_sys_feedback[1].split('round')
-        find_column = find_round[1].split(')')
-        column = find_column[0].strip('(').split(',')
-
         if 'round' in sysfeedback:
-            return self.response(
-                False,
-                '',
-            {"test_type": "sys_fail",
-             "test_key": "undefined_function_round",
-             "params": [column[0]]},
-            )
+            pattern = r'SELECT round\((.*?),[0-9]\)'
+            match = re.findall(pattern, sysfeedback, re.IGNORECASE)
+            if len(match) > 0:
+                return self.response(
+                    False,
+                    '',
+                {"test_type": "sys_fail",
+                 "test_key": "undefined_function_round",
+                 "params": [match[0]]},
+                )
 
         return self.response(
                 False,

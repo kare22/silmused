@@ -18,15 +18,15 @@ This is the heart and soul of `Silmused` and defines how tests should behave.
 * ChecksLayer
 
 All arguments and their requirements that are used for all of the different tests:
-* name - string | must be lowercased | the name of table, view, function etc. that is testes
+* name - string | cannot be empty, must be lowercased | the name of table, view, function etc. that is testes
 * points - integer, numeric | default is 0 | the amount of points of given for a specific test
 * title - string | default is None | tests can be given a short description or what was tested
 * where - string | default is None | can be used to specify test queries
-* join=None
-* column_name=None
-* should_exist=True
-* query='',
-* description=None
+* join - string | default is None, current limis is on join | can be used to add joins
+* column_name - string | default is None, must be lowercased | the column that is checked for data mostly
+* should_exist - True/False | default is True | if tested result should exist or not
+* query - string | shouldn't be used for tests, will be overwritten | test inner query used for testing results
+* description - string | default is None | can be used to give tests more through description, not displayed anywhere
 * arguments=None
 * expected_value=None
 * expected_character_maximum_length=None
