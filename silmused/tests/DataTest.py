@@ -1,7 +1,7 @@
 from silmused.tests.TestDefinition import TestDefinition
 
 
-# TODO split this into TableDataTest and ViewDataTest, so that feedback would be more
+# TODO split this into TableDataTest and ViewDataTest, so that feedback code would be more readable
 # TODO expected_value - add option to check the value between a set of data ex. 105-108
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
@@ -31,6 +31,8 @@ class DataTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
+        #print(self.query)
+        #print(result)
         if not self.isView:
             if self.expected_value is None:
                 if self.should_exist:
@@ -57,7 +59,7 @@ class DataTest(TestDefinition):
 
                             )
                         else:
-                            # TODO Should check if all results are not None, line 148 also
+                            # TODO Should check if all results are not None
                             return super().response(
                                 len(result) > 0 and result[0][0] is not None,
                                 {"test_type": "data_test",
@@ -95,17 +97,28 @@ class DataTest(TestDefinition):
             # expected value is not None
             else:
                 if self.should_exist:
-                    # TODO add type check
-
-                    return super().response(
-                        str(result[0][0]) == str(self.expected_value),
-                        {"test_type": "data_test",
-                         "test_key": "table_expected_value_should_exist_positive_feedback",
-                         "params": [self.expected_value, self.name, self.column_name]},
-                        {"test_type": "data_test",
-                         "test_key": "table_expected_value_should_exist_negative_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                    )
+                    if self.expected_value == 'NULL' or self.expected_value == 'None':
+                        if result[0][0] is None and len(result) > 0:
+                            return super().response(
+                                result[0][0] is None,
+                                {"test_type": "data_test",
+                                 "test_key": "table_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "table_expected_value_should_exist_negative_feedback",
+                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                            )
+                    else:
+                        # TODO add type check
+                        return super().response(
+                            str(result[0][0]) == str(self.expected_value),
+                            {"test_type": "data_test",
+                             "test_key": "table_expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.name, self.column_name]},
+                            {"test_type": "data_test",
+                             "test_key": "table_expected_value_should_exist_negative_feedback",
+                             "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                        )
                 else:
                     return super().response(
                         str(result[0][0]) != str(self.expected_value),
@@ -144,6 +157,7 @@ class DataTest(TestDefinition):
 
                             )
                         else:
+                            # TODO Should check if all results are not None
                             return super().response(
                                 len(result) > 0 and result[0][0] is not None,
                                 {"test_type": "data_test",
@@ -181,17 +195,29 @@ class DataTest(TestDefinition):
             # expected value is not None
             else:
                 if self.should_exist:
-                    # TODO add type check
+                    if self.expected_value == 'NULL' or self.expected_value == 'None':
+                        if result[0][0] is None and len(result) > 0:
+                            return super().response(
+                                result[0][0] is None,
+                                {"test_type": "data_test",
+                                 "test_key": "view_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.name, self.column_name]},
+                                {"test_type": "data_test",
+                                 "test_key": "view_expected_value_should_exist_negative_feedback",
+                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                            )
+                    else:
+                        # TODO add type check
 
-                    return super().response(
-                        str(result[0][0]) == str(self.expected_value),
-                        {"test_type": "data_test",
-                         "test_key": "view_expected_value_should_exist_positive_feedback",
-                         "params": [self.expected_value, self.name, self.column_name]},
-                        {"test_type": "data_test",
-                         "test_key": "view_expected_value_should_exist_negative_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                    )
+                        return super().response(
+                            str(result[0][0]) == str(self.expected_value),
+                            {"test_type": "data_test",
+                             "test_key": "view_expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.name, self.column_name]},
+                            {"test_type": "data_test",
+                             "test_key": "view_expected_value_should_exist_negative_feedback",
+                             "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                        )
                 else:
                     return super().response(
                         str(result[0][0]) != str(self.expected_value),
