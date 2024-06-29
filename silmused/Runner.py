@@ -21,7 +21,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432', test_query='test', query_sql=None):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432', test_query='test', query_sql=None, encoding=''):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -32,6 +32,7 @@ class Runner:
         self.db_port = db_port
         self.test_query = test_query
         self.query_sql = query_sql
+        self.encoding = encoding
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
@@ -95,9 +96,15 @@ class Runner:
             return False
 
         try:
-            with open(self.file_path, 'r') as file:
-                lines = file.readlines()
-                return any(line.strip().startswith("INSERT") for line in lines)
+            if len(self.encoding) > 0:
+                with open(self.file_path, 'r', encoding=self.encoding) as file:
+                    lines = file.readlines()
+                    return any(line.strip().startswith("INSERT") for line in lines)
+            else:
+
+                with open(self.file_path, 'r') as file:
+                    lines = file.readlines()
+                    return any(line.strip().startswith("INSERT") for line in lines)
         except IOError:
             return False
 
@@ -118,8 +125,13 @@ class Runner:
         cursor = connection.cursor()
 
         try:
-            with open(self.file_path, 'r') as file:
-                sql_script = file.read()
+            if len(self.encoding) > 0:
+                with open(self.file_path, 'r', encoding=self.encoding) as file:
+                    sql_script = file.read()
+            else:
+
+                with open(self.file_path, 'r') as file:
+                    sql_script = file.read()
             cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
@@ -150,7 +162,10 @@ class Runner:
         connection = self._connect()
         cursor = connection.cursor()
         try:
-            cursor.execute("CREATE VIEW test AS " + self.query_sql)
+            cursor.execute("CREATE VIEW test_view AS " + self.query_sql)
+            cursor.execute("create table test_table as select * from test_view limit 0;")
+            cursor.execute("alter table test_table add column id serial;")
+            cursor.execute("insert into test_table select * from test_view;")
             connection.commit()
         except Exception as exception:
             print(f"Running SQL failed: {exception}")
