@@ -19,6 +19,7 @@ def main():
     lang = sys.argv[7] if len(sys.argv) > 7 else 'en'
     test_query = sys.argv[8] if len(sys.argv) > 8 else 'test'
     querydb_path = sys.argv[9] if len(sys.argv) > 9 else ''
+    sql_file_encoding = sys.argv[10] if len(sys.argv) > 10 else ''
 
     with open(tests_path, 'r') as file:
         tests_file_content = file.read()
@@ -30,8 +31,8 @@ def main():
     if test_query == 'query':
         with open(sql_file_path, 'r') as file:
             query_sql = file.read()
-        # query_sql = sql_file_path
         sql_file_path = querydb_path
 
-    r=Runner(sql_file_path, tests, db_user=db_user, db_host=db_host, db_port=db_port, db_password=db_password, lang=lang, test_query=test_query, query_sql=query_sql)
+    r=Runner(sql_file_path, tests, db_user=db_user, db_host=db_host, db_port=db_port, db_password=db_password, lang=lang,
+             test_query=test_query, query_sql=query_sql, encoding=sql_file_encoding)
     print(r.get_results())
