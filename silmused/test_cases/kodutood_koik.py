@@ -332,7 +332,9 @@ tests = [
         ]
     ),
 ]
-
+"""
+"""
+tests = [
     # Kodutöö 5 kontrollid
     # 25p
     ChecksLayer(
@@ -403,7 +405,6 @@ tests = [
             ),
         ]
     ),
-tests = [
     # 25p
     ChecksLayer(
         title='Protseduuri sp_uus_turniir kontrollid',
@@ -442,11 +443,7 @@ tests = [
         ]
     ),
 ]
-"""
-_user1 = 123456
-_user2 = 123457
-_partii_id = 123123
-tests = [
+
     # Kodutöö 6 kontrollid
     # 10p + 10p
     ChecksLayer(
@@ -465,6 +462,11 @@ tests = [
         ],
     ),
     # 25p
+    """
+_user1 = 123456
+_user2 = 123457
+_partii_id = 123123
+tests = [
     ChecksLayer(
         title='Trigger tg_partiiaeg kontrollid',
         tests=[
@@ -479,31 +481,33 @@ tests = [
             ExecuteLayer("ALTER TABLE public.partiid ENABLE TRIGGER tg_partiiaeg"),
             ExecuteLayer("ALTER TABLE public.isikud DISABLE TRIGGER ALL"),
             ExecuteLayer(f"DELETE FROM public.isikud WHERE id in ({_user1},{_user2})"),
-            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user1},'Man', 'Ka')"),
-            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi) VALUES ({_user2},'Kan', 'Ma')"),
-            ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-04-22 17:45:24.000','2023-03-22 17:45:24.000',{_user1},{_user2},2,0, {_partii_id})", ),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi, klubis) VALUES ({_user1},'Man', 'Ka',54)"),
             DataTest(
                 title='Kas testimiseks õnnestus lisada test_isik1?',
                 name='isikud',
-                where=f"public.isikud.id = {_user1} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
+                where=f"isikud.id = {_user1} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
                 points=2,
             ),
+            ExecuteLayer(f"INSERT INTO public.isikud (id, eesnimi, perenimi, klubis) VALUES ({_user2},'Kan', 'Ma',54)"),
             DataTest(
                 title='Kas testimiseks õnnestus lisada test_isik2?',
                 name='isikud',
-                where=f"public.isikud.id = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
+                where=f"isikud.id = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
                 points=2,
             ),
+            ExecuteLayer(f"INSERT INTO public.partiid VALUES (44,'2023-04-22 17:45:24.000','2023-03-22 17:45:24.000',{_user1},{_user2},2,0, {_partii_id})", ),
             DataTest(
                 title='Kas testimiseks lisatud isikute partii lõpphetk on õige?',
                 name='partiid',
-                column_name='lopphetk',
-                where=f"valge = {_user1} AND must = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
-                expected_value='None',
+                column_name='COUNT(*)',
+                where=f"lopphetk IS NULL and valge = {_user1} AND must = {_user2} and EXISTS(SELECT * FROM information_schema.triggers WHERE trigger_name = 'tg_partiiaeg')",
+                expected_value=1,
                 points=11,
             ),
         ],
     ),
+]
+"""
     # 25p
     ChecksLayer(
         title='Trigger tg_klubi_olemasolu kontrollid',
@@ -543,3 +547,4 @@ tests = [
         ]
     )
 ]
+"""
