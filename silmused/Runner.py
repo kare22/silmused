@@ -60,6 +60,7 @@ class Runner:
                 self._create_query_view()
                 self.results = self._run_tests()
             else:
+                print(backup_file_path)
                 print('Error: File is not a valid PostgresSql dump or insert file!')
         else:
             print('Error: Choose Test or Query format!')
@@ -162,10 +163,10 @@ class Runner:
         connection = self._connect()
         cursor = connection.cursor()
         try:
-            cursor.execute("CREATE VIEW test_view AS " + self.query_sql)
-            cursor.execute("create table test_table as select * from test_view limit 0;")
-            cursor.execute("alter table test_table add column id serial;")
-            cursor.execute("insert into test_table select * from test_view;")
+            cursor.execute("CREATE VIEW query_view AS " + self.query_sql)
+            cursor.execute("create table query_test as select * from query_view limit 0;")
+            cursor.execute("alter table query_test add column test_id serial;")
+            cursor.execute("insert into query_test select * from query_view;")
             connection.commit()
         except Exception as exception:
             print(f"Running SQL failed: {exception}")
