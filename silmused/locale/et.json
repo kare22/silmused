@@ -64,7 +64,15 @@
 		"view_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 vaates $param2 ja veerus $param2",
 		"view_expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust $param1, leiti hoopis $param2 vaates $param3 ja veerus $param4",
 		"view_expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus $param1 ei võrdu $param2 vaates $param3 ja veerus $param4",
-		"view_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 vaates $param3 ja veerus $param4"
+		"view_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda väärtusega $param2 vaates $param3 ja veerus $param4",
+		"table_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3 tabelis $param4 veerus $param5",
+		"table_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 tabelis $param4 veerus $param5",
+		"table_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 tabelis $param3 veerus $param4",
+		"table_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 tabelis $param3 veerus $param4",
+		"view_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3 vaates $param4 veerus $param5",
+		"view_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 vaates $param4 veerus $param5",
+		"view_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 vaates $param3 veerus $param4",
+		"view_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 vaates $param3 veerus $param4"
 	},
 	"function_test": {
 		"function_exists_positive_feedback": "Õige, funktsioon $param1 on olemas",
@@ -106,7 +114,11 @@
 		"query_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus $param1 leiti päringu veerus $param2",
 		"query_expected_value_should_exist_negative_feedback": "Vale, ei ole väärtust $param1, leiti hoopis $param2 päringu veerus $param3",
 		"query_expected_value_should_not_exist_positive_feedback": "Õige, väärtus $param1 ei võrdu $param2 päringu veerus $param3",
-		"query_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda $param2 päringu veerus $param3"
+		"query_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus $param1 ei tohi võrduda $param2 päringu veerus $param3",
+		"query_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3 veerus $param4",
+		"query_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 veerus $param4",
+		"query_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 veerus $param3",
+		"query_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 veerus $param3"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",

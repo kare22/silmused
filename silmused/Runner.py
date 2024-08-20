@@ -204,9 +204,14 @@ class Runner:
                                                      param1=params[0], param2=params[1], param3=params[2])
             elif len(params) == 4:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0], param2=params[1], param3=params[2], param4=params[3])
+                                                     param1=params[0], param2=params[1], param3=params[2],
+                                                     param4=params[3])
+            elif len(params) == 5:
+                feedback = self.translator.translate(message['test_type'], message['test_key'],
+                                                     param1=params[0], param2=params[1], param3=params[2],
+                                                     param4=params[3], param5=params[4])
             else:
-                feedback = "Params were given, but there is more than 4"
+                feedback = "Params were given, but there is more than 5"
 
         return feedback
 
