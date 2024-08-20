@@ -40,7 +40,6 @@ class StructureTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-
         test_type_result = self.test_type(result)
         if test_type_result is not None:
             return test_type_result
