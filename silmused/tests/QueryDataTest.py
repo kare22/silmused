@@ -1,5 +1,6 @@
 from silmused.tests.TestDefinition import TestDefinition
 
+
 class QueryDataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, points=0):
@@ -17,7 +18,7 @@ class QueryDataTest(TestDefinition):
                 min_value = None
                 max_value = None
                 for value in expected_value:
-                    if type(value) == str:
+                    if isinstance(value, str):
                         raise Exception('Ranged expected value cannot be a string')
                     if min_value is None:
                         min_value = value

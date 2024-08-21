@@ -21,7 +21,7 @@ class DataTest(TestDefinition):
                 min_value = None
                 max_value = None
                 for value in expected_value:
-                    if type(value) == str:
+                    if isinstance(value, str):
                         raise Exception('Ranged expected value cannot be a string')
                     if min_value is None:
                         min_value = value
@@ -131,7 +131,7 @@ class DataTest(TestDefinition):
                                  "params": [self.expected_value, self.name, self.column_name]},
                                 {"test_type": "data_test",
                                  "test_key": "table_expected_value_should_exist_negative_feedback",
-                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                             )
                     elif self.expected_value_list:
                         if self.expected_value_group == "numbers":
@@ -291,7 +291,7 @@ class DataTest(TestDefinition):
                              "params": [self.expected_value, self.name, self.column_name]},
                             {"test_type": "data_test",
                              "test_key": "view_expected_value_should_exist_negative_feedback",
-                             "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                             "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                         )
                 else:
                     return super().response(

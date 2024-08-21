@@ -106,6 +106,7 @@ The bread and butter of Silmused. That does lots of stuff.
 * db_port - port used for connecting to database, default is 5432 
 * test_query - parameter that decides if query tests or database tests are executed, default is database tests 
 * query_sql - when test_query='test', then this query will be used to create view, where the tests will be executed on.
+* encoding - can be used to specify in what encoding database files are
 ### Database creation
 Creates a random named database based on random string and current datetime and connects to it.
 For database creation it accepts pg_dump or SQL script.
