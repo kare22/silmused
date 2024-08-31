@@ -52,6 +52,8 @@ class QueryDataTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
+
+        # TODO Add an overall test response to the end, incase of oversight
         if self.expected_value is None:
             if self.should_exist:
                 if self.column_name is None:
@@ -77,7 +79,7 @@ class QueryDataTest(TestDefinition):
                         )
                     # Same feedback test_keys
                     else:
-                        # TODO Should check if all results are not None, line 148 also
+                        # TODO Should check if all results are not None
                         return super().response(
                             len(result) > 0 and result[0][0] is not None,
                             {"test_type": "query_data_test",
@@ -112,7 +114,16 @@ class QueryDataTest(TestDefinition):
         # expected value is not None
         else:
             if self.should_exist:
+                if len(result) == 0:
+                    return super().response(
+                        False,
+                        "",
+                        {"test_type": "query_data_test",
+                         "test_key": "query_no_result",
+                         "params": []},
+                    )
                 if self.expected_value == 'NULL' or self.expected_value == 'None':
+                    # TODO Should check if all results are None
                     if result[0][0] is None and len(result) > 0:
                         return super().response(
                             result[0][0] is None,
@@ -125,31 +136,28 @@ class QueryDataTest(TestDefinition):
                         )
                 elif self.expected_value_list:
                     if self.expected_value_group == "numbers":
-                        if len(result) > 0:
-                            return super().response(
-                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_numbers_positive_feedback",
-                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                            self.column_name]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_numbers_negative_feedback",
-                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                            self.column_name]},
-                            )
+                        return super().response(
+                            self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_group_numbers_positive_feedback",
+                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                        self.column_name]},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_group_numbers_negative_feedback",
+                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                        self.column_name]},
+                        )
                     elif self.expected_value_group == "strings":
-                        if len(result) > 0:
-                            return super().response(
-                                result[0][0] in self.expected_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_strings_positive_feedback",
-                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_strings_negative_feedback",
-                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
-                            )
+                        return super().response(
+                            result[0][0] in self.expected_value,
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_group_strings_positive_feedback",
+                             "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_group_strings_negative_feedback",
+                             "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                        )
                 else:
-                    # TODO No result found should have a feedback
                     # TODO add type check
                     return super().response(
                         str(result[0][0]) == str(self.expected_value),
