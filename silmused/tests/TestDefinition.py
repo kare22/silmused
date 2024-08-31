@@ -3,7 +3,7 @@ import re
 
 
 # TODO this should not be usable without a child
-class TestDefinition():
+class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
                  expected_type=None, expected_count=None, pre_query=None, after_query=None):
@@ -33,7 +33,7 @@ class TestDefinition():
         self.name = name
         self.column_name = column_name
         self.description = description
-        self.arguments = arguments # TODO arguments could be a class
+        self.arguments = arguments  # TODO arguments could be a class
         self.expected_value = expected_value
         self.expected_character_maximum_length = expected_character_maximum_length
         self.expected_type = expected_type
@@ -50,13 +50,13 @@ class TestDefinition():
     def run(self, cursor):
         try:
             # TODO could executing of pre and/or after queries be handled here?
-            #print(self.query)
+            # print(self.query)
             return self.execute(cursor)
         except:
             # TODO better handler for rollback?
-            # TODO better error message?
-            #print(sys.exc_info())
+            # print(sys.exc_info())
             cursor.execute('ROLLBACK')
+            print(sys.exc_info()[0])
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
             if 'UndefinedTable' in str(sys.exc_info()[0]):
@@ -65,6 +65,8 @@ class TestDefinition():
                 return self._ambiguous_column_error_feedback(str(sys.exc_info()[1]))
             if 'UndefinedFunction' in str(sys.exc_info()[0]):
                 return self._undefined_function_error_feedback(str(sys.exc_info()[1]))
+            if 'IndexError' in str(sys.exc_info()[0]):
+                return self._index_error()
             return self.response(
                 False,
                 message_failure=sys.exc_info(),
@@ -91,7 +93,7 @@ class TestDefinition():
             'is_sys_fail': is_sys_fail,
         }
 
-    def _undefined_column_error_feedback(self,sysfeedback):
+    def _undefined_column_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
 
         return self.response(
@@ -102,7 +104,7 @@ class TestDefinition():
              "params": [split_sys_feedback[1]]},
         )
 
-    def _undefined_table_error_feedback(self,sysfeedback):
+    def _undefined_table_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
 
         return self.response(
@@ -132,9 +134,9 @@ class TestDefinition():
                 return self.response(
                     False,
                     '',
-                {"test_type": "sys_fail",
-                 "test_key": "undefined_function_round",
-                 "params": [match[0]]},
+                    {"test_type": "sys_fail",
+                     "test_key": "undefined_function_round",
+                     "params": [match[0]]},
                 )
 
         return self.response(
@@ -142,3 +144,12 @@ class TestDefinition():
                 message_failure=sysfeedback,
                 is_sys_fail=True
             )
+
+    def _index_error(self):
+        return self.response(
+            False,
+            '',
+            {"test_type": "sys_fail",
+             "test_key": "index_error",
+             "params": []},
+        )
