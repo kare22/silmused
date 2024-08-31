@@ -74,6 +74,10 @@
 		"view_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 vaates $param3 veerus $param4",
 		"view_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 vaates $param3 veerus $param4"
 	},
+	"default_feedback": {
+		"default_positive_feedback": "Õige tulemus",
+		"default_negative_feedback": "Vale tulemus"
+	},
 	"function_test": {
 		"function_exists_positive_feedback": "Õige, funktsioon $param1 on olemas",
 		"function_exists_negative_feedback": "Vale, funktsiooni $param1 ei ole olemas",
@@ -118,7 +122,8 @@
 		"query_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3 veerus $param4",
 		"query_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 veerus $param4",
 		"query_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 veerus $param3",
-		"query_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 veerus $param3"
+		"query_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 veerus $param3",
+		"query_no_result": "Vale, päringul puudub tulemus"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",
@@ -154,7 +159,8 @@
 		"undefined_column": "Ei saa testida, sest veergu $param1 ei ole olemas",
 		"undefined_table": "Ei saa testida, sest tabel $param1 ei ole olemas",
 		"ambiguous_column": "Ei saa testida, sest veergu $param1 saab kasutada mitmes päringu objektis",
-		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric"
+		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric",
+		"index_error": "Tulemust ei leitud"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
@@ -177,7 +183,7 @@
 		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas vaatest $param2",
 		"mat_view_should_exist_positive_feedback": "Õige, materialiseeritud vaade $param1 on olemas",
 		"mat_view_should_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei ole olemas",
-		"mat_view_should_not_exist_positive_feedback": "Õige, aterialiseeritud vaade $param1 ei ole olemas",
-		"mat_view_should_not_exist_negative_feedback": "Vale, aterialiseeritud vaadet $param1 ei tohiks olla olemas"
+		"mat_view_should_not_exist_positive_feedback": "Õige, materialiseeritud vaade $param1 ei ole olemas",
+		"mat_view_should_not_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei tohiks olla olemas"
 	}
 }
