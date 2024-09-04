@@ -56,7 +56,9 @@ class TestDefinition:
             # TODO better handler for rollback?
             # print(sys.exc_info())
             cursor.execute('ROLLBACK')
+            print("siin")
             print(sys.exc_info()[0])
+            print("pärast siin")
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
             if 'UndefinedTable' in str(sys.exc_info()[0]):
