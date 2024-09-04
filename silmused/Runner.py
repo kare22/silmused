@@ -58,9 +58,7 @@ class Runner:
             elif self._file_is_valid_pg_insert():
                 self._create_db_from_psql_insert()
                 self._create_query_view()
-                print("siin on viga1")
                 self.results = self._run_tests()
-                print("siin on viga2")
             else:
                 print(backup_file_path)
                 print('Error: File is not a valid PostgresSql dump or insert file!')
@@ -152,9 +150,7 @@ class Runner:
             results = []
 
             for test in self.tests:
-                print(test)
                 results.append(test.run(cursor))
-                print(results)
 
             return results
         except Exception as exception:
