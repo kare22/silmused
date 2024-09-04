@@ -163,11 +163,17 @@ class Runner:
         connection = self._connect()
         cursor = connection.cursor()
         try:
+            print("siin on viga")
             cursor.execute("CREATE VIEW query_view AS " + self.query_sql)
+            print("siin on viga1")
             cursor.execute("create table query_test as select * from query_view limit 0;")
+            print("siin on viga2")
             cursor.execute("alter table query_test add column test_id serial;")
+            print("siin on viga3")
             cursor.execute("insert into query_test select * from query_view;")
+            print("siin on viga4")
             connection.commit()
+            print("siin on viga5")
         except Exception as exception:
             print(f"Running SQL failed: {exception}")
         finally:
