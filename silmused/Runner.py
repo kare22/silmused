@@ -294,13 +294,22 @@ class Runner:
                 points_max = 1
                 points_actual = 1
 
-            output = {
-                "result_type": "OK_V3",
-                "points": round(100 * points_actual / points_max),
-                "producer": f"silmused {__version__}",
-                "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "tests": tests
-            }
+            if points_max != 0:
+                output = {
+                    "result_type": "OK_V3",
+                    "points": round(100 * points_actual / points_max),
+                    "producer": f"silmused {__version__}",
+                    "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "tests": tests
+                }
+            else:
+                output = {
+                    "result_type": "OK_V3",
+                    "points": 0,
+                    "producer": f"silmused {__version__}",
+                    "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "tests": tests
+                }
             return json.dumps(output, ensure_ascii=False)
         except:
             print(sys.exc_info())
