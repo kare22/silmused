@@ -160,7 +160,9 @@
 		"undefined_table": "Ei saa testida, sest tabel $param1 ei ole olemas",
 		"ambiguous_column": "Ei saa testida, sest veergu $param1 saab kasutada mitmes päringu objektis",
 		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric",
-		"index_error": "Tulemust ei leitud"
+		"index_error": "Tulemust ei leitud",
+		"incorrect_dump_file": "Viga: Ei leitud õiget Postgre dump või sql faili!",
+		"incorrect_test_format": "Viga: Vali Test või Query formaat!"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
