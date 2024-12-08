@@ -16,7 +16,10 @@ file_path = "silmused/test_cases/ope_db/praktikum12.sql"
 #file_path= "silmused/test_cases/tudeng.sql"
 #file_path = "silmused/test_cases/feedback_tests.sql"
 
+# port 5432 is used by postgres v16
+# r = Runner(file_path, tests, db_user=db_user, lang=lang, db_port=5432, encoding='UTF-8')
 
-r = Runner(file_path, tests, db_user=db_user, lang=lang, encoding='UTF-8')
+# port 5433 is used by postgres v17
+r = Runner(file_path, tests, db_user=db_user, lang=lang, db_port=5433, encoding='UTF-8')
 
 print(r.get_results())
