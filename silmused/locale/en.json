@@ -160,7 +160,9 @@
 		"undefined_table": "Cannot be tested, because table $param1 does not exist",
 		"ambiguous_column": "Cannot be tested, because column $param1 can be referenced by multiple objects",
 		"undefined_function_round": "Cannot be tested, because column $param1 is not numeric",
-		"index_error": "There is no result"
+		"index_error": "There is no result",
+		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
+		"incorrect_test_format": "Error: Choose Test or Query format!"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Correct, trigger $param1 was found",
