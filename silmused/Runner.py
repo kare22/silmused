@@ -42,15 +42,12 @@ class Runner:
             if self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
                 self.results = self._run_tests()
-                # _results_to_string(self.results)
             elif self._file_is_valid_pg_insert():
                 self._create_db_from_psql_insert()
                 self.results = self._run_tests()
-                # _results_to_string(self.results)
             else:
-                print('Error: File is not a valid PostgresSql dump or insert file!')
+                print(self.translator.translate("sys_fail", "incorrect_dump_file"))
         elif self.test_query == 'query':
-            # print('Query Test is selected!')
             if self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
                 self._create_query_view()
@@ -60,10 +57,9 @@ class Runner:
                 self._create_query_view()
                 self.results = self._run_tests()
             else:
-                print(backup_file_path)
-                print('Error: File is not a valid PostgresSql dump or insert file!')
+                print(self.translator.translate("sys_fail", "incorrect_dump_file"))
         else:
-            print('Error: Choose Test or Query format!')
+            print(self.translator.translate("sys_fail", "incorrect_test_format"))
 
     def _file_is_valid_pg_dump(self):
         if not os.path.isfile(self.file_path):
