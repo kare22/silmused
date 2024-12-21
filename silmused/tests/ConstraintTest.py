@@ -231,7 +231,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -253,7 +253,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -274,7 +274,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        len(result) == 0,
                         {"test_type": "constraint_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -296,7 +296,7 @@ class ConstraintTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "constraint_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -317,7 +317,7 @@ class ConstraintTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "constraint_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -339,7 +339,7 @@ class ConstraintTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "constraint_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -360,7 +360,7 @@ class ConstraintTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "constraint_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -381,7 +381,7 @@ class ConstraintTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            len(result) == 0,
                             {"test_type": "constraint_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -427,7 +427,7 @@ class ConstraintTest(TestDefinition):
                 )
             else:
                 return super().response(
-                    len(result) > 0,
+                    False,
                     {"test_type": "constraint_test",
                      "test_key": "custom_feedback",
                      "params": [self.custom_feedback]},
@@ -447,7 +447,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        False,
                         {"test_type": "constraint_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -466,7 +466,7 @@ class ConstraintTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        len(result) > 0,
+                        False,
                         {"test_type": "constraint_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
