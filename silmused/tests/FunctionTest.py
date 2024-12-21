@@ -47,25 +47,47 @@ class FunctionTest(TestDefinition):
 
         if self.expected_value is None:
             if self.expected_count is None:
-                return super().response(
-                    len(result) > 0,
-                    {"test_type": "function_test",
-                     "test_key": "function_not_expected_value_not_expected_result_count_positive_feedback",
-                     "params": [self.name, list_to_string(self.arguments)]},
-                    {"test_type": "function_test",
-                     "test_key": "function_not_expected_value_not_expected_result_count_negative_feedback",
-                     "params": [self.name, list_to_string(self.arguments)]}
-                )
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "function_test",
+                         "test_key": "function_not_expected_value_not_expected_result_count_positive_feedback",
+                         "params": [self.name, list_to_string(self.arguments)]},
+                        {"test_type": "function_test",
+                         "test_key": "function_not_expected_value_not_expected_result_count_negative_feedback",
+                         "params": [self.name, list_to_string(self.arguments)]}
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
             else:
-                return super().response(
-                    len(result) == self.expected_count,
-                    {"test_type": "function_test",
-                     "test_key": "function_not_expected_value_expected_result_count_positive_feedback",
-                     "params": [self.expected_count, self.name, list_to_string(self.arguments)]},
-                    {"test_type": "function_test",
-                     "test_key": "function_not_expected_value_expected_result_count_negative_feedback",
-                     "params": [self.expected_count, self.name, list_to_string(self.arguments), len(result)]}
-                )
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) == self.expected_count,
+                        {"test_type": "function_test",
+                         "test_key": "function_not_expected_value_expected_result_count_positive_feedback",
+                         "params": [self.expected_count, self.name, list_to_string(self.arguments)]},
+                        {"test_type": "function_test",
+                         "test_key": "function_not_expected_value_expected_result_count_negative_feedback",
+                         "params": [self.expected_count, self.name, list_to_string(self.arguments), len(result)]}
+                    )
+                else:
+                    return super().response(
+                        len(result) == self.expected_count,
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
         else:
             # TODO when type is decimal but we give float, we get an error
             # if type(result[0][0]) != type(self.expected_value):
@@ -74,57 +96,101 @@ class FunctionTest(TestDefinition):
             #         'Correct',
             #         f"Expected type {type(self.expected_value)} but got {type(result[0][0])}",
             #     )
-            return super().response(
-                str(result[0][0]) == str(self.expected_value),
-                {"test_type": "function_test",
-                 "test_key": "function_expected_value_positive_feedback",
-                 "params": [self.expected_value]},
-                {"test_type": "function_test",
-                 "test_key": "function_expected_value_negative_feedback",
-                 "params": [self.expected_value, result[0][0]]}
-            )
+            if self.custom_feedback is None:
+                return super().response(
+                    str(result[0][0]) == str(self.expected_value),
+                    {"test_type": "function_test",
+                     "test_key": "function_expected_value_positive_feedback",
+                     "params": [self.expected_value]},
+                    {"test_type": "function_test",
+                     "test_key": "function_expected_value_negative_feedback",
+                     "params": [self.expected_value, result[0][0]]}
+                )
+            else:
+                return super().response(
+                    str(result[0][0]) == str(self.expected_value),
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                )
 
     def test_function_exists(self, cursor):
         cursor.execute(f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
         if len(cursor.fetchall()) <= 0:
-            return super().response(
-                False,
-                {"test_type": "function_test",
-                 "test_key": "function_exists_positive_feedback",
-                 "params": [self.name]},
-                {"test_type": "function_test",
-                 "test_key": "function_exists_negative_feedback",
-                 "params": [self.name]}
-            )
+            if self.custom_feedback is None:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "function_exists_positive_feedback",
+                     "params": [self.name]},
+                    {"test_type": "function_test",
+                     "test_key": "function_exists_negative_feedback",
+                     "params": [self.name]}
+                )
+            else:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                )
         return None
 
     def test_function_type(self, cursor):
         cursor.execute(
             f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'FUNCTION' AND routine_name='{self.name}'")
         if not len(cursor.fetchall()) > 0:
-            return super().response(
-                False,
-                {"test_type": "function_test",
-                 "test_key": "function_type_positive_feedback",
-                 "params": [self.name]},
-                {"test_type": "function_test",
-                 "test_key": "function_type_negative_feedback",
-                 "params": [self.name]}
-            )
+            if self.custom_feedback is None:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "function_type_positive_feedback",
+                     "params": [self.name]},
+                    {"test_type": "function_test",
+                     "test_key": "function_type_negative_feedback",
+                     "params": [self.name]}
+                )
+            else:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                )
         return None
 
     def test_function_args(self, cursor):
         cursor.execute(f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
         number_of_parameters_result = cursor.fetchall()[0][0]
         if not number_of_parameters_result == self.number_of_parameters:
-            return super().response(
-                False,
-                {"test_type": "function_test",
-                 "test_key": "function_parameters_amount_positive_feedback",
-                 "params": [self.name]}
-                ,
-                {"test_type": "function_test",
-                 "test_key": "function_parameters_amount_negative_feedback",
-                 "params": [self.number_of_parameters, self.name, number_of_parameters_result]}
-            )
+            if self.custom_feedback is None:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "function_parameters_amount_positive_feedback",
+                     "params": [self.name]}
+                    ,
+                    {"test_type": "function_test",
+                     "test_key": "function_parameters_amount_negative_feedback",
+                     "params": [self.number_of_parameters, self.name, number_of_parameters_result]}
+                )
+            else:
+                return super().response(
+                    False,
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                    {"test_type": "function_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                )
         return None
