@@ -6,7 +6,7 @@ import re
 class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
-                 expected_type=None, expected_count=None, pre_query=None, after_query=None):
+                 expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -42,6 +42,7 @@ class TestDefinition:
         self.pre_query = pre_query
         self.after_query = after_query
         self.should_exist = should_exist  # TODO should be renamed to something more descriptive (should_be_false/falsy)
+        self.custom_feedback = custom_feedback
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):
