@@ -21,7 +21,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgresql', db_port='5432', test_query='test', query_sql=None, encoding=''):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgres', db_port='5432', test_query='test', query_sql=None, encoding=''):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name

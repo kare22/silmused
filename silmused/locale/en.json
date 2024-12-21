@@ -38,7 +38,8 @@
 		"table_constraint_type_should_not_exist_positive_feedback": "Correct, constraint type $param1 was not found in table $param2",
 		"table_constraint_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint type $param1 in table $param2",
 		"table_constraint_name_and_type_should_not_exist_positive_feedback": "Correct, constraint $param1 and constraint type $param2 was not found in table $param3",
-		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint $param1 and constraint type $param2 in table $param3"
+		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint $param1 and constraint type $param2 in table $param3",
+		"custom_feedback": "$param1"
 	},
 	"data_test": {
 		"table_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table $param1",
@@ -72,7 +73,8 @@
 		"view_expected_value_group_numbers_positive_feedback": "Correct, value $param1 was found between $param2 and $param3 in view $param4 column $param5",
 		"view_expected_value_group_numbers_negative_feedback": "Wrong, value $param1 was not found between $param2 and $param3 in view $param4 column $param5",
 		"view_expected_value_group_strings_positive_feedback": "Correct, value $param1 was found in list $param2 in view $param3 column $param4",
-		"view_expected_value_group_strings_negative_feedback": "Wrong, value $param1 was not found in list $param2 in view $param3 column $param4"
+		"view_expected_value_group_strings_negative_feedback": "Wrong, value $param1 was not found in list $param2 in view $param3 column $param4",
+		"custom_feedback": "$param1"
 	},
 	"default_feedback": {
 		"default_positive_feedback": "Correct result",
@@ -90,11 +92,13 @@
 		"function_not_expected_value_expected_result_count_positive_feedback": "Correct, result count $param1 for function $param2($param3) is correct",
 		"function_not_expected_value_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for function $param2($param3), but got $param4",
 		"function_expected_value_positive_feedback": "Correct, found value $param1",
-		"function_expected_value_negative_feedback": "Wrong, expected $param1, but got $param2"
+		"function_expected_value_negative_feedback": "Wrong, expected $param1, but got $param2",
+		"custom_feedback": "$param1"
 	},
 	"index_test": {
 		"index_positive_feedback": "Correct, index $param1 was found",
-		"index_negative_feedback": "Wrong, expected to find index $param1, but none were found"
+		"index_negative_feedback": "Wrong, expected to find index $param1, but none were found",
+		"custom_feedback": "$param1"
 	},
 	"query_structure_test": {
 		"query_table_should_exist_positive_feedback": "Correct, query was found",
@@ -104,7 +108,8 @@
 		"query_table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
 		"query_table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
 		"query_column_should_not_exist_positive_feedback": "Correct no column named $param1 found in query",
-		"query_column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in query"
+		"query_column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in query",
+		"custom_feedback": "$param1"
 	},
 	"query_data_test": {
 		"query_not_expected_value_should_exist_positive_feedback": "Correct, results were found for query",
@@ -123,7 +128,8 @@
 		"query_expected_value_group_numbers_negative_feedback": "Wrong, value $param1 was not found between $param2 and $param3 in column $param4",
 		"query_expected_value_group_strings_positive_feedback": "Correct, value $param1 was found in list $param2 in column $param3",
 		"query_expected_value_group_strings_negative_feedback": "Wrong, value $param1 was not found in list $param2 in column $param3",
-		"query_no_result": "Wrong, query returns no result"
+		"query_no_result": "Wrong, query returns no result",
+		"custom_feedback": "$param1"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Correct, procedure $param1 was found",
@@ -135,7 +141,8 @@
 		"procedure_not_expected_result_count_positive_feedback": "Correct, result count for procedure $param1($param2) is correct",
 		"procedure_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for procedure $param1($param2), but none was found",
 		"procedure_expected_result_count_positive_feedback": "Correct, result count $param1 for procedure $param2($param3) is correct",
-		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for procedure $param2($param3), but got $param4"
+		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for procedure $param2($param3), but got $param4",
+		"custom_feedback": "$param1"
 	},
 	"structure_test" : {
 		"expected_character_maximum_length_type_check_positive_feedback": "Correct, found character maximum length $param1 in table $param2 and column $param3",
@@ -153,7 +160,8 @@
 		"table_should_not_exist_positive_feedback": "Correct no table named $param1 was found",
 		"table_should_not_exist_negative_feedback": "Wrong, expected to not find table $param1",
 		"column_should_not_exist_positive_feedback": "Correct no column named $param1 found in table $param2",
-		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2"
+		"column_should_not_exist_negative_feedback": "Wrong, expected to not find column $param1 in table $param2",
+		"custom_feedback": "$param1"
 	},
 	"sys_fail": {
 		"undefined_column": "Cannot be tested, because column $param1 does not exist",
@@ -162,13 +170,15 @@
 		"undefined_function_round": "Cannot be tested, because column $param1 is not numeric",
 		"index_error": "There is no result",
 		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
-		"incorrect_test_format": "Error: Choose Test or Query format!"
+		"incorrect_test_format": "Error: Choose Test or Query format!",
+		"custom_feedback": "$param1"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Correct, trigger $param1 was found",
 		"trigger_exists_negative_feedback": "Wrong, expected to find trigger $param1, but none were found",
 		"trigger_definition_positive_feedback": "Correct, trigger $param1 definition is correct",
-		"trigger_definition_negative_feedback": "Wrong, trigger $param1 had the following errors: $param2"
+		"trigger_definition_negative_feedback": "Wrong, trigger $param1 had the following errors: $param2",
+		"custom_feedback": "$param1"
 	},
 	"view_test": {
 		"expected_value_should_exist_positive_feedback": "Correct, expected $param1",
@@ -186,6 +196,7 @@
 		"mat_view_should_exist_positive_feedback": "Correct, materialized view $param1 was found",
 		"mat_view_should_exist_negative_feedback": "Wrong, expected to find materialized view $param1, but none were found",
 		"mat_view_should_not_exist_positive_feedback": "Correct no materialized view named $param1 was found",
-		"mat_view_should_not_exist_negative_feedback": "Wrong, expected to not find materialized view $param1"
+		"mat_view_should_not_exist_negative_feedback": "Wrong, expected to not find materialized view $param1",
+		"custom_feedback": "$param1"
 	}
 }

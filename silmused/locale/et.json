@@ -38,7 +38,8 @@
 		"table_constraint_type_should_not_exist_positive_feedback": "Õige, kitsendustüüp $param1 ei ole olemas tabelil $param2",
 		"table_constraint_type_should_not_exist_negative_feedback": "Vale, kitsendustüüpi $param1 on olemas tabelil $param2",
 		"table_constraint_name_and_type_should_not_exist_positive_feedback": "Õige, kitsendus $param1 ja kitsendustüüp $param2 ei ole olemas tabelil $param3",
-		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Vale, kitsendust $param1 ja kitsendustüüpi $param2 on olemas tabelil $param3"
+		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Vale, kitsendust $param1 ja kitsendustüüpi $param2 on olemas tabelil $param3",
+		"custom_feedback": "$param1"
 	},
 	"data_test": {
 		"table_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas tabelis $param1",
@@ -72,7 +73,8 @@
 		"view_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3 vaates $param4 veerus $param5",
 		"view_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 vaates $param4 veerus $param5",
 		"view_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 vaates $param3 veerus $param4",
-		"view_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 vaates $param3 veerus $param4"
+		"view_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 vaates $param3 veerus $param4",
+		"custom_feedback": "$param1"
 	},
 	"default_feedback": {
 		"default_positive_feedback": "Õige tulemus",
@@ -90,11 +92,13 @@
 		"function_not_expected_value_expected_result_count_positive_feedback": "Õige, tulemuste arv $param1 on õige funktsioonil $param2($param3)",
 		"function_not_expected_value_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida funktsioonile $param2($param3), aga leiti $param4",
 		"function_expected_value_positive_feedback": "Õige, saadi väärtus $param1",
-		"function_expected_value_negative_feedback": "Vale, oodati väärtust $param1, aga saadi $param2"
+		"function_expected_value_negative_feedback": "Vale, oodati väärtust $param1, aga saadi $param2",
+		"custom_feedback": "$param1"
 	},
 	"index_test": {
 		"index_positive_feedback": "Õige, indeks $param1 on olemas",
-		"index_negative_feedback": "Vale, indeks $param1 ei ole olemas"
+		"index_negative_feedback": "Vale, indeks $param1 ei ole olemas",
+		"custom_feedback": "$param1"
 	},
 	"query_structure_test": {
 		"query_table_should_exist_positive_feedback": "Õige, päring on olemas",
@@ -104,7 +108,8 @@
 		"query_table_should_not_exist_positive_feedback": "Õige päringut pole olemas",
 		"query_table_should_not_exist_negative_feedback": "Vale, päringut ei tohi olla, aga on",
 		"query_column_should_not_exist_positive_feedback": "Õige veerg $param1 ei ole päringus olemas",
-		"query_column_should_not_exist_negative_feedback": "Vale, veergu $param1 ei tohiks olla päringus olemas"
+		"query_column_should_not_exist_negative_feedback": "Vale, veergu $param1 ei tohiks olla päringus olemas",
+		"custom_feedback": "$param1"
 	},
 	"query_data_test": {
 		"query_not_expected_value_should_exist_positive_feedback": "Õige, päringul leiti tulemus",
@@ -123,7 +128,8 @@
 		"query_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3 veerus $param4",
 		"query_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2 veerus $param3",
 		"query_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2 veerus $param3",
-		"query_no_result": "Vale, päringul puudub tulemus"
+		"query_no_result": "Vale, päringul puudub tulemus",
+		"custom_feedback": "$param1"
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Õige, protseduur $param1 on olemas",
@@ -135,7 +141,8 @@
 		"procedure_not_expected_result_count_positive_feedback": "Õige, protseduuri $param1($param2) tulemuste arv on õige",
 		"procedure_not_expected_result_count_negative_feedback": "Vale, tulemuste arv on vale protseduuril $param1($param2)",
 		"procedure_expected_result_count_positive_feedback": "Õige, tulemuste arv $param1 on õige protseduuril $param2($param3)",
-		"procedure_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida protseduurile $param2($param3), aga leiti $param4"
+		"procedure_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida protseduurile $param2($param3), aga leiti $param4",
+		"custom_feedback": "$param1"
 	},
 	"structure_test" : {
 		"expected_character_maximum_length_type_check_positive_feedback": "Õige, on olemas veeru suurus $param1 tabelis $param2 ja veerus $param3",
@@ -153,7 +160,8 @@
 		"table_should_not_exist_positive_feedback": "Õige, tabel $param1 ei ole olemas",
 		"table_should_not_exist_negative_feedback": "Vale, tabelit $param1 ei tohiks olla olemas",
 		"column_should_not_exist_positive_feedback": "Õige, veergu $param1 ei ole olemas tabelis $param2",
-		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2"
+		"column_should_not_exist_negative_feedback": "Vale, veerg $param1 ei tohiks olla olemas tabelis $param2",
+		"custom_feedback": "$param1"
 	},
 	"sys_fail": {
 		"undefined_column": "Ei saa testida, sest veergu $param1 ei ole olemas",
@@ -162,13 +170,15 @@
 		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric",
 		"index_error": "Tulemust ei leitud",
 		"incorrect_dump_file": "Viga: Ei leitud õiget Postgre dump või sql faili!",
-		"incorrect_test_format": "Viga: Vali Test või Query formaat!"
+		"incorrect_test_format": "Viga: Vali Test või Query formaat!",
+		"custom_feedback": "$param1"
 	},
 	"trigger_test": {
 		"trigger_exists_positive_feedback": "Õige, triger $param1 on olemas",
 		"trigger_exists_negative_feedback": "Vale, triger $param1 ei ole olemas",
 		"trigger_definition_positive_feedback": "Õige, trigeri $param1 on koostatud õigesti",
-		"trigger_definition_negative_feedback": "Vale, trigeril $param1 on järgmised probleemid: $param2"
+		"trigger_definition_negative_feedback": "Vale, trigeril $param1 on järgmised probleemid: $param2",
+		"custom_feedback": "$param1"
 	},
 	"view_test": {
 		"expected_value_should_exist_positive_feedback": "Õige, oodati tulemust $param1",
@@ -186,6 +196,7 @@
 		"mat_view_should_exist_positive_feedback": "Õige, materialiseeritud vaade $param1 on olemas",
 		"mat_view_should_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei ole olemas",
 		"mat_view_should_not_exist_positive_feedback": "Õige, materialiseeritud vaade $param1 ei ole olemas",
-		"mat_view_should_not_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei tohiks olla olemas"
+		"mat_view_should_not_exist_negative_feedback": "Vale, materialiseeritud vaadet $param1 ei tohiks olla olemas",
+		"custom_feedback": "$param1"
 	}
 }
