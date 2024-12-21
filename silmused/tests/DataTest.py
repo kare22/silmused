@@ -98,7 +98,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    result[0][0] > 0,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -121,7 +121,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    len(result) > 0 and result[0][0] is not None,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -145,7 +145,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) == 0,
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -167,7 +167,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) == 0,
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -192,7 +192,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    result[0][0] is None,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -217,7 +217,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        len(result) > 0,
+                                        self.expected_min_value < result[0][0] < self.expected_max_value,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -239,7 +239,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        len(result) > 0,
+                                        result[0][0] in self.expected_value,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -262,7 +262,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                str(result[0][0]) == str(self.expected_value),
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -283,7 +283,7 @@ class DataTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            str(result[0][0]) != str(self.expected_value),
                             {"test_type": "data_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -332,7 +332,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    result[0][0] > 0,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -355,7 +355,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    len(result) > 0 and result[0][0] is not None,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -379,7 +379,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) == 0,
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -401,7 +401,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                len(result) == 0,
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -426,7 +426,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    len(result) > 0,
+                                    result[0][0] is None,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -451,7 +451,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        len(result) > 0,
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -473,7 +473,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        len(result) > 0,
+                                        result[0][0] in self.expected_value,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -495,7 +495,7 @@ class DataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                len(result) > 0,
+                                str(result[0][0]) == str(self.expected_value),
                                 {"test_type": "data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -516,7 +516,7 @@ class DataTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            len(result) > 0,
+                            str(result[0][0]) != str(self.expected_value),
                             {"test_type": "data_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
