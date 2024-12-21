@@ -3,7 +3,7 @@ from silmused.tests.TestDefinition import TestDefinition
 
 class QueryDataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, points=0):
+                 expected_value=None, custom_feedback=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -43,6 +43,7 @@ class QueryDataTest(TestDefinition):
             query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}",
             should_exist=should_exist,
             expected_value=expected_value,
+            custom_feedback=custom_feedback,
         )
 
         self.column_name = column_name
@@ -57,124 +58,245 @@ class QueryDataTest(TestDefinition):
         if self.expected_value is None:
             if self.should_exist:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_data_test",
-                         "test_key": "query_not_expected_value_should_exist_positive_feedback"},
-                        {"test_type": "query_data_test",
-                         "test_key": "query_not_expected_value_should_exist_negative_feedback"},
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "query_not_expected_value_should_exist_positive_feedback"},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_not_expected_value_should_exist_negative_feedback"},
 
-                    )
+                        )
+                    else:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
                     if self.is_count:
-                        return super().response(
-                            result[0][0] > 0,
-                            {"test_type": "query_data_test",
-                             "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.column_name]},
+                        if self.custom_feedback is None:
+                            return super().response(
+                                result[0][0] > 0,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.column_name]},
 
-                        )
+                            )
+                        else:
+                            return super().response(
+                                result[0][0] > 0,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                     # Same feedback test_keys
                     else:
+                        if self.custom_feedback is None:
                         # TODO Should check if all results are not None
-                        return super().response(
-                            len(result) > 0 and result[0][0] is not None,
-                            {"test_type": "query_data_test",
-                             "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.column_name]},
-                        )
+                            return super().response(
+                                len(result) > 0 and result[0][0] is not None,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_column_not_expected_value_should_exist_positive_feedback",
+                                 "params": [self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_column_not_expected_value_should_exist_negative_feedback",
+                                 "params": [self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                len(result) > 0 and result[0][0] is not None,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
             # should_exist = False
             else:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_data_test",
-                         "test_key": "query_not_expected_value_should_not_exist_positive_feedback"},
-                        {"test_type": "query_data_test",
-                         "test_key": "query_not_expected_value_should_not_exist_negative_feedback"},
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "query_not_expected_value_should_not_exist_positive_feedback"},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_not_expected_value_should_not_exist_negative_feedback"},
 
-                    )
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_data_test",
-                         "test_key": "query_column_not_expected_value_should_not_exist_positive_feedback",
-                         "params": [self.column_name]},
-                        {"test_type": "query_data_test",
-                         "test_key": "query_column_not_expected_value_should_not_exist_negative_feedback",
-                         "params": [self.column_name]},
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "query_column_not_expected_value_should_not_exist_positive_feedback",
+                             "params": [self.column_name]},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_column_not_expected_value_should_not_exist_negative_feedback",
+                             "params": [self.column_name]},
 
-                    )
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
         # expected value is not None
         else:
             if self.should_exist:
                 if len(result) == 0:
-                    return super().response(
-                        False,
-                        "",
-                        {"test_type": "query_data_test",
-                         "test_key": "query_no_result",
-                         "params": []},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            False,
+                            "",
+                            {"test_type": "query_data_test",
+                             "test_key": "query_no_result",
+                             "params": []},
+                        )
+                    else:
+                        return super().response(
+                            False,
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 if self.expected_value == 'NULL' or self.expected_value == 'None':
                     # TODO Should check if all results are None
                     if result[0][0] is None and len(result) > 0:
-                        return super().response(
-                            result[0][0] is None,
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_positive_feedback",
-                             "params": [self.expected_value, self.name, self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_negative_feedback",
-                             "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
-                        )
+                        if self.custom_feedback is None:
+                            return super().response(
+                                result[0][0] is None,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.name, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_negative_feedback",
+                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                result[0][0] is None,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                 elif self.expected_value_list:
                     if self.expected_value_group == "numbers":
-                        return super().response(
-                            self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_group_numbers_positive_feedback",
-                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                        self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_group_numbers_negative_feedback",
-                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                        self.column_name]},
-                        )
+                        if self.custom_feedback is None:
+                            return super().response(
+                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_group_numbers_positive_feedback",
+                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                            self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_group_numbers_negative_feedback",
+                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                            self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                     elif self.expected_value_group == "strings":
-                        return super().response(
-                            result[0][0] in self.expected_value,
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_group_strings_positive_feedback",
-                             "params": [str(result[0][0]), self.expected_value, self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_group_strings_negative_feedback",
-                             "params": [str(result[0][0]), self.expected_value, self.column_name]},
-                        )
+                        if self.custom_feedback is None:
+                            return super().response(
+                                result[0][0] in self.expected_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_group_strings_positive_feedback",
+                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_group_strings_negative_feedback",
+                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                result[0][0] in self.expected_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                 else:
+                    if self.custom_feedback is None:
                     # TODO add type check
+                        return super().response(
+                            str(result[0][0]) == str(self.expected_value),
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.column_name]},
+                            {"test_type": "query_data_test",
+                             "test_key": "query_expected_value_should_exist_negative_feedback",
+                             "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                        )
+                    else:
+                        return super().response(
+                            str(result[0][0]) == str(self.expected_value),
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_data_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
+            else:
+                if self.custom_feedback is None:
                     return super().response(
-                        str(result[0][0]) == str(self.expected_value),
+                        str(result[0][0]) != str(self.expected_value),
                         {"test_type": "query_data_test",
-                         "test_key": "query_expected_value_should_exist_positive_feedback",
-                         "params": [self.expected_value, self.column_name]},
+                         "test_key": "query_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.expected_value, str(result[0][0]), self.column_name]},
                         {"test_type": "query_data_test",
-                         "test_key": "query_expected_value_should_exist_negative_feedback",
+                         "test_key": "query_expected_value_should_not_exist_negative_feedback",
                          "params": [self.expected_value, str(result[0][0]), self.column_name]},
                     )
-            else:
-                return super().response(
-                    str(result[0][0]) != str(self.expected_value),
-                    {"test_type": "query_data_test",
-                     "test_key": "query_expected_value_should_not_exist_positive_feedback",
-                     "params": [self.expected_value, str(result[0][0]), self.column_name]},
-                    {"test_type": "query_data_test",
-                     "test_key": "query_expected_value_should_not_exist_negative_feedback",
-                     "params": [self.expected_value, str(result[0][0]), self.column_name]},
-                )
+                else:
+                    return super().response(
+                        str(result[0][0]) != str(self.expected_value),
+                        {"test_type": "query_data_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "query_data_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
