@@ -4,7 +4,7 @@ from silmused.utils import list_to_string
 
 class ViewTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True,
-                 where=None, description=None, isMaterialized=False, points=0):
+                 where=None, description=None, custom_feedback=None, isMaterialized=False, points=0):
         if isMaterialized:
             query = f"SELECT * FROM pg_matviews WHERE matviewname = '{name}'"
         else:
@@ -30,6 +30,7 @@ class ViewTest(TestDefinition):
             description=description,
             query=query,
             should_exist=should_exist,
+            custom_feedback=custom_feedback,
         )
 
         self.column_name = column_name
@@ -42,90 +43,178 @@ class ViewTest(TestDefinition):
 
         if self.isMaterialized:
             if self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    {"test_type": "view_test",
-                     "test_key": "mat_view_should_exist_positive_feedback",
-                     "params": [self.name]},
-                    {"test_type": "view_test",
-                     "test_key": "mat_view_should_exist_negative_feedback",
-                     "params": [self.name]},
-                )
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "view_test",
+                         "test_key": "mat_view_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "view_test",
+                         "test_key": "mat_view_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        False,
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
             else:
-                return super().response(
-                    len(result) == 0,
-                    {"test_type": "view_test",
-                     "test_key": "mat_view_should_not_exist_positive_feedback",
-                     "params": [self.name]},
-                    {"test_type": "view_test",
-                     "test_key": "mat_view_should_not_exist_negative_feedback",
-                     "params": [self.name]},
-                )
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "view_test",
+                         "test_key": "mat_view_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": "view_test",
+                         "test_key": "mat_view_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        False,
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
         if self.expected_value is not None:
             # TODO Is this needed?
             # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
             if self.should_exist:
+                if self.custom_feedback is None:
                 # print(self.title, result[0][0])
-                return super().response(
-                    len(result) != 0 and result[0][0] == self.expected_value,
-                    {"test_type": "view_test",
-                     "test_key": "expected_value_should_exist_positive_feedback",
-                     "params": [self.query]},
-                    {"test_type": "view_test",
-                     "test_key": "expected_value_should_exist_negative_feedback",
-                     "params": [self.query, self.expected_value]},
-                )
+                    return super().response(
+                        len(result) != 0 and result[0][0] == self.expected_value,
+                        {"test_type": "view_test",
+                         "test_key": "expected_value_should_exist_positive_feedback",
+                         "params": [self.query]},
+                        {"test_type": "view_test",
+                         "test_key": "expected_value_should_exist_negative_feedback",
+                         "params": [self.query, self.expected_value]},
+                    )
+                else:
+                    return super().response(
+                        False,
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
             else:
+                if self.custom_feedback is None:
                 # print(self.title, result[0][0])
-                return super().response(
-                    len(result) == 0 or result[0][0] != self.expected_value,
-                    {"test_type": "view_test",
-                     "test_key": "expected_value_should_not_exist_positive_feedback",
-                     "params": [self.query]},
-                    {"test_type": "view_test",
-                     "test_key": "expected_value_should_not_exist_negative_feedback",
-                     "params": [self.query, self.expected_value]},
-                )
+                    return super().response(
+                        len(result) == 0 or result[0][0] != self.expected_value,
+                        {"test_type": "view_test",
+                         "test_key": "expected_value_should_not_exist_positive_feedback",
+                         "params": [self.query]},
+                        {"test_type": "view_test",
+                         "test_key": "expected_value_should_not_exist_negative_feedback",
+                         "params": [self.query, self.expected_value]},
+                    )
+                else:
+                    return super().response(
+                        False,
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
         else:
             if self.should_exist:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "view_test",
-                         "test_key": "view_should_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "view_test",
-                         "test_key": "view_should_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "view_test",
+                             "test_key": "view_should_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "view_test",
+                             "test_key": "view_should_exist_negative_feedback",
+                             "params": [self.name]},
+                        )
+                    else:
+                        return super().response(
+                            False,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "view_test",
-                         "test_key": "column_should_exist_positive_feedback",
-                         "params": [self.column_name, self.name]},
-                        {"test_type": "view_test",
-                         "test_key": "column_should_exist_negative_feedback",
-                         "params": [self.column_name, self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "view_test",
+                             "test_key": "column_should_exist_positive_feedback",
+                             "params": [self.column_name, self.name]},
+                            {"test_type": "view_test",
+                             "test_key": "column_should_exist_negative_feedback",
+                             "params": [self.column_name, self.name]},
+                        )
+                    else:
+                        return super().response(
+                            False,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
             else:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "view_test",
-                         "test_key": "view_should_not_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "view_test",
-                         "test_key": "view_should_not_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "view_test",
+                             "test_key": "view_should_not_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "view_test",
+                             "test_key": "view_should_not_exist_negative_feedback",
+                             "params": [self.name]},
+                        )
+                    else:
+                        return super().response(
+                            False,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "view_test",
-                         "test_key": "column_should_not_exist_positive_feedback",
-                         "params": [self.column_name, self.name]},
-                        {"test_type": "view_test",
-                         "test_key": "column_should_not_exist_negative_feedback",
-                         "params": [self.column_name, self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "view_test",
+                             "test_key": "column_should_not_exist_positive_feedback",
+                             "params": [self.column_name, self.name]},
+                            {"test_type": "view_test",
+                             "test_key": "column_should_not_exist_negative_feedback",
+                             "params": [self.column_name, self.name]},
+                        )
+                    else:
+                        return super().response(
+                            False,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )

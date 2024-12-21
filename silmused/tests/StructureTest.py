@@ -3,7 +3,9 @@ from silmused.utils import list_to_string
 
 
 class StructureTest(TestDefinition):
-    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, expected_type=None, expected_character_maximum_length=None, should_exist=True, where=None, description=None, points=0):
+    def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, expected_type=None,
+                 expected_character_maximum_length=None, should_exist=True, where=None,
+                 description=None, custom_feedback=None, points=0):
         if column_name is None and expected_type is not None:
             raise Exception('Expected type needs a column to be set!')
 
@@ -32,6 +34,7 @@ class StructureTest(TestDefinition):
             expected_character_maximum_length=expected_character_maximum_length,
             query=query,
             should_exist=should_exist,
+            custom_feedback=custom_feedback
         )
 
         self.column_name = column_name
@@ -48,70 +51,136 @@ class StructureTest(TestDefinition):
             # TODO Is this needed?
             # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
             if self.should_exist:
+                if self.custom_feedback is None:
                 # print(self.title, result[0][0])
-                return super().response(
-                    len(result) != 0 and result[0][0] == self.expected_value,
-                    {"test_type": "structure_test",
-                     "test_key": "expected_value_should_exist_positive_feedback",
-                     "params": [self.query]},
-                    {"test_type": "structure_test",
-                     "test_key": "expected_value_should_exist_negative_feedback",
-                     "params": [self.query, self.expected_value]},
-                )
+                    return super().response(
+                        len(result) != 0 and result[0][0] == self.expected_value,
+                        {"test_type": "structure_test",
+                         "test_key": "expected_value_should_exist_positive_feedback",
+                         "params": [self.query]},
+                        {"test_type": "structure_test",
+                         "test_key": "expected_value_should_exist_negative_feedback",
+                         "params": [self.query, self.expected_value]},
+                    )
+                else:
+                    return super().response(
+                        len(result) != 0 and result[0][0] == self.expected_value,
+                        {"test_type": "structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
             else:
+                if self.custom_feedback is None:
                 # print(self.title, result[0][0])
-                return super().response(
-                    len(result) == 0 or result[0][0] != self.expected_value,
-                    {"test_type": "structure_test",
-                     "test_key": "expected_value_should_not_exist_positive_feedback",
-                     "params": [self.query]},
-                    {"test_type": "structure_test",
-                     "test_key": "expected_value_should_not_exist_negative_feedback",
-                     "params": [self.query, self.expected_value]},
-                )
+                    return super().response(
+                        len(result) == 0 or result[0][0] != self.expected_value,
+                        {"test_type": "structure_test",
+                         "test_key": "expected_value_should_not_exist_positive_feedback",
+                         "params": [self.query]},
+                        {"test_type": "structure_test",
+                         "test_key": "expected_value_should_not_exist_negative_feedback",
+                         "params": [self.query, self.expected_value]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0 or result[0][0] != self.expected_value,
+                        {"test_type": "structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
         else:
             if self.should_exist:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "structure_test",
-                         "test_key": "table_should_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "structure_test",
-                         "test_key": "table_should_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "structure_test",
+                             "test_key": "table_should_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "structure_test",
+                             "test_key": "table_should_exist_negative_feedback",
+                             "params": [self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "structure_test",
-                         "test_key": "column_should_exist_positive_feedback",
-                         "params": [self.column_name, self.name]},
-                        {"test_type": "structure_test",
-                         "test_key": "column_should_exist_negative_feedback",
-                         "params": [self.column_name, self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "structure_test",
+                             "test_key": "column_should_exist_positive_feedback",
+                             "params": [self.column_name, self.name]},
+                            {"test_type": "structure_test",
+                             "test_key": "column_should_exist_negative_feedback",
+                             "params": [self.column_name, self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
             else:
                 if self.column_name is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "structure_test",
-                         "test_key": "table_should_not_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "structure_test",
-                         "test_key": "table_should_not_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "structure_test",
+                             "test_key": "table_should_not_exist_positive_feedback",
+                             "params": [self.name]},
+                            {"test_type": "structure_test",
+                             "test_key": "table_should_not_exist_negative_feedback",
+                             "params": [self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "structure_test",
-                         "test_key": "column_should_not_exist_positive_feedback",
-                         "params": [self.column_name, self.name]},
-                        {"test_type": "structure_test",
-                         "test_key": "column_should_not_exist_negative_feedback",
-                         "params": [self.column_name, self.name]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "structure_test",
+                             "test_key": "column_should_not_exist_positive_feedback",
+                             "params": [self.column_name, self.name]},
+                            {"test_type": "structure_test",
+                             "test_key": "column_should_not_exist_negative_feedback",
+                             "params": [self.column_name, self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
 
     def test_type(self, result):
         if self.expected_type is None:
@@ -141,16 +210,27 @@ class StructureTest(TestDefinition):
                 is_type_correct = False
 
         if is_type_correct is False or is_character_maximum_length_correct is False:
-            return super().response(
-                False,
-                None,
-                {"test_type": "structure_test",
-                 "test_key": "expected_character_maximum_length_type_check_negative_feedback",
-                 "params": [self.expected_character_maximum_length, character_maximum_length, self.name, self.column_name]}
-                if is_character_maximum_length_correct is False
-                else {"test_type": "structure_test",
-                      "test_key": "expected_type_check_negative_feedback",
-                      "params": [self.expected_type, type, self.name, self.column_name]},
-            )
+            if self.custom_feedback is None:
+                return super().response(
+                    False,
+                    None,
+                    {"test_type": "structure_test",
+                     "test_key": "expected_character_maximum_length_type_check_negative_feedback",
+                     "params": [self.expected_character_maximum_length, character_maximum_length, self.name, self.column_name]}
+                    if is_character_maximum_length_correct is False
+                    else {"test_type": "structure_test",
+                          "test_key": "expected_type_check_negative_feedback",
+                          "params": [self.expected_type, type, self.name, self.column_name]},
+                )
+            else:
+                return super().response(
+                    False,
+                    {"test_type": "structure_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                    {"test_type": "structure_test",
+                     "test_key": "custom_feedback",
+                     "params": [self.custom_feedback]},
+                )
 
         return None
