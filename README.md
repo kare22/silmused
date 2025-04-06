@@ -40,7 +40,7 @@
 ### TestDefinition
 This is the heart and soul of `Silmused` and defines how tests should behave.
 
-:note: Some classes do not implicitly use this as they serve a different purpose.
+:note: Some classes do not implicitly use this as they serve a different purpose:
 * ExecuteLayer
 * TitleLayer
 * ChecksLayer
@@ -63,12 +63,21 @@ All arguments and their requirements that are used for all of the different test
 | expected_character_maximum_length | integer                       | None     |                                                  | used to test table/view column maximum allowed size                                                           |
 | expected_type                     | string                        | None     |                                                  | used to check table/view column type                                                                          |
 | expected_count                    | integer                       | None     | only used for function and procedure tests       | used to check the outputted line count of functions or procedures                                             |
-| pre_query                         | string                        | None     | used only in procedure tests                     | used to run querys that are necessary to run before procedures                                                |
+| pre_query                         | string                        | None     | used only in procedure tests                     | used to run queries that are necessary to run before procedures                                               |
 | after_query                       | string                        | None     | used only in procedure tests                     | used to run queries after procedure test queries                                                              |
-| custom_feedback                   | string                        | None     | will overwrite the test default feedback         | can be used to give custome feedback                                                                          |
+| custom_feedback                   | string                        | None     | will overwrite the test default feedback         | can be used to give custom feedback                                                                           |
 
 ## Tests
-These are the classes used for writing tests
+These are the classes used for writing tests. All of the test types use SQL queries from the database to check if the inputted file
+is valid according to written test. For example database tables or views structure data is collected from postgresql
+information_schema. For example view data is tested with sql queries where the tests expect the correct values for 
+queries or correct amount of data. Each of the coming Tests will have examples how to use them and how it translates to
+SQL query to show how it works.
+
+There are 2 types of tests Query and Database tests.
+So only QueryDataTest and QueryStructureTest is used to test queries, all other tests are used to test databases.
+
+
 ### ConstraintTest
 Used for testing table or column constraints
 Valid arguments:
@@ -100,7 +109,9 @@ Used for testing indexes.
 ### ProcedureTest
 Used for testing procedures.
 ### QueryDataTest
-Used for testing query data.
+Used for testing query data. Querytests are special, because the inputted file is a query, then its used to
+create a table named "query_test". For all query related tests use: name='query_test', where name means the table name.
+Also The table has an extra column named "test_id", this column name can be used test if the order of the query is correct.
 Valid arguments:
 * title
 * name
@@ -111,11 +122,78 @@ Valid arguments:
 * description
 * expected_value
 * custom_feedback
-* points
-Some examples of Tests
+* points\
+
+Some examples of Query tests: \
+
+1. We want to check if the query returns correct amount of lines:\
+title='A question for the test, which is displayed, when feedback is given'\
+name='query_test' - Always the same for query tests.\
+column_name='COUNT(*)' - We find the query result line count
+expected_value=10 - the Query must have 10 lines for a normal result or count gives exactly 10.
+points=20 - the amount fo points the test gives. Usually maximum is 100 as in the end all results are divided by 100 to give %.
 ```
+  QueryDataTest(
+      title='Kas on õige ridade arvuga tulemus?',
+      name='query_test',
+      column_name='COUNT(*)',
+      expected_value=10,
+      points=20,
+  )
+  select count(*) from query_test; 
+  This should equal 10. if its 10, then the test gives 20p.
+```
+```
+  QueryDataTest(
+      title='Kas 1. kohal on õige laul?',
+      name='query_test',
+      column_name='pealkiri',
+      where="test_id=1",
+      expected_value="Madness of Love",
+      points=30,
+  )
+  select pealkiri from query_test where test_id=1; 
+  So test_id=1 means we check value in the first row of column pealkiri and the expected value is "Madness of Love"
+```
+```
+  QueryDataTest(
+      title='Kas on olemas riik Australia?',
+      name='query_test',
+      where="riik='Australia'",
+      points=30,
+  ),
+  select * from query_test where riik = 'Australia';
+  We don't always need to know the exact amount of lines a query returns, so this test just checks if the test query 
+  returns more than 0, then its enough for the test.
+```
+```
+  QueryDataTest(
+      title='Kas ei ole olemas riiki Bulgaaria?',
+      name='query_test',
+      where="riik='Bulgaria'",
+      should_exist=False,
+      points=30,
+  ),
+  select * from query_test where riik = 'Bulgaria';
+  Sometimes we need to check for values that shouldn't be displayed and then we use should_exist=False.
+  As a default its always True.
+```
+As all test inputs are always between quotes, then sometimes " " and ' ' are used interchangeably.
+For example where = "riik = 'Bulgaria'" Its due to SQL values in queries always have to be between ' ', 
+then in tests the whole line has to be between " ".
+
+In some special cases you need more than one set of " " or ' ' then this can be solved with python string concat rules.
+For example:\
+We have a query column called "Title beginning" and we check for value 'Dance'.
+```
+  QueryDataTest(
+      title='Is there a title beginning "Dance"?',
+      name='query_test',
+      where='"Title beginning"' + "='Dance'",
+      points=20,
+  )
   
-  ```
+```
 ### QueryStructureTest
 Used for testing query structure, mainly to test if query has needed columns.
 Valid arguments:
@@ -130,8 +208,22 @@ Valid arguments:
 * points
 Some examples of Tests
 ```
-  
-  ```
+  QueryStructureTest(
+      title='Does column Title exists?',
+      name='query_test',
+      column_name='Title',
+      points=20,
+  )
+```
+```
+  QueryStructureTest(
+      title='Does column Name not exists?',
+      name='query_test',
+      column_name='Name',
+      should_exist=False,
+      points=20,
+  )
+```
 ### StructureTest
 ### TriggerTest
 Used for testing triggers. 
@@ -191,7 +283,7 @@ To run tests for query tests use query_demo.py
 ## Running tests on command line
 Silmused can be run as a command line program
 
-silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> <test_type> <query_test_file> encoding
+silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> <test_type> <query_test_database> encoding
 
 ### Database tests
 silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> test '' encoding
@@ -199,7 +291,7 @@ silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_passw
 Example:
 ``silmused lahendus.sql tests.py postgres localhost 5433 postgres et``
 ### Query tests
-silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> query '' encoding
+silmused <query_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> query <query_test_database> encoding
 
 Example:
 ``silmused query.sql euro_kodu_3_2.py postgres localhost 5432 postgresql et query eurovisioon.sql UTF-8``
