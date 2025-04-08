@@ -205,7 +205,7 @@ class DataTest(TestDefinition):
                             if len(result) > 0:
                                 if self.custom_feedback is None:
                                     return super().response(
-                                        self.expected_min_value < result[0][0] < self.expected_max_value,
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
                                         {"test_type": "data_test",
                                          "test_key": "table_expected_value_group_numbers_positive_feedback",
                                          "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
@@ -217,7 +217,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        self.expected_min_value < result[0][0] < self.expected_max_value,
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},

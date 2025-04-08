@@ -4,7 +4,7 @@ from silmused.utils import list_to_string
 
 class FunctionTest(TestDefinition):
     def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None, expected_value=None,
-                 expected_count=None, number_of_parameters=None, points=0):
+                 expected_count=None, number_of_parameters=None, custom_feedback=None, points=0):
         super().__init__(
             name=name,
             title=title,
@@ -14,8 +14,54 @@ class FunctionTest(TestDefinition):
             description=description,
             expected_value=expected_value,
             expected_count=expected_count,
+            custom_feedback=custom_feedback,
             query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"  # TODO implement parameters,
         )
+        if isinstance(expected_value, list):
+            self.expected_value_list = True
+            if isinstance(expected_value[0], str):
+                self.expected_value_group = "strings"
+            else:
+                self.expected_value_group = "numbers"
+                min_value = None
+                max_value = None
+                for value in expected_value:
+                    if isinstance(value, str):
+                        raise Exception('Ranged expected value cannot be a string')
+                    if min_value is None:
+                        min_value = value
+                    elif value < min_value:
+                        min_value = value
+                    if max_value is None:
+                        max_value = value
+                    elif value > max_value:
+                        max_value = value
+                self.expected_min_value = min_value
+                self.expected_max_value = max_value
+        elif isinstance(expected_count, list):
+            self.expected_value_list = True
+            if isinstance(expected_count[0], str):
+                self.expected_value_group = "strings"
+            else:
+                self.expected_value_group = "numbers"
+                min_value = None
+                max_value = None
+                for value in expected_count:
+                    if isinstance(value, str):
+                        raise Exception('Ranged expected value cannot be a string')
+                    if min_value is None:
+                        min_value = value
+                    elif value < min_value:
+                        min_value = value
+                    if max_value is None:
+                        max_value = value
+                    elif value > max_value:
+                        max_value = value
+                self.expected_min_value = min_value
+                self.expected_max_value = max_value
+        else:
+            self.expected_value_list = False
+            self.expected_value_group = "nothing"
 
         self.number_of_parameters = number_of_parameters
 
@@ -68,6 +114,48 @@ class FunctionTest(TestDefinition):
                          "params": [self.custom_feedback]},
                     )
             else:
+                if self.expected_value_group == "numbers":
+                    if self.custom_feedback is None:
+                        return super().response(
+                            self.expected_min_value <= len(result) <= self.expected_max_value,
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_numbers_positive_feedback",
+                             "params": [len(result), self.expected_min_value, self.expected_max_value]},
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_numbers_negative_feedback",
+                             "params": [len(result), self.expected_min_value, self.expected_max_value]},
+                        )
+                    else:
+                        return super().response(
+                            self.expected_min_value <= len(result) <= self.expected_max_value,
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
+                elif self.expected_value_group == "strings":
+                    if self.custom_feedback is None:
+                        return super().response(
+                            result[0][0] in self.expected_value,
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_strings_positive_feedback",
+                             "params": [str(result[0][0]), self.expected_value]},
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_strings_negative_feedback",
+                             "params": [str(result[0][0]), self.expected_value]},
+                        )
+                    else:
+                        return super().response(
+                            result[0][0] in self.expected_value,
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 if self.custom_feedback is None:
                     return super().response(
                         len(result) == self.expected_count,
@@ -96,6 +184,49 @@ class FunctionTest(TestDefinition):
             #         'Correct',
             #         f"Expected type {type(self.expected_value)} but got {type(result[0][0])}",
             #     )
+            if self.expected_value_list:
+                if self.expected_value_group == "numbers":
+                    if self.custom_feedback is None:
+                        return super().response(
+                            self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_numbers_positive_feedback",
+                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value]},
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_numbers_negative_feedback",
+                             "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value]},
+                        )
+                    else:
+                        return super().response(
+                            self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
+                elif self.expected_value_group == "strings":
+                    if self.custom_feedback is None:
+                        return super().response(
+                            result[0][0] in self.expected_value,
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_strings_positive_feedback",
+                             "params": [str(result[0][0]), self.expected_value]},
+                            {"test_type": "function_test",
+                             "test_key": "function_expected_value_group_strings_negative_feedback",
+                             "params": [str(result[0][0]), self.expected_value]},
+                        )
+                    else:
+                        return super().response(
+                            result[0][0] in self.expected_value,
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "function_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
             if self.custom_feedback is None:
                 return super().response(
                     str(result[0][0]) == str(self.expected_value),
