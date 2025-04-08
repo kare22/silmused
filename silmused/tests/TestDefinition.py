@@ -10,8 +10,8 @@ class TestDefinition:
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
-        if expected_count is not None and not isinstance(expected_count, int):
-            raise Exception('Parameter "expected_count" must be an integer')
+        #if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
+        #    raise Exception('Parameter "expected_count" must be an integer or list')
 
         if not isinstance(points, int) and not isinstance(points, float):
             raise Exception('Parameter "points" must be either an integer or a float')

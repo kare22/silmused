@@ -93,6 +93,10 @@
 		"function_not_expected_value_expected_result_count_negative_feedback": "Vale, oodati tulemuseks $param1 rida funktsioonile $param2($param3), aga leiti $param4",
 		"function_expected_value_positive_feedback": "Õige, saadi väärtus $param1",
 		"function_expected_value_negative_feedback": "Vale, oodati väärtust $param1, aga saadi $param2",
+		"function_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus $param1 vahemikus $param2 ja $param3",
+		"function_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust $param1 vahemikus $param2 ja $param3",
+		"function_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus $param1 nimekirjas $param2",
+		"function_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust $param1 nimekirjas $param2",
 		"custom_feedback": "$param1"
 	},
 	"index_test": {

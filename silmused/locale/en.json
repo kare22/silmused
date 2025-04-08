@@ -93,6 +93,10 @@
 		"function_not_expected_value_expected_result_count_negative_feedback": "Wrong, expected result count $param1 for function $param2($param3), but got $param4",
 		"function_expected_value_positive_feedback": "Correct, found value $param1",
 		"function_expected_value_negative_feedback": "Wrong, expected $param1, but got $param2",
+		"function_expected_value_group_numbers_positive_feedback": "Correct, value $param1 was found between $param2 and $param3",
+		"function_expected_value_group_numbers_negative_feedback": "Wrong, value $param1 was not found between $param2 and $param3",
+		"function_expected_value_group_strings_positive_feedback": "Correct, value $param1 was found in list $param2",
+		"function_expected_value_group_strings_negative_feedback": "Wrong, value $param1 was not found in list $param2",
 		"custom_feedback": "$param1"
 	},
 	"index_test": {
