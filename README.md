@@ -47,25 +47,25 @@ This is the heart and soul of `Silmused` and defines how tests should behave.
 
 All arguments and their requirements that are used for all of the different tests:
 
-| Argument Name                     | Type                          | Default  | Limits                                           | Description                                                                                                   |
-|-----------------------------------|-------------------------------|----------|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| name                              | string                        | NOT None | cannot be empty, must be lowercased              | the name of table, view, function etc. that is testes                                                         |
-| points                            | integer, float                | 0        |                                                  | the amount of points of given for a specific test                                                             |
-| title                             | string                        | None     |                                                  | tests can be given a short description or what was tested                                                     |
-| where                             | string                        | None     |                                                  | can be used to specify test queries                                                                           |
-| join                              | string                        | None     | current limis is on join                         | can be used to add joins                                                                                      |
-| column_name                       | string                        | None     | must be lowercased                               | the column that is checked for data mostly                                                                    |
-| should_exist                      | boolean                       | True     |                                                  | if tested result should exist or not                                                                          |
-| query                             | string                        | None     | shouldn't be used for tests, will be overwritten | test inner query used for testing results                                                                     |
-| description                       | string                        | None     |                                                  | can be used to give tests more through description, not displayed anywhere                                    |
-| arguments                         | list                          | None     |                                                  | used to give arguments for functions/procedures, can be used to check specific values from information_schema |
-| expected_value                    | string, numerical, NULL, list | None     | None                                             | When the test should return an expected result can be a list to check a range or multiple results             |
-| expected_character_maximum_length | integer                       | None     |                                                  | used to test table/view column maximum allowed size                                                           |
-| expected_type                     | string                        | None     |                                                  | used to check table/view column type                                                                          |
-| expected_count                    | integer                       | None     | only used for function and procedure tests       | used to check the outputted line count of functions or procedures                                             |
-| pre_query                         | string                        | None     | used only in procedure tests                     | used to run queries that are necessary to run before procedures                                               |
-| after_query                       | string                        | None     | used only in procedure tests                     | used to run queries after procedure test queries                                                              |
-| custom_feedback                   | string                        | None     | will overwrite the test default feedback         | can be used to give custom feedback                                                                           |
+| Argument Name                     | Type                          | Default  | Limits                                            | Description                                                                                                   |
+|-----------------------------------|-------------------------------|----------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| name                              | string                        | NOT None | cannot be empty, must be lowercased               | the name of table, view, function etc. that is testes                                                         |
+| points                            | integer, float                | 0        |                                                   | the amount of points of given for a specific test                                                             |
+| title                             | string                        | None     |                                                   | tests can be given a short description or what was tested, shown on feedback                                  |
+| where                             | string                        | None     |                                                   | can be used to specify test queries                                                                           |
+| join                              | string                        | None     | current limit is only inner join                  | can be used to add joins                                                                                      |
+| column_name                       | string                        | None     | must be lowercased                                | the column that is checked for data mostly                                                                    |
+| should_exist                      | boolean                       | True     | True/False                                        | if tested result should exist or not                                                                          |
+| query                             | string                        | None     | shouldn't be used for tests, will be overwritten  | test inner query used for testing results                                                                     |
+| description                       | string                        | None     |                                                   | can be used to give tests more through description, not displayed anywhere, only visible for test writer      |
+| arguments                         | list                          | None     |                                                   | used to give arguments for functions/procedures, can be used to check specific values from information_schema |
+| expected_value                    | string, numerical, NULL, list | None     | None                                              | When the test should return an expected result can be a list to check a range or multiple results             |
+| expected_character_maximum_length | integer                       | None     |                                                   | used to test table/view column maximum allowed size                                                           |
+| expected_type                     | string                        | None     |                                                   | used to check table/view column type                                                                          |
+| expected_count                    | integer                       | None     | only used for function and procedure tests        | used to check the outputted line count of functions or procedures                                             |
+| pre_query                         | string                        | None     | used only in procedure tests                      | used to run queries that are necessary to run before procedures                                               |
+| after_query                       | string                        | None     | used only in procedure tests                      | used to run queries after procedure test queries                                                              |
+| custom_feedback                   | string                        | None     | will overwrite the test default feedback          | can be used to give custom feedback                                                                           |
 
 ## Tests
 These are the classes used for writing tests. All of the test types use SQL queries from the database to check if the inputted file
@@ -79,7 +79,7 @@ So only QueryDataTest and QueryStructureTest is used to test queries, all other 
 
 
 ### ConstraintTest
-Used for testing table or column constraints
+Used for testing table or column constraints\
 Valid arguments:
 * title
 * name
@@ -88,7 +88,7 @@ Valid arguments:
 * constraint_type
 * description
 * should_exist
-* points
+* points\
 Simple example for table constraint
 ```
 ConstraintTest(
@@ -111,7 +111,7 @@ Used for testing procedures.
 ### QueryDataTest
 Used for testing query data. Querytests are special, because the inputted file is a query, then its used to
 create a table named "query_test". For all query related tests use: name='query_test', where name means the table name.
-Also The table has an extra column named "test_id", this column name can be used test if the order of the query is correct.
+Also the table has an extra column named "test_id", this column name can be used test if the order of the query is correct.\
 Valid arguments:
 * title
 * name
@@ -122,19 +122,19 @@ Valid arguments:
 * description
 * expected_value
 * custom_feedback
-* points\
+* points
 
-Some examples of Query tests: \
+Some examples of Query tests: 
 
 1. We want to check if the query returns correct amount of lines:\
 title='A question for the test, which is displayed, when feedback is given'\
 name='query_test' - Always the same for query tests.\
-column_name='COUNT(*)' - We find the query result line count
-expected_value=10 - the Query must have 10 lines for a normal result or count gives exactly 10.
+column_name='COUNT(*)' - We find the query result line count\
+expected_value=10 - the Query must have 10 lines for a normal result or count gives exactly 10.\
 points=20 - the amount fo points the test gives. Usually maximum is 100 as in the end all results are divided by 100 to give %.
 ```
   QueryDataTest(
-      title='Kas on õige ridade arvuga tulemus?',
+      title='Does the query output correct amount of lines?',
       name='query_test',
       column_name='COUNT(*)',
       expected_value=10,
@@ -145,7 +145,7 @@ points=20 - the amount fo points the test gives. Usually maximum is 100 as in th
 ```
 ```
   QueryDataTest(
-      title='Kas 1. kohal on õige laul?',
+      title='Is the first song correct?',
       name='query_test',
       column_name='pealkiri',
       where="test_id=1",
@@ -157,7 +157,7 @@ points=20 - the amount fo points the test gives. Usually maximum is 100 as in th
 ```
 ```
   QueryDataTest(
-      title='Kas on olemas riik Australia?',
+      title='Does the query result have Australia?',
       name='query_test',
       where="riik='Australia'",
       points=30,
@@ -168,7 +168,7 @@ points=20 - the amount fo points the test gives. Usually maximum is 100 as in th
 ```
 ```
   QueryDataTest(
-      title='Kas ei ole olemas riiki Bulgaaria?',
+      title='Does the query not return Bulgaria?',
       name='query_test',
       where="riik='Bulgaria'",
       should_exist=False,
@@ -187,7 +187,7 @@ For example:\
 We have a query column called "Title beginning" and we check for value 'Dance'.
 ```
   QueryDataTest(
-      title='Is there a title beginning "Dance"?',
+      title='Is there a title beginning with "Dance"?',
       name='query_test',
       where='"Title beginning"' + "='Dance'",
       points=20,
@@ -269,7 +269,7 @@ For database creation it accepts pg_dump or SQL script.
 ### Feedback
 Used to format all tests results in a json format. All test results go through Translator.
 ## Translation
-Used to add different translations to Silmused. Translation files are located in silmused/locale. 
+This is used to add different translations to Silmused. Translation files are located in silmused/locale. 
 Translation files are in JSON format.
 Translation is built upon Test Type ex. (IndexTest, ProcedureTest) and Test Key which is specified in Test files for different testing feedbacks
 ## Custom feedback
