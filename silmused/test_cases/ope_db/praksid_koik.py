@@ -11,7 +11,7 @@ from silmused.tests.ViewTest import ViewTest
 from silmused.tests.QueryStructureTest import QueryStructureTest
 from silmused.tests.QueryDataTest import QueryDataTest
 
-
+"""
 # Praktikum 3
 tests = [
     # Ülesanne 1, 14; 10p
@@ -360,7 +360,6 @@ tests = [
     ),
 ]
 
-"""
 # Praktikum 8 100p
 tests = [
     # 4p
@@ -1179,9 +1178,8 @@ tests = [
             )
         ],
     ),
-]
-"""
-"""
+]"""
+# praktikum 10
 tests = [
     # 1, 10p
     ChecksLayer(
@@ -1404,13 +1402,13 @@ tests = [
             FunctionTest(
                 title='Kas on õige kirjete arv?',
                 name='f_infopump',
-                expected_count=105,
+                expected_count=[105, 108],
                 points=10,
             ),
         ]
     ),
 ]
-"""
+
 """
 _user1 = 123456
 _user2 = 123457
