@@ -5,3 +5,5 @@ venv
 demo.py
 *.sql
 *.json
+silmused/test_cases/query_tests/eurovisioon/euro_querys.py
+silmused/test_cases/query_tests/male/male_querys.py
