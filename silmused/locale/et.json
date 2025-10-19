@@ -186,6 +186,7 @@
 		"undefined_function_round": "Ei saa testida, sest veerg $param1 ei ole numeric",
 		"index_error": "Tulemust ei leitud",
 		"incorrect_dump_file": "Viga: Ei leitud õiget Postgre dump või sql faili!",
+		"empty_query_file": "Viga: Päringut ei leitud failist!",
 		"incorrect_test_format": "Viga: Vali Test või Query formaat!",
 		"custom_feedback": "$param1"
 	},

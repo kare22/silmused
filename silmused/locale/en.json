@@ -186,6 +186,7 @@
 		"undefined_function_round": "Cannot be tested, because column $param1 is not numeric",
 		"index_error": "There is no result",
 		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
+		"empty_query_file": "Error: No query found from file",
 		"incorrect_test_format": "Error: Choose Test or Query format!",
 		"custom_feedback": "$param1"
 	},
