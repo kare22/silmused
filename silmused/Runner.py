@@ -50,7 +50,9 @@ class Runner:
             else:
                 print(self.translator.translate("sys_fail", "incorrect_dump_file"))
         elif self.test_query == 'query':
-            if self._file_is_valid_pg_dump():
+            if len(self.query_sql) == 0:
+                print(self.translator.translate("sys_fail", "empty_query_file"))
+            elif self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
                 self._create_query_view()
                 self.results = self._run_tests()
@@ -124,7 +126,7 @@ class Runner:
                 if re.findall(r"\\restrict", sql_script):
                     sql_script = re.sub(r"(--.*$)|(^\\restrict.*$)|(^\\unrestrict.*$)", "", sql_script,
                                         flags=re.MULTILINE)
-            if re.findall(r".*CREATE SCHEMA public;.", sql_script):
+            if re.findall(r".*CREATE SCHEMA public;.*", sql_script):
                 cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
