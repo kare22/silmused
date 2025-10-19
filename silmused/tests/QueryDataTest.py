@@ -212,51 +212,110 @@ class QueryDataTest(TestDefinition):
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
                             )
+                    else:
+                        if self.custom_feedback is None:
+                            return super().response(
+                                False,
+                                '',
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_no_result_negative_feedback",
+                                 "params": [self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                 elif self.expected_value_list:
                     if self.expected_value_group == "numbers":
-                        if self.custom_feedback is None:
-                            return super().response(
-                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_numbers_positive_feedback",
-                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                            self.column_name]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_numbers_negative_feedback",
-                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                            self.column_name]},
-                            )
+                        if len(result) > 0:
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_numbers_positive_feedback",
+                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                                self.column_name]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_numbers_negative_feedback",
+                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                                self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
                         else:
-                            return super().response(
-                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                            )
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    False,
+                                    '',
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_numbers_no_result_negative_feedback",
+                                     "params": [self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
                     elif self.expected_value_group == "strings":
-                        if self.custom_feedback is None:
-                            return super().response(
-                                result[0][0] in self.expected_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_strings_positive_feedback",
-                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "query_expected_value_group_strings_negative_feedback",
-                                 "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                        if len(result) > 0:
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    result[0][0] in self.expected_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_strings_positive_feedback",
+                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_strings_negative_feedback",
+                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    result[0][0] in self.expected_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
                             )
                         else:
-                            return super().response(
-                                result[0][0] in self.expected_value,
-                                {"test_type": "query_data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                                {"test_type": "query_data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                            )
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    False,
+                                    '',
+                                    {"test_type": "query_data_test",
+                                     "test_key": "query_expected_value_group_strings_no_result_negative_feedback",
+                                     "params": [self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "query_data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
                 else:
                     if self.custom_feedback is None:
                     # TODO add type check
@@ -300,3 +359,10 @@ class QueryDataTest(TestDefinition):
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
                     )
+        return super().response(
+            str(result[0][0]) != str(self.expected_value),
+            {"test_type": "query_data_test",
+             "test_key": "no_feedback"},
+            {"test_type": "query_data_test",
+             "test_key": "no_feedback"},
+        )

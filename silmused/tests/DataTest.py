@@ -57,8 +57,9 @@ class DataTest(TestDefinition):
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-        # print(self.query)
-        # print(result)
+        #print(self.query)
+        #print(result)
+        # TODO If the result is empty, then should return error that no result found, ideally it would be under the correct test
         if not self.isView:
             if self.expected_value is None:
                 if self.should_exist:
@@ -178,6 +179,25 @@ class DataTest(TestDefinition):
             # expected value is not None
             else:
                 if self.should_exist:
+                    if len(result) == 0:
+                        if self.custom_feedback is None:
+                            return super().response(
+                                False,
+                                "",
+                                {"test_type": "data_test",
+                                 "test_key": "query_no_result",
+                                 "params": []},
+                            )
+                        else:
+                            return super().response(
+                                False,
+                                {"test_type": "data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
                         if result[0][0] is None and len(result) > 0:
                             if self.custom_feedback is None:
@@ -200,6 +220,25 @@ class DataTest(TestDefinition):
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
                                 )
+                        else:
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    False,
+                                    '',
+                                    {"test_type": "data_test",
+                                     "test_key": "table_expected_value_should_exist_no_result_negative_feedback",
+                                     "params": [self.name, self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
                     elif self.expected_value_list:
                         if self.expected_value_group == "numbers":
                             if len(result) > 0:
@@ -214,6 +253,25 @@ class DataTest(TestDefinition):
                                          "test_key": "table_expected_value_group_numbers_negative_feedback",
                                          "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
                                                     self.name, self.column_name]},
+                                    )
+                                else:
+                                    return super().response(
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                    )
+                            else:
+                                if self.custom_feedback is None:
+                                    return super().response(
+                                        False,
+                                        '',
+                                        {"test_type": "data_test",
+                                         "test_key": "table_expected_value_group_numbers_no_result_negative_feedback",
+                                         "params": [self.name, self.column_name]},
                                     )
                                 else:
                                     return super().response(
@@ -247,7 +305,23 @@ class DataTest(TestDefinition):
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
                                     )
-
+                            else:
+                                if self.custom_feedback is None:
+                                    return super().response(
+                                        False,
+                                        '',
+                                        {"test_type": "data_test",
+                                         "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
+                                         "params": [self.name, self.column_name]},
+                                    )
+                                else:
+                                    return super().response(
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        '',
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                    )
                     else:
                         if self.custom_feedback is None:
                             # TODO add type check
@@ -412,6 +486,25 @@ class DataTest(TestDefinition):
             # expected value is not None
             else:
                 if self.should_exist:
+                    if len(result) == 0:
+                        if self.custom_feedback is None:
+                            return super().response(
+                                False,
+                                "",
+                                {"test_type": "data_test",
+                                 "test_key": "query_no_result",
+                                 "params": []},
+                            )
+                        else:
+                            return super().response(
+                                False,
+                                {"test_type": "data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
                         if result[0][0] is None and len(result) > 0:
                             if self.custom_feedback is None:
@@ -427,6 +520,25 @@ class DataTest(TestDefinition):
                             else:
                                 return super().response(
                                     result[0][0] is None,
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
+                        else:
+                            if self.custom_feedback is None:
+                                return super().response(
+                                    False,
+                                    '',
+                                    {"test_type": "data_test",
+                                     "test_key": "view_expected_value_should_exist_no_result_negative_feedback",
+                                     "params": [self.name, self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -459,6 +571,25 @@ class DataTest(TestDefinition):
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
                                     )
+                            else:
+                                if self.custom_feedback is None:
+                                    return super().response(
+                                        False,
+                                        '',
+                                        {"test_type": "data_test",
+                                         "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
+                                         "params": [self.name, self.column_name]},
+                                    )
+                                else:
+                                    return super().response(
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                    )
                         elif self.expected_value_group == "strings":
                             if len(result) > 0:
                                 if self.custom_feedback is None:
@@ -477,6 +608,23 @@ class DataTest(TestDefinition):
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
+                                        {"test_type": "data_test",
+                                         "test_key": "custom_feedback",
+                                         "params": [self.custom_feedback]},
+                                    )
+                            else:
+                                if self.custom_feedback is None:
+                                    return super().response(
+                                        False,
+                                        '',
+                                        {"test_type": "data_test",
+                                         "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
+                                         "params": [self.name, self.column_name]},
+                                    )
+                                else:
+                                    return super().response(
+                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        '',
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -524,3 +672,12 @@ class DataTest(TestDefinition):
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
                         )
+        return super().response(
+            str(result[0][0]) != str(self.expected_value),
+            {"test_type": "data_test",
+             "test_key": "no_feedback",
+             "params": []},
+            {"test_type": "data_test",
+             "test_key": "no_feedback",
+             "params": []},
+        )
