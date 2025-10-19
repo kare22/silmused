@@ -2,6 +2,7 @@ import json
 import os
 import subprocess
 import sys
+import re
 
 import psycopg2
 from uuid import uuid4
@@ -21,7 +22,7 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgres', db_port='5432', test_query='test', query_sql=None, encoding=''):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgres', db_port='5432', test_query='test', query_sql=None, encoding=None):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -38,6 +39,7 @@ class Runner:
 
         self.results = []
         self.translator = Translator(locale=lang)
+
         if self.test_query == 'test':
             if self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
@@ -93,15 +95,9 @@ class Runner:
             return False
 
         try:
-            if len(self.encoding) > 0:
-                with open(self.file_path, 'r', encoding=self.encoding) as file:
-                    lines = file.readlines()
-                    return any(line.strip().startswith("INSERT") for line in lines)
-            else:
-
-                with open(self.file_path, 'r') as file:
-                    lines = file.readlines()
-                    return any(line.strip().startswith("INSERT") for line in lines)
+            with open(self.file_path, 'r', encoding=self.encoding) as file:
+                lines = file.readlines()
+                return any(line.strip().startswith("INSERT") for line in lines)
         except IOError:
             return False
 
@@ -122,14 +118,14 @@ class Runner:
         cursor = connection.cursor()
 
         try:
-            if len(self.encoding) > 0:
-                with open(self.file_path, 'r', encoding=self.encoding) as file:
-                    sql_script = file.read()
-            else:
-
-                with open(self.file_path, 'r') as file:
-                    sql_script = file.read()
-            cursor.execute('DROP SCHEMA IF EXISTS public')
+            with open(self.file_path, 'r', encoding=self.encoding) as file:
+                sql_script = file.read()
+                # Postgre 17.6+ added rstrict/unrestrict to dump files and psycopg2 script execution fails, if these are not removed
+                if re.findall(r"\\restrict", sql_script):
+                    sql_script = re.sub(r"(--.*$)|(^\\restrict.*$)|(^\\unrestrict.*$)", "", sql_script,
+                                        flags=re.MULTILINE)
+            if re.findall(r".*CREATE SCHEMA public;.", sql_script):
+                cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
             connection.commit()
         except Exception as exception:
