@@ -22,7 +22,8 @@ def _results_to_string(results):
 
 
 class Runner:
-    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost', db_password='postgres', db_port='5432', test_query='test', query_sql=None, encoding=None):
+    def __init__(self, backup_file_path, tests, lang='en', test_name='', db_user='postgres', db_host='localhost',
+                 db_password='postgres', db_port='5432', test_query='test', query_sql=None, encoding=None):
         self.file_path = backup_file_path
         self.tests = tests
         self.test_name = test_name
@@ -96,12 +97,20 @@ class Runner:
         if not self.file_path.lower().endswith('.sql'):
             return False
 
-        try:
-            with open(self.file_path, 'r', encoding=self.encoding) as file:
-                lines = file.readlines()
-                return any(line.strip().startswith("INSERT") for line in lines)
-        except IOError:
-            return False
+        if self.encoding is not None:
+            try:
+                with open(self.file_path, 'r', encoding=self.encoding) as file:
+                    lines = file.readlines()
+                    return any(line.strip().startswith("INSERT") for line in lines)
+            except IOError:
+                return False
+        else:
+            try:
+                with open(self.file_path, 'r') as file:
+                    lines = file.readlines()
+                    return any(line.strip().startswith("INSERT") for line in lines)
+            except IOError:
+                return False
 
     def _create_db_from_psql_insert(self):
         connection = self._connect(db_name='postgres')
@@ -120,12 +129,18 @@ class Runner:
         cursor = connection.cursor()
 
         try:
-            with open(self.file_path, 'r', encoding=self.encoding) as file:
-                sql_script = file.read()
-                # Postgre 17.6+ added rstrict/unrestrict to dump files and psycopg2 script execution fails, if these are not removed
-                if re.findall(r"\\restrict", sql_script):
-                    sql_script = re.sub(r"(--.*$)|(^\\restrict.*$)|(^\\unrestrict.*$)", "", sql_script,
-                                        flags=re.MULTILINE)
+            if self.encoding is not None:
+                with open(self.file_path, 'r', encoding=self.encoding) as file:
+                    sql_script = file.read()
+
+            else:
+                with open(self.file_path, 'r') as file:
+                    sql_script = file.read()
+
+            # Postgre 17.6+ added rstrict/unrestrict to dump files and psycopg2 script execution fails, if these are not removed
+            if re.findall(r"\\restrict", sql_script):
+                sql_script = re.sub(r"(--.*$)|(^\\restrict.*$)|(^\\unrestrict.*$)", "", sql_script,
+                                    flags=re.MULTILINE)
             if re.findall(r".*CREATE SCHEMA public;.*", sql_script):
                 cursor.execute('DROP SCHEMA IF EXISTS public')
             cursor.execute(sql_script)
