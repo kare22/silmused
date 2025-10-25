@@ -35,8 +35,6 @@ class Runner:
         self.test_query = test_query
         self.query_sql = query_sql
         self.encoding = encoding
-        print("Testin"+self.encoding+"kas on tühi")
-        print("Testin"+self.query_sql+"kas on tühi")
 
         self.db_name = f"db{'_' + self.test_name if self.test_name != '' else ''}_{self.file_path.split('/')[-1].split('.')[0]}_{str(uuid4()).replace('-', '_')}"
 
@@ -99,7 +97,7 @@ class Runner:
         if not self.file_path.lower().endswith('.sql'):
             return False
 
-        if self.encoding is not None:
+        if len(self.encoding) == 0:
             try:
                 with open(self.file_path, 'r', encoding=self.encoding) as file:
                     lines = file.readlines()
@@ -131,7 +129,7 @@ class Runner:
         cursor = connection.cursor()
 
         try:
-            if self.encoding is not None:
+            if len(self.encoding) == 0:
                 with open(self.file_path, 'r', encoding=self.encoding) as file:
                     sql_script = file.read()
 
