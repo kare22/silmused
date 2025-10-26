@@ -19,7 +19,7 @@ def main():
     lang = sys.argv[7] if len(sys.argv) > 7 else 'en'
     test_query = sys.argv[8] if len(sys.argv) > 8 else 'test'
     querydb_path = sys.argv[9] if len(sys.argv) > 9 else ''
-    sql_file_encoding = sys.argv[10] if len(sys.argv) > 10 else ''
+    sql_file_encoding = sys.argv[10] if len(sys.argv) > 10 else None
 
     with open(tests_path, 'r') as file:
         tests_file_content = file.read()
