@@ -1,297 +1,759 @@
 # Silmused
 
-# Current versions
-* python @3.12
-* psycopg2 @2.9.9
+A PostgreSQL testing framework that validates database schemas and SQL queries automatically.
 
-# Code reference
-- [Code reference](#code-reference)
-  * [Basics](#basics)
-  * [Test Structure](#test-structure)
-    + [TestDefinition](#testdefinition)
-  * [Tests](#tests)
-    + [ConstraintTest](#constrainttest)
-    + [DataTest](#datatest)
-    + [FunctionTest](#functiontest)
-    + [IndexText](#indextext)
-    + [ProcedureTest](#proceduretest)
-    + [QueryDataTest](#querydatatest)
-    + [QueryStructureTest](#querystructuretest)
-    + [StructureTest](#structuretest)
-    + [TriggerTest](#triggertest)
-    + [ViewTest](#viewtest)
-    + [ChecksLayer](#checkslayer)
-    + [ExecuteLayer](#executelayer)
-    + [TitleLayer](#titlelayer)
-  * [Runner](#runner)
-    + [Initialize](#initialize)
-    + [Database creation](#database-creation)
-    + [Results](#results)
-    + [Feedback](#feedback)
-  * [Translation](#translation)
-  * [Custom feedback](#custom-feedback)
-- [Running Demo Files](#running-demo-files)
-  * [Database Test Demo](#database-test-demo)
-  * [Query Test Demo](#query-test-demo)
-## Basics
-* private methods are noted with an underscore (`_`) at the start 
+## What is Silmused?
 
-## Test Structure
-### TestDefinition
-This is the heart and soul of `Silmused` and defines how tests should behave.
+Silmused helps you write automated tests for PostgreSQL databases. It can test:
+- Database structures (tables, columns, constraints, indexes)
+- Data content and correctness
+- SQL query results and structure
+- Functions and procedures
+- Triggers and views
 
-:note: Some classes do not implicitly use this as they serve a different purpose:
-* ExecuteLayer
-* TitleLayer
-* ChecksLayer
+## Getting Started
 
-All arguments and their requirements that are used for all of the different tests:
+### Prerequisites
 
-| Argument Name                     | Type                          | Default  | Limits                                            | Description                                                                                                   |
-|-----------------------------------|-------------------------------|----------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| name                              | string                        | NOT None | cannot be empty, must be lowercased               | the name of table, view, function etc. that is testes                                                         |
-| points                            | integer, float                | 0        |                                                   | the amount of points of given for a specific test                                                             |
-| title                             | string                        | None     |                                                   | tests can be given a short description or what was tested, shown on feedback                                  |
-| where                             | string                        | None     |                                                   | can be used to specify test queries                                                                           |
-| join                              | string                        | None     | current limit is only inner join                  | can be used to add joins                                                                                      |
-| column_name                       | string                        | None     | must be lowercased                                | the column that is checked for data mostly                                                                    |
-| should_exist                      | boolean                       | True     | True/False                                        | if tested result should exist or not                                                                          |
-| query                             | string                        | None     | shouldn't be used for tests, will be overwritten  | test inner query used for testing results                                                                     |
-| description                       | string                        | None     |                                                   | can be used to give tests more through description, not displayed anywhere, only visible for test writer      |
-| arguments                         | list                          | None     |                                                   | used to give arguments for functions/procedures, can be used to check specific values from information_schema |
-| expected_value                    | string, numerical, NULL, list | None     | None                                              | When the test should return an expected result can be a list to check a range or multiple results             |
-| expected_character_maximum_length | integer                       | None     |                                                   | used to test table/view column maximum allowed size                                                           |
-| expected_type                     | string                        | None     |                                                   | used to check table/view column type                                                                          |
-| expected_count                    | integer                       | None     | only used for function and procedure tests        | used to check the outputted line count of functions or procedures                                             |
-| pre_query                         | string                        | None     | used only in procedure tests                      | used to run queries that are necessary to run before procedures                                               |
-| after_query                       | string                        | None     | used only in procedure tests                      | used to run queries after procedure test queries                                                              |
-| custom_feedback                   | string                        | None     | will overwrite the test default feedback          | can be used to give custom feedback                                                                           |
+- Python 3.12
+- PostgreSQL database
+- psycopg2 2.9.9
 
-## Tests
-These are the classes used for writing tests. All of the test types use SQL queries from the database to check if the inputted file
-is valid according to written test. For example database tables or views structure data is collected from postgresql
-information_schema. For example view data is tested with sql queries where the tests expect the correct values for 
-queries or correct amount of data. Each of the coming Tests will have examples how to use them and how it translates to
-SQL query to show how it works.
+### Step 1: Prepare Your Database
 
-There are 2 types of tests Query and Database tests.
-So only QueryDataTest and QueryStructureTest is used to test queries, all other tests are used to test databases.
+Create a SQL dump file or SQL script with your database:
 
-
-### ConstraintTest
-Used for testing table or column constraints\
-Valid arguments:
-* title
-* name
-* column_name
-* constraint_name
-* constraint_type
-* description
-* should_exist
-* points\
-Simple example for table constraint
+```bash
+pg_dump -U postgres mydatabase > mydb.sql
 ```
+
+Alternatively, you can use a SQL script file that contains INSERT statements.
+
+### Step 2: Write Your First Test
+
+Create a Python file (e.g., `my_tests.py`) with your tests:
+
+```python
+from silmused import Runner, StructureTest, DataTest
+
+# Test that the 'users' table exists
+test1 = StructureTest(
+    name='users',
+    title='Users table exists',
+    points=10
+)
+
+# Test that users table has an email column
+test2 = StructureTest(
+    name='users',
+    column_name='email',
+    title='Email column exists',
+    points=15
+)
+
+# Test that there are exactly 100 users
+test3 = DataTest(
+    name='users',
+    column_name='COUNT(*)',
+    expected_value=100,
+    title='Correct number of users',
+    points=20
+)
+
+tests = [test1, test2, test3]
+```
+
+### Step 3: Run Your Tests
+
+```python
+from silmused import Runner
+
+runner = Runner(
+    backup_file_path='mydb.sql',
+    tests=tests,
+    lang='en'
+)
+
+results = runner.get_results()
+print(results)  # JSON output with test results
+```
+
+## Understanding Test Types
+
+Silmused supports two main testing modes:
+
+1. **Database Tests** - Test your database structure and data
+2. **Query Tests** - Test SQL query results
+
+### Database Tests
+
+These tests validate your database schema and content.
+
+#### Testing Table Structure
+
+**Test if a table exists:**
+```python
+StructureTest(
+    name='products',
+    title='Products table exists',
+    points=10
+)
+```
+
+**Test if a column exists:**
+```python
+StructureTest(
+    name='products',
+    column_name='price',
+    title='Price column exists',
+    points=15
+)
+```
+
+**Test column type:**
+```python
+StructureTest(
+    name='products',
+    column_name='price',
+    expected_type='decimal',
+    title='Price is decimal type',
+    points=15
+)
+```
+
+**Test column maximum length:**
+```python
+StructureTest(
+    name='users',
+    column_name='email',
+    expected_type='varchar',
+    expected_character_maximum_length=255,
+    title='Email has correct length',
+    points=10
+)
+```
+
+#### Testing Data Content
+
+**Check if data exists:**
+```python
+DataTest(
+    name='orders',
+    title='Orders table has data',
+    points=10
+)
+```
+
+**Check exact count:**
+```python
+DataTest(
+    name='orders',
+    column_name='COUNT(*)',
+    expected_value=50,
+    title='Exactly 50 orders',
+    points=20
+)
+```
+
+**Check specific value:**
+```python
+DataTest(
+    name='users',
+    column_name='email',
+    where="id=1",
+    expected_value='admin@example.com',
+    title='First user has correct email',
+    points=15
+)
+```
+
+**Check value range:**
+```python
+DataTest(
+    name='products',
+    column_name='price',
+    where="id=1",
+    expected_value=[100, 200],  # Between 100 and 200
+    title='Product price in range',
+    points=20
+)
+```
+
+**Check if value should NOT exist:**
+```python
+DataTest(
+    name='users',
+    where="deleted_at IS NOT NULL",
+    should_exist=False,
+    title='No deleted users',
+    points=10
+)
+```
+
+#### Testing Constraints
+
+**Test table constraint:**
+```python
 ConstraintTest(
-    title='Does table X have unique constraint?',
-    name='table_x',
-    constraint_name='unique_table_x',
+    name='users',
+    title='Users table has constraints',
+    points=10
+)
+```
+
+**Test specific constraint type:**
+```python
+ConstraintTest(
+    name='users',
     constraint_type='UNIQUE',
-    points=10,
-    )
+    column_name='email',
+    title='Email has unique constraint',
+    points=15
+)
 ```
 
-### DataTest
-Used for testing database structures like tables or views data. Queries have a different [DataTest](#query-data-test).
-### FunctionTest
-Used for testing functions.
-### IndexText
-Used for testing indexes.
-### ProcedureTest
-Used for testing procedures.
-### QueryDataTest
-Used for testing query data. Querytests are special, because the inputted file is a query, then its used to
-create a table named "query_test". For all query related tests use: name='query_test', where name means the table name.
-Also the table has an extra column named "test_id", this column name can be used test if the order of the query is correct.\
-Valid arguments:
-* title
-* name
-* column_name
-* should_exist
-* where
-* join
-* description
-* expected_value
-* custom_feedback
-* points
+**Test constraint by name:**
+```python
+ConstraintTest(
+    name='users',
+    constraint_name='pk_users',
+    constraint_type='PRIMARY KEY',
+    title='Primary key constraint exists',
+    points=20
+)
+```
 
-Some examples of Query tests: 
+#### Testing Functions
 
-1. We want to check if the query returns correct amount of lines:\
-title='A question for the test, which is displayed, when feedback is given'\
-name='query_test' - Always the same for query tests.\
-column_name='COUNT(*)' - We find the query result line count\
-expected_value=10 - the Query must have 10 lines for a normal result or count gives exactly 10.\
-points=20 - the amount fo points the test gives. Usually maximum is 100 as in the end all results are divided by 100 to give %.
+**Test function exists:**
+```python
+FunctionTest(
+    name='calculate_total',
+    arguments=[100, 0.2],
+    title='Function returns value',
+    points=20
+)
 ```
-  QueryDataTest(
-      title='Does the query output correct amount of lines?',
-      name='query_test',
-      column_name='COUNT(*)',
-      expected_value=10,
-      points=20,
-  )
-  select count(*) from query_test; 
-  This should equal 10. if its 10, then the test gives 20p.
-```
-```
-  QueryDataTest(
-      title='Is the first song correct?',
-      name='query_test',
-      column_name='pealkiri',
-      where="test_id=1",
-      expected_value="Madness of Love",
-      points=30,
-  )
-  select pealkiri from query_test where test_id=1; 
-  So test_id=1 means we check value in the first row of column pealkiri and the expected value is "Madness of Love"
-```
-```
-  QueryDataTest(
-      title='Does the query result have Australia?',
-      name='query_test',
-      where="riik='Australia'",
-      points=30,
-  ),
-  select * from query_test where riik = 'Australia';
-  We don't always need to know the exact amount of lines a query returns, so this test just checks if the test query 
-  returns more than 0, then its enough for the test.
-```
-```
-  QueryDataTest(
-      title='Does the query not return Bulgaria?',
-      name='query_test',
-      where="riik='Bulgaria'",
-      should_exist=False,
-      points=30,
-  ),
-  select * from query_test where riik = 'Bulgaria';
-  Sometimes we need to check for values that shouldn't be displayed and then we use should_exist=False.
-  As a default its always True.
-```
-As all test inputs are always between quotes, then sometimes " " and ' ' are used interchangeably.
-For example where = "riik = 'Bulgaria'" Its due to SQL values in queries always have to be between ' ', 
-then in tests the whole line has to be between " ".
 
-In some special cases you need more than one set of " " or ' ' then this can be solved with python string concat rules.
-For example:\
-We have a query column called "Title beginning" and we check for value 'Dance'.
+**Test function return value:**
+```python
+FunctionTest(
+    name='calculate_total',
+    arguments=[100, 0.2],
+    expected_value=120,
+    title='Function calculates correctly',
+    points=30
+)
 ```
-  QueryDataTest(
-      title='Is there a title beginning with "Dance"?',
-      name='query_test',
-      where='"Title beginning"' + "='Dance'",
-      points=20,
-  )
-  
+
+**Test function result count:**
+```python
+FunctionTest(
+    name='get_active_users',
+    expected_count=10,
+    title='Function returns 10 users',
+    points=25
+)
 ```
-### QueryStructureTest
-Used for testing query structure, mainly to test if query has needed columns.
-Valid arguments:
-* title
-* name
-* column_name
-* arguments
-* should_exist
-* where
-* description
-* custom_feedback
-* points
-Some examples of Tests
+
+**Test function parameter count:**
+```python
+FunctionTest(
+    name='calculate_total',
+    arguments=[100, 0.2],
+    number_of_parameters=2,
+    title='Function has 2 parameters',
+    points=15
+)
 ```
-  QueryStructureTest(
-      title='Does column Title exists?',
-      name='query_test',
-      column_name='Title',
-      points=20,
-  )
+
+#### Testing Procedures
+
+**Test procedure:**
+```python
+ProcedureTest(
+    name='update_order_status',
+    arguments=[1, 'completed'],
+    after_query="SELECT * FROM orders WHERE id=1 AND status='completed'",
+    expected_count=1,
+    title='Procedure updates order',
+    points=30
+)
 ```
+
+**With pre-query setup:**
+```python
+ProcedureTest(
+    name='process_payment',
+    arguments=[100, 'USD'],
+    pre_query="INSERT INTO accounts (id, balance) VALUES (1, 1000)",
+    after_query="SELECT balance FROM accounts WHERE id=1",
+    title='Procedure processes payment',
+    points=40
+)
 ```
-  QueryStructureTest(
-      title='Does column Name not exists?',
-      name='query_test',
-      column_name='Name',
-      should_exist=False,
-      points=20,
-  )
+
+#### Testing Views
+
+**Test view exists:**
+```python
+ViewTest(
+    name='active_users',
+    title='Active users view exists',
+    points=15
+)
 ```
-### StructureTest
-### TriggerTest
-Used for testing triggers. 
-These tests use ExecuteLayer commands to prepare for trigger testing. 
-### ViewTest
-Used for testing views.
+
+**Test view column:**
+```python
+ViewTest(
+    name='active_users',
+    column_name='username',
+    title='View has username column',
+    points=10
+)
+```
+
+**Test materialized view:**
+```python
+ViewTest(
+    name='user_stats',
+    isMaterialized=True,
+    title='Materialized view exists',
+    points=20
+)
+```
+
+#### Testing Indexes
+
+**Test index exists:**
+```python
+IndexTest(
+    name='idx_user_email',
+    title='Email index exists',
+    points=15
+)
+```
+
+#### Testing Triggers
+
+**Test trigger exists:**
+```python
+TriggerTest(
+    name='update_timestamp',
+    title='Update timestamp trigger exists',
+    points=20
+)
+```
+
+**Test trigger with event manipulation:**
+```python
+TriggerTest(
+    name='audit_log_trigger',
+    arguments=['INSERT', 'UPDATE'],
+    action_timing='AFTER',
+    title='Trigger handles INSERT and UPDATE',
+    points=30
+)
+```
+
+### Query Tests
+
+Query tests validate SQL query results. When testing queries, the input file is your SQL query, and it creates a temporary table called `query_test` with an extra `test_id` column for row ordering.
+
+**Important:** For all query tests, always use `name='query_test'`.
+
+#### Testing Query Structure
+
+**Test if query has a column:**
+```python
+QueryStructureTest(
+    name='query_test',
+    column_name='Title',
+    title='Query has Title column',
+    points=20
+)
+```
+
+**Test if query should NOT have a column:**
+```python
+QueryStructureTest(
+    name='query_test',
+    column_name='Name',
+    should_exist=False,
+    title='Query does not have Name column',
+    points=15
+)
+```
+
+#### Testing Query Data
+
+**Check query result count:**
+```python
+QueryDataTest(
+    name='query_test',
+    column_name='COUNT(*)',
+    expected_value=10,
+    title='Query returns 10 rows',
+    points=20
+)
+```
+
+**Check first row value:**
+```python
+QueryDataTest(
+    name='query_test',
+    column_name='pealkiri',
+    where="test_id=1",
+    expected_value="Madness of Love",
+    title='First row has correct value',
+    points=30
+)
+```
+
+**Check if value exists:**
+```python
+QueryDataTest(
+    name='query_test',
+    where="riik='Australia'",
+    title='Query includes Australia',
+    points=30
+)
+```
+
+**Check if value should NOT exist:**
+```python
+QueryDataTest(
+    name='query_test',
+    where="riik='Bulgaria'",
+    should_exist=False,
+    title='Query does not include Bulgaria',
+    points=30
+)
+```
+
+**Check value range:**
+```python
+QueryDataTest(
+    name='query_test',
+    column_name='price',
+    where="test_id=1",
+    expected_value=[100, 200],
+    title='Price is in range',
+    points=25
+)
+```
+
+## Organizing Tests with Layers
+
 ### ChecksLayer
-This is a Test Layer that can be used to hold together a group of tests and give an overall Title for that group.
-ex.
-```
+
+Group related tests together:
+
+```python
+from silmused import ChecksLayer, StructureTest, DataTest, ConstraintTest
+
 ChecksLayer(
-  title='Checks for table X'
-  tests=[
-    StructureTest(...),
-    DataTest(...),
-  ],
-),
-ChecksLayer(...)
+    title='Users table validation',
+    tests=[
+        StructureTest(name='users', points=10),
+        StructureTest(name='users', column_name='email', points=15),
+        ConstraintTest(name='users', constraint_type='UNIQUE', column_name='email', points=20),
+        DataTest(name='users', column_name='COUNT(*)', expected_value=100, points=25)
+    ]
+)
+```
+
+### TitleLayer
+
+Add section titles to your test output:
+
+```python
+from silmused import TitleLayer
+
+TitleLayer('Database Structure Tests')
+# ... your tests here ...
+TitleLayer('Data Validation Tests')
+# ... more tests ...
 ```
 
 ### ExecuteLayer
-Used to RUN extra querys between or before tests
-### TitleLayer
-Used to insert extra titles if needed.
-## Runner
-The bread and butter of Silmused. That does lots of stuff.
-### Initialize
-* backup_file_path - path to the file that creates the database that will be tested or where the queries will be executed on. 
-* tests - list of tests 
-* lang - language, which will be used for test feedbacks, default is english 
-* test_name - if given, then it is used in database creation, so different test databases could be differentiated 
-* db_user - user used for connecting to database, default is postgres 
-* db_host - host used for connecting to database, default is localhost 
-* db_password - password used fo connecting to database, default is postgresql 
-* db_port - port used for connecting to database, default is 5432 
-* test_query - parameter that decides if query tests or database tests are executed, default is database tests 
-* query_sql - when test_query='test', then this query will be used to create view, where the tests will be executed on.
-* encoding - can be used to specify in what encoding database files are
-### Database creation
-Creates a random named database based on random string and current datetime and connects to it.
-For database creation it accepts pg_dump or SQL script.
-### Results
-### Feedback
-Used to format all tests results in a json format. All test results go through Translator.
-## Translation
-This is used to add different translations to Silmused. Translation files are located in silmused/locale. 
-Translation files are in JSON format.
-Translation is built upon Test Type ex. (IndexTest, ProcedureTest) and Test Key which is specified in Test files for different testing feedbacks
-## Custom feedback
-Every test has an argument **custom_feedback** that can be used to write your own custom feedback for all tests.
-If some test feedbacks would make sense as a default feedback, then pull request add it yourself.
-# Running Demo Files
-## Database Test Demo
-To run tests for database tests use demo.py
-## Query Test Demo
-To run tests for query tests use query_demo.py
-## Running tests on command line
-Silmused can be run as a command line program
 
-silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> <test_type> <query_test_database> encoding
+Run SQL queries between tests (useful for trigger testing):
 
-### Database tests
-silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> test '' encoding
+```python
+from silmused import ExecuteLayer
 
-Example:
-``silmused lahendus.sql tests.py postgres localhost 5433 postgres et``
-### Query tests
-silmused <query_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> query <query_test_database> encoding
+ExecuteLayer("INSERT INTO users (email) VALUES ('test@example.com')")
+# ... your trigger tests here ...
+```
 
-Example:
-``silmused query.sql euro_kodu_3_2.py postgres localhost 5432 postgresql et query eurovisioon.sql UTF-8``
+## Complete Workflow Examples
+
+### Example 1: Testing a Complete Database
+
+```python
+from silmused import Runner, ChecksLayer, StructureTest, DataTest, ConstraintTest, TitleLayer
+
+tests = [
+    TitleLayer('Table Structure'),
+    ChecksLayer(
+        title='Users table',
+        tests=[
+            StructureTest(name='users', title='Table exists', points=10),
+            StructureTest(name='users', column_name='email', expected_type='varchar', points=15),
+            ConstraintTest(name='users', constraint_type='PRIMARY KEY', points=20),
+            DataTest(name='users', column_name='COUNT(*)', expected_value=100, points=25)
+        ]
+    ),
+    TitleLayer('Products'),
+    ChecksLayer(
+        title='Products table',
+        tests=[
+            StructureTest(name='products', points=10),
+            StructureTest(name='products', column_name='price', expected_type='decimal', points=15),
+            DataTest(name='products', where="price > 100", points=20)
+        ]
+    )
+]
+
+runner = Runner(
+    backup_file_path='database.sql',
+    tests=tests,
+    lang='en'
+)
+
+results = runner.get_results()
+print(results)
+```
+
+### Example 2: Testing a SQL Query
+
+```python
+from silmused import Runner, QueryStructureTest, QueryDataTest
+
+# Your query file contains the SQL query
+# The query will be executed and results stored in query_test table
+
+tests = [
+    QueryStructureTest(
+        name='query_test',
+        column_name='Title',
+        title='Query has Title column',
+        points=20
+    ),
+    QueryDataTest(
+        name='query_test',
+        column_name='COUNT(*)',
+        expected_value=10,
+        title='Query returns 10 rows',
+        points=30
+    ),
+    QueryDataTest(
+        name='query_test',
+        column_name='pealkiri',
+        where="test_id=1",
+        expected_value="Madness of Love",
+        title='First row is correct',
+        points=30
+    )
+]
+
+runner = Runner(
+    backup_file_path='database.sql',  # Database for query execution
+    tests=tests,
+    test_query='query',  # Enable query test mode
+    query_sql='SELECT * FROM songs ORDER BY id',  # Your SQL query
+    lang='en'
+)
+
+results = runner.get_results()
+print(results)
+```
+
+## Runner Configuration
+
+The `Runner` class accepts these parameters:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `backup_file_path` | string | **Required** | Path to SQL dump or SQL script file |
+| `tests` | list | **Required** | List of test objects |
+| `lang` | string | `'en'` | Language for feedback (`'en'` or `'et'`) |
+| `test_name` | string | `''` | Optional name for test database |
+| `db_user` | string | `'postgres'` | PostgreSQL username |
+| `db_host` | string | `'localhost'` | Database host |
+| `db_password` | string | `'postgres'` | Database password |
+| `db_port` | string | `'5432'` | Database port |
+| `test_query` | string | `'test'` | `'test'` for database tests, `'query'` for query tests |
+| `query_sql` | string | `''` | SQL query string (for query tests) |
+| `encoding` | string | `None` | File encoding (e.g., `'UTF-8'`) |
+
+## Common Test Parameters
+
+All test classes share common parameters from `TestDefinition`:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `name` | string | **Required** | Table/view/function name (must be lowercase) |
+| `points` | int/float | `0` | Points awarded for this test |
+| `title` | string | `None` | Test description shown in feedback |
+| `column_name` | string | `None` | Column name to test (must be lowercase) |
+| `should_exist` | boolean | `True` | Whether result should exist |
+| `expected_value` | any | `None` | Expected value, or list `[min, max]` for range |
+| `where` | string | `None` | WHERE clause for filtering |
+| `join` | string | `None` | JOIN clause (currently only INNER JOIN) |
+| `description` | string | `None` | Internal description (not shown in feedback) |
+| `custom_feedback` | string | `None` | Custom feedback message |
+
+## String Handling in Queries
+
+When writing WHERE clauses, remember:
+- SQL values must be in single quotes: `'value'`
+- Python strings use double quotes: `"..."`
+
+**Example:**
+```python
+DataTest(
+    name='users',
+    where="email='admin@example.com'",  # SQL uses ' inside Python "
+    points=15
+)
+```
+
+**For columns with spaces:**
+```python
+QueryDataTest(
+    name='query_test',
+    where='"Title beginning"' + "='Dance'",  # Column name with spaces
+    points=20
+)
+```
+
+## Understanding Results
+
+Test results are returned as JSON in OK_V3 format:
+
+```json
+{
+  "result_type": "OK_V3",
+  "points": 85,
+  "producer": "silmused 1.4.5",
+  "finished_at": "2024-01-15T10:30:00Z",
+  "tests": [
+    {
+      "title": "Users table exists",
+      "status": "PASS",
+      "feedback": ""
+    },
+    {
+      "title": "Email column exists",
+      "status": "FAIL",
+      "feedback": "Wrong, expected to find column email in table users"
+    }
+  ]
+}
+```
+
+- `points`: Percentage score (0-100)
+- `tests`: Array of test results
+- `status`: `"PASS"` or `"FAIL"`
+- `feedback`: Human-readable feedback message
+
+## Running Tests from Command Line
+
+Silmused can be run as a command-line program:
+
+### Database Tests
+
+```bash
+silmused <database_dump_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> test '' <encoding>
+```
+
+**Example:**
+```bash
+silmused lahendus.sql tests.py postgres localhost 5432 postgresql en test '' UTF-8
+```
+
+### Query Tests
+
+```bash
+silmused <query_file> <tests_file> <db_user> <hostname> <port> <db_password> <test_language> query <query_test_database> <encoding>
+```
+
+**Example:**
+```bash
+silmused query.sql euro_kodu_3_2.py postgres localhost 5432 postgresql en query eurovisioon.sql UTF-8
+```
+
+**Note:** The tests file must include an array with the key `"tests"`:
+
+```python
+tests = [
+    StructureTest(...),
+    DataTest(...)
+]
+```
+
+## Translation Support
+
+Silmused supports multiple languages for feedback messages. Currently supported:
+- English (`'en'`)
+- Estonian (`'et'`)
+
+Set the language when creating the Runner:
+
+```python
+runner = Runner(
+    backup_file_path='database.sql',
+    tests=tests,
+    lang='et'  # Estonian feedback
+)
+```
+
+## Custom Feedback
+
+Every test supports custom feedback messages:
+
+```python
+DataTest(
+    name='users',
+    column_name='COUNT(*)',
+    expected_value=100,
+    custom_feedback='Expected exactly 100 users, but found a different number',
+    points=20
+)
+```
+
+Custom feedback overwrites the default translated feedback messages.
+
+## Tips and Best Practices
+
+1. **Always use lowercase for table/column names** - Silmused expects lowercase names
+2. **Use descriptive titles** - They appear in test results and help debugging
+3. **Group related tests** - Use `ChecksLayer` to organize tests logically
+4. **Set appropriate points** - Total points typically sum to 100 for percentage scoring
+5. **Use `description` for internal notes** - Not shown in feedback, useful for documentation
+6. **Test incrementally** - Start with structure tests, then data tests
+7. **Handle edge cases** - Test both positive (`should_exist=True`) and negative (`should_exist=False`) cases
+
+## Troubleshooting
+
+**Problem:** Tests fail with "table not found"
+- **Solution:** Ensure table names are lowercase in tests
+
+**Problem:** Query tests not working
+- **Solution:** Make sure `test_query='query'` and `query_sql` is set, and use `name='query_test'` for all query tests
+
+**Problem:** Encoding errors
+- **Solution:** Specify `encoding='UTF-8'` when loading SQL files with special characters
+
+**Problem:** Database connection fails
+- **Solution:** Check database credentials, host, port, and ensure PostgreSQL is running
+
+## Current Versions
+
+- Python: 3.12
+- psycopg2: 2.9.9
+- Silmused: 1.4.5
+
