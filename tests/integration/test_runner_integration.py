@@ -7,7 +7,7 @@ import json
 import tempfile
 import os
 from unittest.mock import Mock, MagicMock, patch, mock_open
-from silmused import Runner
+from silmused.Runner import Runner
 from silmused.tests.StructureTest import StructureTest
 from silmused.tests.DataTest import DataTest
 from silmused.ChecksLayer import ChecksLayer
