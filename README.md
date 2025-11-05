@@ -92,7 +92,7 @@ Silmused supports two main testing modes:
 
 - Python: 3.12
 - psycopg2: 2.9.9
-- Silmused: 1.4.5
+- Silmused: 1.4.6
 
 ## Architecture Overview
 
