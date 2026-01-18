@@ -41,7 +41,7 @@ tests = [
                 name='query_test',
                 column_name='vanus',
                 where="eesnimi = 'Arvo' and perenimi = 'Mets'",
-                expected_value=85,
+                expected_value=86,
                 points=30,
             ),
         ]
