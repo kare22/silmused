@@ -33,6 +33,7 @@ class QueryDataTest(TestDefinition):
         else:
             self.expected_value_list = False
 
+
         super().__init__(
             name=name,
             title=title,
@@ -318,19 +319,30 @@ class QueryDataTest(TestDefinition):
                                 )
                 else:
                     if self.custom_feedback is None:
-                    # TODO add type check
-                        return super().response(
-                            str(result[0][0]) == str(self.expected_value),
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_positive_feedback",
-                             "params": [self.expected_value, self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_negative_feedback",
-                             "params": [self.expected_value, str(result[0][0]), self.column_name]},
-                        )
+                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                            return super().response(
+                                result[0][0] == self.expected_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_negative_feedback",
+                                 "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                str(result[0][0]) == str(self.expected_value),
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_negative_feedback",
+                                 "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                            )
                     else:
-                        return super().response(
-                            str(result[0][0]) == str(self.expected_value),
+                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                            return super().response(
+                                result[0][0] == self.expected_value,
                             {"test_type": "query_data_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -338,6 +350,17 @@ class QueryDataTest(TestDefinition):
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
                         )
+                        else:
+                            return super().response(
+                                str(result[0][0]) == str(self.expected_value),
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
+            # expected value shouldn't exist
             else:
                 if self.custom_feedback is None:
                     return super().response(
