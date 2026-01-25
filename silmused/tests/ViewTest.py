@@ -4,7 +4,7 @@ from silmused.utils import list_to_string
 
 class ViewTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True,
-                 where=None, description=None, custom_feedback=None, isMaterialized=False, banned_arguments=None, points=0):
+                 where=None, description=None, custom_feedback=None, isMaterialized=False, elements=None, points=0):
         if isMaterialized:
             query = f"SELECT * FROM pg_matviews WHERE matviewname = '{name}'"
         else:
@@ -20,13 +20,13 @@ class ViewTest(TestDefinition):
             else:
                 raise AttributeError('Parameter column_name must be list or string')
 
-        if banned_arguments is not None:
+        if elements is not None:
             if not isMaterialized:
                 query = f"SELECT * FROM pg_views WHERE viewname = '{name}'"
-            if isinstance(banned_arguments, str):
-                query += f" AND definition ILIKE '%{banned_arguments}%'"
-            elif isinstance(banned_arguments, list):
-                for (index, arg) in enumerate(banned_arguments):
+            if isinstance(elements, str):
+                query += f" AND definition ILIKE '%{elements}%'"
+            elif isinstance(elements, list):
+                for (index, arg) in enumerate(elements):
                     operator = 'AND (' if index == 0 else 'OR'
                     query += f" {operator} definition ILIKE '%{arg}%'"
                 query += ")"
@@ -44,7 +44,7 @@ class ViewTest(TestDefinition):
             query=query,
             should_exist=should_exist,
             custom_feedback=custom_feedback,
-            banned_arguments=banned_arguments,
+            elements=elements,
         )
 
         self.column_name = column_name
@@ -56,27 +56,49 @@ class ViewTest(TestDefinition):
         result = cursor.fetchall()
 
         if self.isMaterialized:
-            if self.banned_arguments is not None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "view_test",
-                         "test_key": "mat_view_banned_arguments_positive_feedback",
-                         "params": [self.banned_arguments,self.name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "mat_view_banned_arguments_negative_feedback",
-                         "params": [self.banned_arguments,self.name]},
-                    )
+            if self.elements is not None:
+                if self.should_exist:
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "view_test",
+                             "test_key": "mat_view_required_elements_positive_feedback",
+                             "params": [self.elements,self.name]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "mat_view_required_elements_negative_feedback",
+                             "params": [self.elements,self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) > 0,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
                 else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "view_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                    if self.custom_feedback is None:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "view_test",
+                             "test_key": "mat_view_banned_elements_positive_feedback",
+                             "params": [self.elements,self.name]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "mat_view_banned_elements_negative_feedback",
+                             "params": [self.elements,self.name]},
+                        )
+                    else:
+                        return super().response(
+                            len(result) == 0,
+                            {"test_type": "view_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "custom_feedback",
+                             "params": [self.custom_feedback]},
+                        )
             elif self.should_exist:
                 if self.custom_feedback is None:
                     return super().response(
@@ -119,27 +141,49 @@ class ViewTest(TestDefinition):
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
                     )
-        if self.banned_arguments is not None:
-            if self.custom_feedback is None:
-                return super().response(
-                    len(result) == 0,
+        if self.elements is not None:
+            if self.should_exist:
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) > 0,
+                            {"test_type": "view_test",
+                             "test_key": "view_required_elements_positive_feedback",
+                             "params": [self.elements,self.name]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "view_required_elements_negative_feedback",
+                             "params": [self.elements,self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
                         {"test_type": "view_test",
-                         "test_key": "view_banned_arguments_positive_feedback",
-                         "params": [self.banned_arguments,self.name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "view_banned_arguments_negative_feedback",
-                         "params": [self.banned_arguments,self.name]},
-                )
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
             else:
-                return super().response(
-                    len(result) == 0,
-                    {"test_type": "view_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
-                    {"test_type": "view_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
-                )
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) == 0,
+                            {"test_type": "view_test",
+                             "test_key": "view_banned_elements_positive_feedback",
+                             "params": [self.elements,self.name]},
+                            {"test_type": "query_structure_test",
+                             "test_key": "view_banned_elements_negative_feedback",
+                             "params": [self.elements,self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "view_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
         if self.expected_value is not None:
             # TODO Is this needed?
             # What is this test checking? result 0,0 is database name, maybe this should check if the value is found in result?
