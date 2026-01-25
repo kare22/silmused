@@ -121,8 +121,10 @@
 		"query_table_should_not_exist_negative_feedback": "Vale, päringut ei tohi olla, aga on",
 		"query_column_should_not_exist_positive_feedback": "Õige veerg '$param1' ei ole päringus olemas",
 		"query_column_should_not_exist_negative_feedback": "Vale, veergu '$param1' ei tohiks olla päringus olemas",
-		"query_banned_arguments_positive_feedback": "Õige, keelatud argumente '$param1' ei ole päringus kasutatud",
-		"query_banned_arguments_negative_feedback": "Vale, keelatud argumente '$param1' on päringus kasutatud",
+		"query_required_elements_positive_feedback": "Õige, kõik nõutud elemendid '$param1' on päringus kasutatud",
+		"query_required_elements_negative_feedback": "Vale, kõiki nõutud elemente '$param1' ei ole päringus kasutatud",
+		"query_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole päringus kasutatud",
+		"query_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on päringus kasutatud",
 		"custom_feedback": "'$param1'"
 	},
 	"query_data_test": {
@@ -212,14 +214,18 @@
 		"view_should_not_exist_negative_feedback": "Vale, vaadet '$param1' ei tohiks olla olemas",
 		"column_should_not_exist_positive_feedback": "Õige, veergu '$param1' ei ole olemas vaates '$param2'",
 		"column_should_not_exist_negative_feedback": "Vale, veerg '$param1' ei tohiks olla olemas vaatest '$param2'",
-		"view_banned_arguments_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud vaates '$param2'",
-		"view_banned_arguments_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud vaates '$param2'",
+		"view_required_elements_positive_feedback": "Õige, kõiki nõutud elemente '$param1' on kasutatud vaate päringus nimega '$param2'",
+		"view_required_elements_negative_feedback": "Vale, kõiki nõutud elemente '$param1' ei ole kasutatud vaate päringus nimega '$param2'",
+		"view_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud vaates '$param2'",
+		"view_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud vaates '$param2'",
 		"mat_view_should_exist_positive_feedback": "Õige, materialiseeritud vaade '$param1' on olemas",
 		"mat_view_should_exist_negative_feedback": "Vale, materialiseeritud vaadet '$param1' ei ole olemas",
 		"mat_view_should_not_exist_positive_feedback": "Õige, materialiseeritud vaade '$param1' ei ole olemas",
 		"mat_view_should_not_exist_negative_feedback": "Vale, materialiseeritud vaadet '$param1' ei tohiks olla olemas",
-		"mat_view_banned_arguments_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud materialiseeritud vaates '$param2'",
-		"mat_view_banned_arguments_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud materialiseeritud vaates '$param2'",
+		"mat_view_required_elements_positive_feedback": "Õige, kõiki nõutud elemente '$param1' on kasutatud materialiseeritud vaate päringus nimega '$param2'",
+		"mat_view_required_elements_negative_feedback": "Vale, kõiki nõutud elemente '$param1' ei ole kasutatud materialiseeritud vaate päringus nimega '$param2'",
+		"mat_view_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud materialiseeritud vaates '$param2'",
+		"mat_view_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud materialiseeritud vaates '$param2'",
 		"custom_feedback": "'$param1'"
 	}
 }

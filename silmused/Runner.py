@@ -127,7 +127,7 @@ class Runner:
             with open(self.file_path, 'r', encoding=self.encoding) as file:
                 sql_script = file.read()
 
-            # Postgre 17.6+ added rstrict/unrestrict to dump files and psycopg2 script execution fails, if these are not removed
+            # Postgre 17.6+ added rstrict/unrestrict to dump files, if these are not removed then psycopg2 script execution fails
             if re.findall(r"\\restrict", sql_script):
                 sql_script = re.sub(r"(--.*$)|(^\\restrict.*$)|(^\\unrestrict.*$)", "", sql_script,
                                     flags=re.MULTILINE)
