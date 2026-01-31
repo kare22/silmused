@@ -20,6 +20,13 @@ tests = [
                 column_name='arv',
                 points=10,
             ),
+            QueryStructureTest(
+                title='Kas lahenduses on kasutatud keelatud elemente?',
+                name='query_test',
+                elements='LIMIT',
+                should_exist=False,
+                points=10,
+            ),
             QueryDataTest(
                 title='Kas on õige ridade arvuga tulemus?',
                 name='query_test',
@@ -33,7 +40,7 @@ tests = [
                 column_name='arv',
                 where='"ränkingu klass" = 1100',
                 expected_value=25,
-                points=20,
+                points=10,
             ),
             QueryDataTest(
                 title='Kas on õige ränking viimasel kohal?',

@@ -31,14 +31,16 @@ tests = [
                 where="nimi = 'Tartu'",
                 expected_value=6,
                 points=30,
+                column_name_fallback=['klubide%arv'],
             ),
             QueryDataTest(
-                title='Kas Elvas on 0 klubi?',
+                title='Kas tulemuses on näha klubideta asulad?',
                 name='query_test',
                 column_name='"klubide arv"',
                 where="nimi = 'Elva'",
                 expected_value=0,
                 points=30,
+                column_name_fallback=['klubide%arv'],
             ),
         ]
     ),
