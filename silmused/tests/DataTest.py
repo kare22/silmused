@@ -3,10 +3,10 @@ from silmused.tests.TestDefinition import TestDefinition
 
 # TODO split this into TableDataTest and ViewDataTest, so that feedback code would be more readable
 # But this will just duplicate code...
-# TODO expected_value - add option to check the value between a set of data ex. 105-108
+# TODO expected_value - add an option to query the expected results, if that data should change after a time
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, isView=False, custom_feedback=None, points=0):
+                 expected_value=None, isView=False, column_name_fallback=None, custom_feedback=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -46,19 +46,22 @@ class DataTest(TestDefinition):
             query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}",
             should_exist=should_exist,
             expected_value=expected_value,
-            custom_feedback=custom_feedback
+            custom_feedback=custom_feedback,
         )
 
         self.column_name = column_name
         self.where = where
         self.join = join
         self.isView = isView
+        self.column_name_fallback = column_name_fallback
 
     def execute(self, cursor):
+        if self.column_name_fallback is not None:
+            self.column_name = self.check_alternative_columns(cursor)
+            self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
+                          f" WHERE ({self.where})") if self.where is not None else ""
         cursor.execute(self.query)
         result = cursor.fetchall()
-        #print(self.query)
-        #print(result)
         # TODO If the result is empty, then should return error that no result found, ideally it would be under the correct test
         if not self.isView:
             if self.expected_value is None:
@@ -652,7 +655,7 @@ class DataTest(TestDefinition):
                                     )
                     else:
                         if self.custom_feedback is None:
-                        # TODO add type check
+                            # TODO add type check
                             return super().response(
                                 str(result[0][0]) == str(self.expected_value),
                                 {"test_type": "data_test",
@@ -702,3 +705,13 @@ class DataTest(TestDefinition):
              "test_key": "no_feedback",
              "params": []},
         )
+
+    def check_alternative_columns(self, cursor):
+        for c_name in self.column_name_fallback:
+            query = (f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.name}' "
+                     f"AND column_name ILIKE '{c_name}'")
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if len(result[0][0]) > 0:
+                return result[0][0]
+        return self.column_name
