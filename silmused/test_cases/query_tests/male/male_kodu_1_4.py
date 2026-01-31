@@ -17,12 +17,19 @@ tests = [
                 column_name='arv',
                 points=20,
             ),
+            QueryStructureTest(
+                title='Kas lahenduses on kasutatud keelatud elemente?',
+                name='query_test',
+                elements='LIMIT',
+                should_exist=False,
+                points=10,
+            ),
             QueryDataTest(
                 title='Kas on õige ridade arvuga tulemus?',
                 name='query_test',
                 column_name='COUNT(*)',
                 expected_value=3,
-                points=30,
+                points=20,
             ),
             QueryDataTest(
                 title='Kas on mais kõige vähem mängijaid?',
@@ -30,7 +37,15 @@ tests = [
                 column_name='arv',
                 where='"sünnikuu number" = 5',
                 expected_value=2,
-                points=30,
+                points=15,
+            ),
+            QueryDataTest(
+                title='Kas on septembris õige arv mängijaid?',
+                name='query_test',
+                column_name='arv',
+                where='"sünnikuu number" = 9',
+                expected_value=3,
+                points=15,
             ),
         ]
     ),
