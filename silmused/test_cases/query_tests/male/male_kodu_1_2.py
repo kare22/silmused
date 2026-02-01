@@ -29,12 +29,25 @@ tests = [
                 column_name='vanus',
                 points=10,
             ),
+            QueryStructureTest(
+                title='Kas tulemuses on ainult nõutud veerud?',
+                name='query_test',
+                column_name=['id','isikukood','klubi','synniaeg','ranking'],
+                should_exist=False,
+                points=5,
+            ),
+            QueryStructureTest(
+                title='Kas päringus on kasutatud nõutud tingimusi?',
+                name='query_test',
+                elements='ets',
+                points=10,
+            ),
             QueryDataTest(
                 title='Kas on õige ridade arvuga tulemus?',
                 name='query_test',
                 column_name='COUNT(*)',
                 expected_value=4,
-                points=30,
+                points=25,
             ),
             QueryDataTest(
                 title='Kas on õige vanus Arvo Metsal?',
@@ -42,7 +55,7 @@ tests = [
                 column_name='vanus',
                 where="eesnimi = 'Arvo' and perenimi = 'Mets'",
                 expected_value=86,
-                points=30,
+                points=20,
             ),
         ]
     ),
