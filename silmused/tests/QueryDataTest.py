@@ -3,12 +3,14 @@ from silmused.tests.TestDefinition import TestDefinition
 
 class QueryDataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, custom_feedback=None, points=0):
+                 expected_value=None, column_name_fallback=None, custom_feedback=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
         if column_name is not None:
             self.is_count = False if column_name.lower().find("count") == -1 else True
+        if column_name_fallback is not None and not isinstance(column_name, list):
+            raise Exception('Parameter "column_name_fallback" must be a list')
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if isinstance(expected_value[0], str):
@@ -44,6 +46,7 @@ class QueryDataTest(TestDefinition):
             should_exist=should_exist,
             expected_value=expected_value,
             custom_feedback=custom_feedback,
+            column_name_fallback=column_name_fallback,
         )
 
         self.column_name = column_name
@@ -51,6 +54,11 @@ class QueryDataTest(TestDefinition):
         self.join = join
 
     def execute(self, cursor):
+        if self.column_name_fallback is not None:
+            self.column_name = self.check_alternative_columns(cursor)
+            self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
+                          f" WHERE ({self.where})") if self.where is not None else ""
+
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -296,7 +304,7 @@ class QueryDataTest(TestDefinition):
                                     {"test_type": "query_data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
-                            )
+                                )
                         else:
                             if self.custom_feedback is None:
                                 return super().response(
@@ -318,26 +326,48 @@ class QueryDataTest(TestDefinition):
                                 )
                 else:
                     if self.custom_feedback is None:
-                    # TODO add type check
-                        return super().response(
-                            str(result[0][0]) == str(self.expected_value),
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_positive_feedback",
-                             "params": [self.expected_value, self.column_name]},
-                            {"test_type": "query_data_test",
-                             "test_key": "query_expected_value_should_exist_negative_feedback",
-                             "params": [self.expected_value, str(result[0][0]), self.column_name]},
-                        )
+                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                            return super().response(
+                                result[0][0] == self.expected_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_negative_feedback",
+                                 "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                            )
+                        else:
+                            return super().response(
+                                str(result[0][0]) == str(self.expected_value),
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_positive_feedback",
+                                 "params": [self.expected_value, self.column_name]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "query_expected_value_should_exist_negative_feedback",
+                                 "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                            )
                     else:
-                        return super().response(
-                            str(result[0][0]) == str(self.expected_value),
-                            {"test_type": "query_data_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "query_data_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                            return super().response(
+                                result[0][0] == self.expected_value,
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
+                        else:
+                            return super().response(
+                                str(result[0][0]) == str(self.expected_value),
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                                {"test_type": "query_data_test",
+                                 "test_key": "custom_feedback",
+                                 "params": [self.custom_feedback]},
+                            )
+            # expected value shouldn't exist
             else:
                 if self.custom_feedback is None:
                     return super().response(
@@ -366,3 +396,13 @@ class QueryDataTest(TestDefinition):
             {"test_type": "query_data_test",
              "test_key": "no_feedback"},
         )
+
+    def check_alternative_columns(self, cursor):
+        for c_name in self.column_name_fallback:
+            query = (f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.name}' "
+                     f"AND column_name ILIKE '{c_name}'")
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if len(result[0][0]) > 0:
+                return result[0][0]
+        return self.column_name
