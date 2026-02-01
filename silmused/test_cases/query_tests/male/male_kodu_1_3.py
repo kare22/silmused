@@ -21,7 +21,7 @@ tests = [
                 points=10,
             ),
             QueryStructureTest(
-                title='Kas lahenduses on kasutatud keelatud elemente?',
+                title='Kas päringus on kasutatud keelatud elemente?',
                 name='query_test',
                 elements='LIMIT',
                 should_exist=False,
@@ -60,7 +60,7 @@ tests = [
                 name='query_test',
                 column_name='COUNT(*)',
                 expected_value=5,
-                points=30,
+                points=20,
             ),
             QueryDataTest(
                 title='Kas on õige ränking esimesel kohal kui eemaldada üks isik 1100 ränkiguga?',
