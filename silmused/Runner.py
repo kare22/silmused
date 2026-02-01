@@ -194,7 +194,7 @@ class Runner:
 
             elif len(params) == 1:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0])
+                                param1 = params[0] if type(params[0]) != list else self._translate_param_separation(params[0]))
             elif len(params) == 2:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
                                                      param1=params[0], param2=params[1])
@@ -213,6 +213,15 @@ class Runner:
                 feedback = "Params were given, but there is more than 5"
 
         return feedback
+
+    # This is used, when the input param is in a list, but it would be better not to output as a python list, but OR list
+    def _translate_param_separation(self, param_list):
+        or_lang = {'en': 'or', 'et': 'või'}
+        output = ''
+        for (index, param) in enumerate(param_list):
+            operator = '' if index == 0 else f"' {or_lang[self.translator.locale]} '"
+            output += f"{operator}{param}"
+        return output
 
     def _checks_to_object(self, checks):
         outputs = []
