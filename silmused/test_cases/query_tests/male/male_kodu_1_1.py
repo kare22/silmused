@@ -30,6 +30,13 @@ tests = [
                 elements='LIMIT',
                 points=20,
             ),
+            QueryStructureTest(
+                title='Kas tulemuses on ainult veerud eesnimi ja perenimi?',
+                name='query_test',
+                column_name=['id','isikukood','klubi','synniaeg','sugu','ranking'],
+                should_exist=False,
+                points=10,
+            ),
             QueryDataTest(
                 title='Kas on õige ridade arvuga tulemus?',
                 name='query_test',
@@ -46,7 +53,7 @@ tests = [
                 points=20,
             ),
             QueryDataTest(
-                title='Kas viies noorim on´õige isik?',
+                title='Kas viies noorim on õige isik?',
                 name='query_test',
                 column_name='eesnimi',
                 where="test_id=5",

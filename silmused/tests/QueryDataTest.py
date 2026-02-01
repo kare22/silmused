@@ -9,6 +9,8 @@ class QueryDataTest(TestDefinition):
             raise Exception('Parameter "column_name" must be a string')
         if column_name is not None:
             self.is_count = False if column_name.lower().find("count") == -1 else True
+        if column_name_fallback is not None and not isinstance(column_name, list):
+            raise Exception('Parameter "column_name_fallback" must be a list')
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if isinstance(expected_value[0], str):
@@ -56,6 +58,7 @@ class QueryDataTest(TestDefinition):
             self.column_name = self.check_alternative_columns(cursor)
             self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
                           f" WHERE ({self.where})") if self.where is not None else ""
+
         cursor.execute(self.query)
         result = cursor.fetchall()
 
