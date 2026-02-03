@@ -18,7 +18,7 @@ tests = [
                 points=15,
             ),
             QueryStructureTest(
-                title='Kas lahenduses on ainult 2 veergu?',
+                title='Kas tulemuses on ainult veerud eesnimi ja perenimi?',
                 name='query_test',
                 column_name=['id','isikukood','klubi','synniaeg','sugu','ranking'],
                 should_exist=False,
@@ -27,15 +27,9 @@ tests = [
             QueryStructureTest(
                 title='Kas lahenduses on kasutatud LIMITit?',
                 name='query_test',
-                elements='LIMIT',
-                points=20,
-            ),
-            QueryStructureTest(
-                title='Kas tulemuses on ainult veerud eesnimi ja perenimi?',
-                name='query_test',
-                column_name=['id','isikukood','klubi','synniaeg','sugu','ranking'],
+                elements=['LIMIT'],
                 should_exist=False,
-                points=10,
+                points=20,
             ),
             QueryDataTest(
                 title='Kas on õige ridade arvuga tulemus?',
