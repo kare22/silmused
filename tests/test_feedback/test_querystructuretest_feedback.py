@@ -150,3 +150,7 @@ class TestQueryStructureTestFeedback:
         assert result['message']['test_key'] == 'custom_feedback'
         assert 'Custom query structure test message' in result['message']['params']
 
+    # TODO query_required_elements_positive_feedback,
+    #  query_required_elements_negative_feedback
+    #  query_banned_elements_positive_feedback
+    #  query_banned_elements_negative_feedback
