@@ -5,17 +5,16 @@ from silmused.utils import list_to_string
 class QueryStructureTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, should_exist=True, where=None,
                  description=None, custom_feedback=None, elements=None, points=0):
-        # required_arguments kodutöö 2_1 needs maletäht, then its
-        # This allows counting:
+
         query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}'"
 
         if column_name is not None:
-            if type(column_name) == str:
+            if isinstance(column_name, str):
                 query += f" AND column_name = '{column_name}'"
-            elif type(column_name) == list:
-                for (index, name) in enumerate(column_name):
+            elif isinstance(column_name, list):
+                for (index, c_name) in enumerate(column_name):
                     operator = 'AND (' if index == 0 else 'OR'
-                    query += f" {operator} column_name = '{name}'"
+                    query += f" {operator} column_name = '{c_name}'"
                 query += ")"
             else:
                 raise AttributeError('Parameter column_name must be list or string')
@@ -49,6 +48,10 @@ class QueryStructureTest(TestDefinition):
         self.where = where
 
     def execute(self, cursor):
+        if isinstance(self.elements, list):
+            self.query = self._check_separately_for_all_elements(cursor)
+        if isinstance(self.column_name, list):
+            self.query = self._check_separately_for_all_columns(cursor)
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -183,3 +186,41 @@ class QueryStructureTest(TestDefinition):
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
                     )
+
+    def _check_separately_for_all_elements(self, cursor):
+        found = []
+        for element in self.elements:
+            query = f"SELECT * FROM information_schema.views WHERE table_name = 'query_view' AND view_definition ILIKE '%{element}%'"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if self.should_exist and len(result) == 0:
+                found.append(element)
+            elif not self.should_exist and len(result) > 0:
+                found.append(element)
+        if len(found) == 0: return self.query
+        query = f"SELECT * FROM information_schema.views WHERE table_name = 'query_view'"
+        self.elements = found
+        for (index, arg) in enumerate(self.elements):
+            operator = 'AND (' if index == 0 else 'OR'
+            query += f" {operator} view_definition ILIKE '%{arg}%'"
+        query += ")"
+        return query
+
+    def _check_separately_for_all_columns(self, cursor):
+        found = []
+        for column in self.column_name:
+            query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}' AND column_name = '{column}'"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if self.should_exist and len(result) == 0:
+                found.append(column)
+            elif not self.should_exist and len(result) > 0:
+                found.append(column)
+        if len(found) == 0: return self.query
+        query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}'"
+        self.column_name = found
+        for (index, c_name) in enumerate(self.column_name):
+            operator = 'AND (' if index == 0 else 'OR'
+            query += f" {operator} column_name = '{c_name}'"
+        query += ")"
+        return query
