@@ -18,10 +18,10 @@ class StructureTest(TestDefinition):
                 for (index, name) in enumerate(column_name):
                     operator = 'AND (' if index == 0 else 'OR'
                     query += f" {operator} column_name = '{name}'"
+                query += ")"
             else:
                 raise AttributeError('Parameter column_name must be list or string')
-        if type(column_name) == list:
-            query += ")"
+
         super().__init__(
             name=name,
             title=title,
@@ -41,6 +41,8 @@ class StructureTest(TestDefinition):
         self.where = where
 
     def execute(self, cursor):
+        if isinstance(self.column_name, list):
+            self.query = self._check_separately_for_all_columns(cursor)
         cursor.execute(self.query)
         result = cursor.fetchall()
         test_type_result = self.test_type(result)
@@ -234,3 +236,20 @@ class StructureTest(TestDefinition):
                 )
 
         return None
+
+    def _check_separately_for_all_columns(self, cursor):
+        found = []
+        for column in self.column_name:
+            query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}' AND column_name = '{column}'"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if len(result) > 0:
+                found.append(column)
+        if len(found) == 0: return self.query
+        query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}'"
+        self.column_name = found
+        for (index, c_name) in enumerate(self.column_name):
+            operator = 'AND (' if index == 0 else 'OR'
+            query += f" {operator} column_name = '{c_name}'"
+        query += ")"
+        return query
