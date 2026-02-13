@@ -6,7 +6,8 @@ import re
 class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
-                 expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None, elements=None):
+                 expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None,
+                 elements=None, column_name_fallback=None, expected_value_query=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -44,6 +45,8 @@ class TestDefinition:
         self.should_exist = should_exist  # TODO should be renamed to something more descriptive (should_be_false/falsy)
         self.custom_feedback = custom_feedback
         self.elements = elements
+        self.column_name_fallback = column_name_fallback
+        self.expected_value_query = expected_value_query
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):
@@ -56,7 +59,7 @@ class TestDefinition:
             return self.execute(cursor)
         except:
             # TODO better handler for rollback?
-            # print(sys.exc_info())
+            #print(sys.exc_info())
             cursor.execute('ROLLBACK')
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
