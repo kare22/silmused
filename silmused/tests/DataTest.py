@@ -3,13 +3,14 @@ from silmused.tests.TestDefinition import TestDefinition
 
 # TODO split this into TableDataTest and ViewDataTest, so that feedback code would be more readable
 # But this will just duplicate code...
-# TODO expected_value - add an option to query the expected results, if that data should change after a time
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, isView=False, column_name_fallback=None, custom_feedback=None, points=0):
+                 expected_value=None, expected_value_query=None, isView=False, column_name_fallback=None, custom_feedback=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
+        if expected_value_query is not None and not isinstance(expected_value_query, str):
+            raise Exception('Parameter "expected_value_query" must be a string')
         if column_name is not None:
             self.is_count = False if column_name.lower().find("count") == -1 else True
         if column_name_fallback is not None and not isinstance(column_name, list):
@@ -49,6 +50,7 @@ class DataTest(TestDefinition):
             should_exist=should_exist,
             expected_value=expected_value,
             custom_feedback=custom_feedback,
+            expected_value_query=expected_value_query,
         )
 
         self.column_name = column_name
@@ -58,6 +60,10 @@ class DataTest(TestDefinition):
         self.column_name_fallback = column_name_fallback
 
     def execute(self, cursor):
+        if self.expected_value_query is not None:
+            cursor.execute(self.expected_value_query)
+            result = cursor.fetchall()
+            self.expected_value = result[0][0]
         if self.column_name_fallback is not None:
             self.column_name = self.check_alternative_columns(cursor)
             self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
