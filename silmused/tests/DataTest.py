@@ -13,7 +13,7 @@ class DataTest(TestDefinition):
             raise Exception('Parameter "expected_value_query" must be a string')
         if column_name is not None:
             self.is_count = False if column_name.lower().find("count") == -1 else True
-        if column_name_fallback is not None and not isinstance(column_name, list):
+        if column_name_fallback is not None and not isinstance(column_name_fallback, list):
             raise Exception('Parameter "column_name_fallback" must be a list')
         if isinstance(expected_value, list):
             self.expected_value_list = True
@@ -338,20 +338,20 @@ class DataTest(TestDefinition):
                             if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
                                 return super().response(
                                     result[0][0] == self.expected_value,
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_positive_feedback",
                                      "params": [self.expected_value, self.column_name]},
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_negative_feedback",
                                      "params": [self.expected_value, str(result[0][0]), self.column_name]},
                                 )
                             else:
                                 return super().response(
                                     str(result[0][0]) == str(self.expected_value),
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_positive_feedback",
                                      "params": [self.expected_value, self.column_name]},
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_negative_feedback",
                                      "params": [self.expected_value, str(result[0][0]), self.column_name]},
                                 )
@@ -359,20 +359,20 @@ class DataTest(TestDefinition):
                             if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
                                 return super().response(
                                     result[0][0] == self.expected_value,
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
                                 )
                             else:
                                 return super().response(
                                     str(result[0][0]) == str(self.expected_value),
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
-                                    {"test_type": "query_data_test",
+                                    {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
                                 )
