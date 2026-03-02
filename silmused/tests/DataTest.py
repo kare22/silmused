@@ -343,7 +343,7 @@ class DataTest(TestDefinition):
                                      "params": [self.expected_value, self.column_name]},
                                     {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_negative_feedback",
-                                     "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                                 )
                             else:
                                 return super().response(
@@ -353,7 +353,7 @@ class DataTest(TestDefinition):
                                      "params": [self.expected_value, self.column_name]},
                                     {"test_type": "data_test",
                                      "test_key": "table_expected_value_should_exist_negative_feedback",
-                                     "params": [self.expected_value, str(result[0][0]), self.column_name]},
+                                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                                 )
                         else:
                             if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
