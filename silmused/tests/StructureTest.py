@@ -15,9 +15,9 @@ class StructureTest(TestDefinition):
             if type(column_name) == str:
                 query += f" AND column_name = '{column_name}'"
             elif type(column_name) == list:
-                for (index, name) in enumerate(column_name):
+                for (index, c_name) in enumerate(column_name):
                     operator = 'AND (' if index == 0 else 'OR'
-                    query += f" {operator} column_name = '{name}'"
+                    query += f" {operator} column_name = '{c_name}'"
                 query += ")"
             else:
                 raise AttributeError('Parameter column_name must be list or string')
