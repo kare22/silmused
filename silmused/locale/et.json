@@ -192,6 +192,7 @@
 		"incorrect_dump_file": "Viga: Ei leitud õiget Postgre dump või sql faili!",
 		"empty_query_file": "Viga: Päringut ei leitud failist!",
 		"incorrect_test_format": "Viga: Vali Test või Query formaat!",
+		"llm_check_fail": "Ülesanne pole ausalt lahendatud!",
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {

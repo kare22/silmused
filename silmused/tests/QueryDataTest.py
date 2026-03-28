@@ -3,8 +3,8 @@ from silmused.tests.TestDefinition import TestDefinition
 
 class QueryDataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, expected_value_query=None, column_name_fallback=None, custom_feedback=None,
-                 points=0):
+                 expected_value=None, expected_value_query=None, column_name_fallback=None,
+                 custom_feedback=None, llm_check=False, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -51,6 +51,7 @@ class QueryDataTest(TestDefinition):
             custom_feedback=custom_feedback,
             column_name_fallback=column_name_fallback,
             expected_value_query=expected_value_query,
+            llm_check=llm_check,
         )
 
         self.column_name = column_name

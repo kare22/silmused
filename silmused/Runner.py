@@ -153,7 +153,10 @@ class Runner:
 
             return results
         except Exception as exception:
-            print(f"Sql TEST RUN failed: {exception}")
+            if isinstance(exception.args[0], dict):
+                print(self._message_to_feedback(exception.args[0]))
+            else:
+                print(f"Sql TEST RUN failed: {exception}")
         finally:
             cursor.close()
             connection.close()
@@ -184,34 +187,41 @@ class Runner:
 
         return connection_layer
 
+    # TODO Param assignment should be better
     def _message_to_feedback(self, message):
         feedback = ''
         feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
         if len(feedback_params) > 0:
             params = message['params']
-            if len(params) == 0:
-                feedback = self.translator.translate(message['test_type'], message['test_key'])
-
-            elif len(params) == 1:
+            if len(params) == 1:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                param1 = params[0] if type(params[0]) != list else self._translate_param_separation(params[0]))
+                         param1 = params[0] if type(params[0]) != list else self._translate_param_separation(params[0]))
             elif len(params) == 2:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0], param2=params[1])
+                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
+                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]))
             elif len(params) == 3:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0], param2=params[1], param3=params[2])
+                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
+                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
+                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]))
             elif len(params) == 4:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0], param2=params[1], param3=params[2],
-                                                     param4=params[3])
+                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
+                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
+                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]),
+                         param4=params[3] if type(params[3]) != list else self._translate_param_separation(params[3]))
             elif len(params) == 5:
                 feedback = self.translator.translate(message['test_type'], message['test_key'],
-                                                     param1=params[0], param2=params[1], param3=params[2],
-                                                     param4=params[3], param5=params[4])
+                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
+                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
+                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]),
+                         param4=params[3] if type(params[3]) != list else self._translate_param_separation(params[3]),
+                         param5=params[4] if type(params[4]) != list else self._translate_param_separation(params[4]))
             else:
                 feedback = "Params were given, but there is more than 5"
-
+        else:
+            feedback = self.translator.translate(message['test_type'], message['test_key'])
         return feedback
 
     # This is used, when the input param is in a list, but it would be better not to output as a python list, but OR list
@@ -265,7 +275,8 @@ class Runner:
 
         points_max = 0
         points_actual = 0
-
+        if self.results is None:
+            return tests, points_max, points_actual
         for result in self.results:
             if result.get('type') == 'execution':
                 continue

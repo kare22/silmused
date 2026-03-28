@@ -4,7 +4,8 @@ from silmused.utils import list_to_string
 
 class ViewTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, should_exist=True,
-                 where=None, description=None, custom_feedback=None, isMaterialized=False, elements=None, points=0):
+                 where=None, description=None, custom_feedback=None, isMaterialized=False, elements=None,
+                 llm_check=False, points=0):
         if isMaterialized:
             query = f"SELECT * FROM pg_matviews WHERE matviewname = '{name}'"
         else:
@@ -45,6 +46,7 @@ class ViewTest(TestDefinition):
             should_exist=should_exist,
             custom_feedback=custom_feedback,
             elements=elements,
+            llm_check=llm_check,
         )
 
         self.column_name = column_name

@@ -192,6 +192,7 @@
 		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
 		"empty_query_file": "Error: No query found from file",
 		"incorrect_test_format": "Error: Choose Test or Query format!",
+		"llm_check_fail": "This task was solved in unfair way!",
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {

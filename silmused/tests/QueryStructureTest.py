@@ -4,7 +4,7 @@ from silmused.utils import list_to_string
 
 class QueryStructureTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, should_exist=True, where=None,
-                 description=None, custom_feedback=None, elements=None, points=0):
+                 description=None, custom_feedback=None, elements=None, llm_check=False, points=0):
 
         query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}'"
 
@@ -42,6 +42,7 @@ class QueryStructureTest(TestDefinition):
             should_exist=should_exist,
             custom_feedback=custom_feedback,
             elements=elements,
+            llm_check=llm_check,
         )
 
         self.column_name = column_name

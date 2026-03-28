@@ -4,7 +4,8 @@ from silmused.utils import list_to_string
 
 class FunctionTest(TestDefinition):
     def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None, expected_value=None,
-                 expected_count=None, number_of_parameters=None, custom_feedback=None, points=0):
+                 expected_count=None, expected_value_query=None, number_of_parameters=None,
+                 custom_feedback=None, llm_check=False, points=0):
         super().__init__(
             name=name,
             title=title,
@@ -15,6 +16,7 @@ class FunctionTest(TestDefinition):
             expected_value=expected_value,
             expected_count=expected_count,
             custom_feedback=custom_feedback,
+            llm_check=llm_check,
             query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"  # TODO implement parameters,
         )
         if isinstance(expected_value, list):
@@ -228,15 +230,26 @@ class FunctionTest(TestDefinition):
                              "params": [self.custom_feedback]},
                         )
             if self.custom_feedback is None:
-                return super().response(
-                    str(result[0][0]) == str(self.expected_value),
-                    {"test_type": "function_test",
-                     "test_key": "function_expected_value_positive_feedback",
-                     "params": [self.expected_value]},
-                    {"test_type": "function_test",
-                     "test_key": "function_expected_value_negative_feedback",
-                     "params": [self.expected_value, result[0][0]]}
-                )
+                if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                    return super().response(
+                        result[0][0] == self.expected_value,
+                        {"test_type": "function_test",
+                         "test_key": "function_expected_value_positive_feedback",
+                         "params": [self.expected_value]},
+                        {"test_type": "function_test",
+                         "test_key": "function_expected_value_negative_feedback",
+                         "params": [self.expected_value, result[0][0]]}
+                    )
+                else:
+                    return super().response(
+                        str(result[0][0]) == str(self.expected_value),
+                        {"test_type": "function_test",
+                         "test_key": "function_expected_value_positive_feedback",
+                         "params": [self.expected_value]},
+                        {"test_type": "function_test",
+                         "test_key": "function_expected_value_negative_feedback",
+                         "params": [self.expected_value, result[0][0]]}
+                    )
             else:
                 return super().response(
                     str(result[0][0]) == str(self.expected_value),

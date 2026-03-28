@@ -7,7 +7,7 @@ class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
                  expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None,
-                 elements=None, column_name_fallback=None, expected_value_query=None):
+                 elements=None, column_name_fallback=None, expected_value_query=None, llm_check=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
@@ -47,12 +47,16 @@ class TestDefinition:
         self.elements = elements
         self.column_name_fallback = column_name_fallback
         self.expected_value_query = expected_value_query
+        self.llm_check = llm_check
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):
         raise NotImplementedError('Method "execute" not implemented')
 
     def run(self, cursor):
+        if self.llm_check:
+            cursor.execute(self.query)
+            self._llm_check(cursor.fetchall())
         try:
             # TODO could executing of pre and/or after queries be handled here?
             # print(self.query)
@@ -157,3 +161,17 @@ class TestDefinition:
              "test_key": "index_error",
              "params": []},
         )
+
+    def _llm_check(self, result):
+        if not self.should_exist and len(result) > 0:
+            if self.custom_feedback is None:
+                raise Exception({'test_type': 'sys_fail', 'test_key': 'llm_check_fail'})
+            else:
+                raise Exception({'test_type': 'sys_fail', 'test_key': 'custom_feedback',
+                                 "params": [self.custom_feedback]})
+        if self.should_exist and len(result) == 0:
+            if self.custom_feedback is None:
+                raise Exception({'test_type': 'sys_fail', 'test_key': 'llm_check_fail'})
+            else:
+                raise Exception({'test_type': 'sys_fail', 'test_key': 'custom_feedback',
+                                 "params": [self.custom_feedback]})

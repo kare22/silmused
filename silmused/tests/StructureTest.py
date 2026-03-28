@@ -5,7 +5,7 @@ from silmused.utils import list_to_string
 class StructureTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, expected_type=None,
                  expected_character_maximum_length=None, should_exist=True, where=None,
-                 description=None, custom_feedback=None, points=0):
+                 description=None, custom_feedback=None, llm_check=False, points=0):
         if column_name is None and expected_type is not None:
             raise Exception('Expected type needs a column to be set!')
 
@@ -34,7 +34,8 @@ class StructureTest(TestDefinition):
             expected_character_maximum_length=expected_character_maximum_length,
             query=query,
             should_exist=should_exist,
-            custom_feedback=custom_feedback
+            custom_feedback=custom_feedback,
+            llm_check=llm_check,
         )
 
         self.column_name = column_name

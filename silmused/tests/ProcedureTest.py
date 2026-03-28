@@ -5,7 +5,7 @@ from silmused.utils import list_to_string
 class ProcedureTest(TestDefinition):
     def __init__(self, name, arguments, title=None, description=None, expected_value=None,
                  expected_count=None, number_of_parameters=None, pre_query=None, after_query=None,
-                 custom_feedback=None, points=0):
+                 custom_feedback=None, llm_check=False, points=0):
         if after_query is None:
             raise Exception('Parameter "after_query" is required')
 
@@ -20,7 +20,8 @@ class ProcedureTest(TestDefinition):
             pre_query=pre_query,
             query=f"CALL {name}({list_to_string(arguments)})",
             after_query=after_query,
-            custom_feedback=custom_feedback
+            custom_feedback=custom_feedback,
+            llm_check=llm_check,
         )
 
         self.number_of_parameters = number_of_parameters

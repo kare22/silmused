@@ -3,7 +3,7 @@ from silmused.tests.TestDefinition import TestDefinition
 
 class TriggerTest(TestDefinition):
     def __init__(self, name, title=None, description=None, points=0, arguments=None,
-                 custom_feedback=None, action_timing=None):
+                 custom_feedback=None, action_timing=None, llm_check=False):
         super().__init__(
             name=name,
             title=title,
@@ -11,6 +11,7 @@ class TriggerTest(TestDefinition):
             description=description,
             arguments=arguments,
             custom_feedback=custom_feedback,
+            llm_check=llm_check,
             query=f"SELECT * FROM information_schema.views WHERE table_name = '{name}'",
         )
 

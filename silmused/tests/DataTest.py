@@ -5,7 +5,8 @@ from silmused.tests.TestDefinition import TestDefinition
 # But this will just duplicate code...
 class DataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, expected_value_query=None, isView=False, column_name_fallback=None, custom_feedback=None, points=0):
+                 expected_value=None, expected_value_query=None, isView=False, column_name_fallback=None,
+                 custom_feedback=None, llm_check=False, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -51,6 +52,7 @@ class DataTest(TestDefinition):
             expected_value=expected_value,
             custom_feedback=custom_feedback,
             expected_value_query=expected_value_query,
+            llm_check=llm_check,
         )
 
         self.column_name = column_name
@@ -663,26 +665,47 @@ class DataTest(TestDefinition):
                                     )
                     else:
                         if self.custom_feedback is None:
-                            # TODO add type check
-                            return super().response(
-                                str(result[0][0]) == str(self.expected_value),
-                                {"test_type": "data_test",
-                                 "test_key": "view_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.name, self.column_name]},
-                                {"test_type": "data_test",
-                                 "test_key": "view_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                            )
+                            if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                                return super().response(
+                                    result[0][0] == self.expected_value,
+                                    {"test_type": "data_test",
+                                     "test_key": "view_expected_value_should_exist_positive_feedback",
+                                     "params": [self.expected_value, self.column_name]},
+                                    {"test_type": "data_test",
+                                     "test_key": "view_expected_value_should_exist_negative_feedback",
+                                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                                )
+                            else:
+                                return super().response(
+                                    str(result[0][0]) == str(self.expected_value),
+                                    {"test_type": "data_test",
+                                     "test_key": "view_expected_value_should_exist_positive_feedback",
+                                     "params": [self.expected_value, self.column_name]},
+                                    {"test_type": "data_test",
+                                     "test_key": "view_expected_value_should_exist_negative_feedback",
+                                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                                )
                         else:
-                            return super().response(
-                                str(result[0][0]) == str(self.expected_value),
-                                {"test_type": "data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                                {"test_type": "data_test",
-                                 "test_key": "custom_feedback",
-                                 "params": [self.custom_feedback]},
-                            )
+                            if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                                return super().response(
+                                    result[0][0] == self.expected_value,
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
+                            else:
+                                return super().response(
+                                    str(result[0][0]) == str(self.expected_value),
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                    {"test_type": "data_test",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]},
+                                )
                 else:
                     if self.custom_feedback is None:
                         return super().response(
