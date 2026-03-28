@@ -66,9 +66,9 @@ class FunctionTest(TestDefinition):
             self.expected_value_group = "nothing"
 
         self.number_of_parameters = number_of_parameters
+        self.expected_value_query= expected_value_query
 
     def execute(self, cursor):
-
         # Check that function name exists
         test_function_exists_result = self.test_function_exists(cursor)
         if test_function_exists_result is not None:
@@ -89,6 +89,11 @@ class FunctionTest(TestDefinition):
         # cursor.execute("SELECT proargnames FROM pg_catalog.pg_proc WHERE proname='f_voit_viik_kaotus'")
         # test_tesult = cursor.fetchall()[0][0]
         # print(len(test_tesult)-(self.number_of_parameters if self.number_of_parameters is not None else 0))
+
+        if self.expected_value_query is not None:
+            cursor.execute(self.expected_value_query)
+            result = cursor.fetchall()
+            self.expected_value = result[0][0]
 
         cursor.execute(self.query)
         result = cursor.fetchall()
