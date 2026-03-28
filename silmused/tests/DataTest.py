@@ -242,7 +242,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    False,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -286,7 +286,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        False,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -327,7 +327,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        False,
                                         '',
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
@@ -570,7 +570,7 @@ class DataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    False,
                                     {"test_type": "data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -614,7 +614,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        False,
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",
                                          "params": [self.custom_feedback]},
@@ -655,7 +655,7 @@ class DataTest(TestDefinition):
                                     )
                                 else:
                                     return super().response(
-                                        self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                        False,
                                         '',
                                         {"test_type": "data_test",
                                          "test_key": "custom_feedback",

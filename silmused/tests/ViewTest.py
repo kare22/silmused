@@ -58,7 +58,6 @@ class ViewTest(TestDefinition):
             self.query = self._check_separately_for_all_columns(cursor)
         cursor.execute(self.query)
         result = cursor.fetchall()
-
         if self.isMaterialized:
             if self.elements is not None:
                 if self.should_exist:
@@ -116,7 +115,7 @@ class ViewTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        False,
+                        len(result) > 0,
                         {"test_type": "view_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -137,7 +136,7 @@ class ViewTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        False,
+                        len(result) == 0,
                         {"test_type": "view_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -205,7 +204,7 @@ class ViewTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        False,
+                        len(result) != 0 and result[0][0] == self.expected_value,
                         {"test_type": "view_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -227,7 +226,7 @@ class ViewTest(TestDefinition):
                     )
                 else:
                     return super().response(
-                        False,
+                        len(result) == 0 or result[0][0] != self.expected_value,
                         {"test_type": "view_test",
                          "test_key": "custom_feedback",
                          "params": [self.custom_feedback]},
@@ -250,7 +249,7 @@ class ViewTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            False,
+                            len(result) > 0,
                             {"test_type": "view_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -271,7 +270,7 @@ class ViewTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            False,
+                            len(result) > 0,
                             {"test_type": "view_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -293,7 +292,7 @@ class ViewTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            False,
+                            len(result) == 0,
                             {"test_type": "view_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},
@@ -314,7 +313,7 @@ class ViewTest(TestDefinition):
                         )
                     else:
                         return super().response(
-                            False,
+                            len(result) == 0,
                             {"test_type": "view_test",
                              "test_key": "custom_feedback",
                              "params": [self.custom_feedback]},

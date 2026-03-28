@@ -37,7 +37,7 @@ class TriggerTest(TestDefinition):
             )
         else:
             return super().response(
-                False,
+                len(errors) == 0,
                 {"test_type": "trigger_test",
                  "test_key": "custom_feedback",
                  "params": [self.custom_feedback]},

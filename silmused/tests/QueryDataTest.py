@@ -239,7 +239,7 @@ class QueryDataTest(TestDefinition):
                             )
                         else:
                             return super().response(
-                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                False,
                                 {"test_type": "query_data_test",
                                  "test_key": "custom_feedback",
                                  "params": [self.custom_feedback]},
@@ -283,7 +283,7 @@ class QueryDataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    False,
                                     {"test_type": "query_data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
@@ -324,7 +324,7 @@ class QueryDataTest(TestDefinition):
                                 )
                             else:
                                 return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
+                                    False,
                                     {"test_type": "query_data_test",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]},
