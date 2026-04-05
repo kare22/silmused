@@ -192,39 +192,18 @@ class Runner:
         feedback = ''
         feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
         if len(feedback_params) > 0:
-            params = message['params']
-            if len(params) == 1:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],
-                         param1 = params[0] if type(params[0]) != list else self._translate_param_separation(params[0]))
-            elif len(params) == 2:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],
-                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
-                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]))
-            elif len(params) == 3:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],
-                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
-                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
-                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]))
-            elif len(params) == 4:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],
-                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
-                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
-                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]),
-                         param4=params[3] if type(params[3]) != list else self._translate_param_separation(params[3]))
-            elif len(params) == 5:
-                feedback = self.translator.translate(message['test_type'], message['test_key'],
-                         param1=params[0] if type(params[0]) != list else self._translate_param_separation(params[0]),
-                         param2=params[1] if type(params[1]) != list else self._translate_param_separation(params[1]),
-                         param3=params[2] if type(params[2]) != list else self._translate_param_separation(params[2]),
-                         param4=params[3] if type(params[3]) != list else self._translate_param_separation(params[3]),
-                         param5=params[4] if type(params[4]) != list else self._translate_param_separation(params[4]))
-            else:
-                feedback = "Params were given, but there is more than 5"
+            dynamic_kwargs = {
+                f"param{index + 1}": (
+                    param if not isinstance(param, list)
+                    else self._translate_param_separation(param)
+                )
+                for index, param in enumerate(message['params'])
+            }
+            feedback = self.translator.translate(message['test_type'], message['test_key'], **dynamic_kwargs)
         else:
             feedback = self.translator.translate(message['test_type'], message['test_key'])
         return feedback
 
-    # This is used, when the input param is in a list, but it would be better not to output as a python list, but OR list
     def _translate_param_separation(self, param_list):
         or_lang = {'en': 'or', 'et': 'või'}
         output = ''
