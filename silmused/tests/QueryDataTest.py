@@ -214,10 +214,10 @@ class QueryDataTest(TestDefinition):
                                 result[0][0] is None,
                                 {"test_type": "query_data_test",
                                  "test_key": "query_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.name, self.column_name]},
+                                 "params": [self.expected_value, self.column_name]},
                                 {"test_type": "query_data_test",
                                  "test_key": "query_expected_value_should_exist_negative_feedback",
-                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                                 "params": ['NULL', str(result[0][0]), self.column_name]},
                             )
                         else:
                             return super().response(
