@@ -32,7 +32,7 @@ class ViewTest(TestDefinition):
                     query += f" {operator} definition ILIKE '%{arg}%'"
                 query += ")"
             else:
-                raise AttributeError('Parameter banned_arguments must be list or string')
+                raise AttributeError('Parameter elements must be list or string')
 
         super().__init__(
             name=name,
@@ -327,7 +327,7 @@ class ViewTest(TestDefinition):
     def _check_separately_for_all_elements(self, cursor):
         found = []
         for element in self.elements:
-            query = f"SELECT * FROM information_schema.views WHERE table_name = 'query_view' AND view_definition ILIKE '%{element}%'"
+            query = f"SELECT * FROM information_schema.views WHERE table_name = '{self.name}' AND view_definition ILIKE '%{element}%'"
             cursor.execute(query)
             result = cursor.fetchall()
             if self.should_exist and len(result) == 0:

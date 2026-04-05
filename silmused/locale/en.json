@@ -105,6 +105,10 @@
 		"function_expected_value_group_numbers_negative_feedback": "Wrong, value '$param1' was not found between '$param2' and '$param3'",
 		"function_expected_value_group_strings_positive_feedback": "Correct, value '$param1' was found in list '$param2'",
 		"function_expected_value_group_strings_negative_feedback": "Wrong, value '$param1' was not found in list '$param2'",
+		"function_required_elements_positive_feedback": "Correct, all required element(s) '$param1' were used in function named '$param2'",
+		"function_required_elements_negative_feedback": "Wrong, not all required element(s) '$param1' were used in function named '$param2'",
+		"function_banned_elements_positive_feedback": "Correct, no banned element(s) '$param1' were used in function named '$param2'",
+		"function_banned_elements_negative_feedback": "Wrong, banned element(s) '$param1' were used in function named '$param2'",
 		"custom_feedback": "'$param1'"
 	},
 	"index_test": {
@@ -162,6 +166,10 @@
 		"procedure_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for procedure '$param1'('$param2'), but none was found",
 		"procedure_expected_result_count_positive_feedback": "Correct, result count '$param1' for procedure '$param2'('$param3') is correct",
 		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count '$param1' for procedure '$param2'('$param3'), but got '$param4'",
+		"procedure_required_elements_positive_feedback": "Correct, all required element(s) '$param1' were used in procedure named '$param2'",
+		"procedure_required_elements_negative_feedback": "Wrong, not all required element(s) '$param1' were used in procedure named '$param2'",
+		"procedure_banned_elements_positive_feedback": "Correct, no banned element(s) '$param1' were used in procedure named '$param2'",
+		"procedure_banned_elements_negative_feedback": "Wrong, banned element(s) '$param1' were used in procedure named '$param2'",
 		"custom_feedback": "'$param1'"
 	},
 	"structure_test" : {

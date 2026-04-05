@@ -105,6 +105,10 @@
 		"function_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust '$param1' vahemikus '$param2' ja '$param3'",
 		"function_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus '$param1' nimekirjas '$param2'",
 		"function_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust '$param1' nimekirjas '$param2'",
+		"function_required_elements_positive_feedback": "Õige, kõiki nõutud elemente '$param1' on kasutatud funktsioonis nimega '$param2'",
+		"function_required_elements_negative_feedback": "Vale, kõiki nõutud elemente '$param1' ei ole kasutatud funktsioonis nimega '$param2'",
+		"function_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud funktsioonis '$param2'",
+		"function_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud funktsioonis '$param2'",
 		"custom_feedback": "'$param1'"
 	},
 	"index_test": {
@@ -162,6 +166,10 @@
 		"procedure_not_expected_result_count_negative_feedback": "Vale, tulemuste arv on vale protseduuril '$param1'('$param2')",
 		"procedure_expected_result_count_positive_feedback": "Õige, tulemuste arv '$param1' on õige protseduuril '$param2'('$param3')",
 		"procedure_expected_result_count_negative_feedback": "Vale, oodati tulemuseks '$param1' rida protseduurile '$param2'('$param3'), aga leiti '$param4'",
+		"procedure_required_elements_positive_feedback": "Õige, kõiki nõutud elemente '$param1' on kasutatud protseduuris nimega '$param2'",
+		"procedure_required_elements_negative_feedback": "Vale, kõiki nõutud elemente '$param1' ei ole kasutatud protseduuris nimega '$param2'",
+		"procedure_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud protseduuris '$param2'",
+		"procedure_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud protseduuris '$param2'",
 		"custom_feedback": "'$param1'"
 	},
 	"structure_test" : {
@@ -192,7 +200,7 @@
 		"incorrect_dump_file": "Viga: Ei leitud õiget Postgre dump või sql faili!",
 		"empty_query_file": "Viga: Päringut ei leitud failist!",
 		"incorrect_test_format": "Viga: Vali Test või Query formaat!",
-		"llm_check_fail": "Ülesanne pole ausalt lahendatud!",
+		"llm_check_fail": "Ülesanne pole sooritatud ausalt!",
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {

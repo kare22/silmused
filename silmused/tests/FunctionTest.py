@@ -3,22 +3,12 @@ from silmused.utils import list_to_string
 
 
 class FunctionTest(TestDefinition):
-    def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None, expected_value=None,
-                 expected_count=None, expected_value_query=None, number_of_parameters=None,
-                 custom_feedback=None, llm_check=False, points=0):
-        super().__init__(
-            name=name,
-            title=title,
-            where=where,
-            points=points,
-            arguments=arguments,
-            description=description,
-            expected_value=expected_value,
-            expected_count=expected_count,
-            custom_feedback=custom_feedback,
-            llm_check=llm_check,
-            query=f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"  # TODO implement parameters,
-        )
+    def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None,
+                 expected_value=None, expected_count=None, expected_value_query=None, number_of_parameters=None,
+                 should_exist=True, elements=None, custom_feedback=None, llm_check=False, points=0):
+
+        query = f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"
+
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if isinstance(expected_value[0], str):
@@ -65,10 +55,40 @@ class FunctionTest(TestDefinition):
             self.expected_value_list = False
             self.expected_value_group = "nothing"
 
+        if elements is not None:
+            query = f"SELECT * FROM pg_proc WHERE proname = '{name}'"
+            if isinstance(elements, str):
+                query += f" AND prosrc ILIKE '%{elements}%'"
+            elif isinstance(elements, list):
+                for (index, arg) in enumerate(elements):
+                    operator = 'AND (' if index == 0 else 'OR'
+                    query += f" {operator} prosrc ILIKE '%{arg}%'"
+                query += ")"
+            else:
+                raise AttributeError('Parameter elements must be list or string')
+
+        super().__init__(
+            name=name,
+            title=title,
+            where=where,
+            points=points,
+            query=query,
+            arguments=arguments,
+            description=description,
+            expected_value=expected_value,
+            expected_count=expected_count,
+            custom_feedback=custom_feedback,
+            llm_check=llm_check,
+            # TODO implement parameters,
+        )
+
         self.number_of_parameters = number_of_parameters
-        self.expected_value_query= expected_value_query
+        self.expected_value_query = expected_value_query
+        self.elements = elements
+        self.should_exist = should_exist
 
     def execute(self, cursor):
+
         # Check that function name exists
         test_function_exists_result = self.test_function_exists(cursor)
         if test_function_exists_result is not None:
@@ -98,7 +118,50 @@ class FunctionTest(TestDefinition):
         cursor.execute(self.query)
         result = cursor.fetchall()
 
-        if self.expected_value is None:
+        if self.elements is not None:
+            if self.should_exist:
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "function_test",
+                         "test_key": "function_required_elements_positive_feedback",
+                         "params": [self.elements, self.name]},
+                        {"test_type": "query_structure_test",
+                         "test_key": "function_required_elements_negative_feedback",
+                         "params": [self.elements, self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "query_structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
+            else:
+                if self.custom_feedback is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "function_test",
+                         "test_key": "function_banned_elements_positive_feedback",
+                         "params": [self.elements, self.name]},
+                        {"test_type": "query_structure_test",
+                         "test_key": "function_banned_elements_negative_feedback",
+                         "params": [self.elements, self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": "function_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                        {"test_type": "query_structure_test",
+                         "test_key": "custom_feedback",
+                         "params": [self.custom_feedback]},
+                    )
+        elif self.expected_value is None:
             if self.expected_count is None:
                 if self.custom_feedback is None:
                     return super().response(
@@ -343,3 +406,22 @@ class FunctionTest(TestDefinition):
                      "params": [self.custom_feedback]},
                 )
         return None
+
+    def _check_separately_for_all_elements(self, cursor):
+        found = []
+        for element in self.elements:
+            query = f"SELECT * FROM pg_proc WHERE proname = '{self.name}' AND prosrc ILIKE '%{element}%'"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if self.should_exist and len(result) == 0:
+                found.append(element)
+            elif not self.should_exist and len(result) > 0:
+                found.append(element)
+        if len(found) == 0: return self.query
+        query = f"SELECT * FROM pg_proc WHERE proname = '{self.name}'"
+        self.elements = found
+        for (index, arg) in enumerate(self.elements):
+            operator = 'AND (' if index == 0 else 'OR'
+            query += f" {operator} prosrc ILIKE '%{arg}%'"
+        query += ")"
+        return query
