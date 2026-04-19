@@ -89,265 +89,132 @@ class ConstraintTest(TestDefinition):
                          "params": [self.name, self.column_name, self.constraint_type]},
                     )
                 else:
-                    # TODO continue here
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_name_and_type_should_exist_positive_feedback",
-                             "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_name_and_type_should_exist_negative_feedback",
-                             "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_name_and_type_should_exist_positive_feedback",
+                         "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_name_and_type_should_exist_negative_feedback",
+                         "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
+                    )
             else:
                 if self.constraint_name is not None and self.constraint_type is None:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_should_exist_positive_feedback",
-                             "params": [self.constraint_name, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_should_exist_negative_feedback",
-                             "params": [self.constraint_name, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_should_exist_positive_feedback",
+                         "params": [self.constraint_name, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_should_exist_negative_feedback",
+                         "params": [self.constraint_name, self.name]},
+                    )
                 elif self.constraint_name is None and self.constraint_type is not None:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_type_should_exist_positive_feedback",
-                             "params": [self.constraint_type, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_type_should_exist_negative_feedback",
-                             "params": [self.constraint_type, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_type_should_exist_positive_feedback",
+                         "params": [self.constraint_type, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_type_should_exist_negative_feedback",
+                         "params": [self.constraint_type, self.name]},
+                    )
                 else:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_and_type_should_exist_positive_feedback",
-                             "params": [self.constraint_name, self.constraint_type, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_and_type_should_exist_negative_feedback",
-                             "params": [self.constraint_name, self.constraint_type, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_and_type_should_exist_positive_feedback",
+                         "params": [self.constraint_name, self.constraint_type, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_and_type_should_exist_negative_feedback",
+                         "params": [self.constraint_name, self.constraint_type, self.name]},
+                    )
 
         # Should exist = False
         else:
             if self.column_name is None and self.constraint_name is None and self.constraint_type is None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "table_constraint_should_not_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "constraint_test",
-                         "test_key": "table_constraint_should_not_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "table_constraint_should_not_exist_positive_feedback",
+                     "params": [self.name]},
+                    {"test_type": self.test_type,
+                     "test_key": "table_constraint_should_not_exist_negative_feedback",
+                     "params": [self.name]},
+                )
 
             elif self.column_name is not None and self.constraint_name is None and self.constraint_type is None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "table_column_constraint_should_not_exist_positive_feedback",
-                         "params": [self.name, self.column_name]},
-                        {"test_type": "constraint_test",
-                         "test_key": "table_column_constraint_should_not_exist_negative_feedback",
-                         "params": [self.name, self.column_name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "table_column_constraint_should_not_exist_positive_feedback",
+                     "params": [self.name, self.column_name]},
+                    {"test_type": self.test_type,
+                     "test_key": "table_column_constraint_should_not_exist_negative_feedback",
+                     "params": [self.name, self.column_name]},
+                )
             elif self.column_name is not None and self.constraint_name is not None and self.constraint_type is None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "table_column_constraint_name_should_not_exist_positive_feedback",
-                         "params": [self.name, self.column_name, self.constraint_name]},
-                        {"test_type": "constraint_test",
-                         "test_key": "table_column_constraint_name_should_not_exist_negative_feedback",
-                         "params": [self.name, self.column_name, self.constraint_name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "table_column_constraint_name_should_not_exist_positive_feedback",
+                     "params": [self.name, self.column_name, self.constraint_name]},
+                    {"test_type": self.test_type,
+                     "test_key": "table_column_constraint_name_should_not_exist_negative_feedback",
+                     "params": [self.name, self.column_name, self.constraint_name]},
+                )
             elif self.column_name is not None and self.constraint_type is not None:
                 if self.constraint_name is None:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_type_should_not_exist_positive_feedback",
-                             "params": [self.name, self.column_name, self.constraint_type]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_type_should_not_exist_negative_feedback",
-                             "params": [self.name, self.column_name, self.constraint_type]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_type_should_not_exist_positive_feedback",
+                         "params": [self.name, self.column_name, self.constraint_type]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_type_should_not_exist_negative_feedback",
+                         "params": [self.name, self.column_name, self.constraint_type]},
+                    )
                 else:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_name_and_type_should_not_exist_positive_feedback",
-                             "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_column_constraint_name_and_type_should_not_exist_negative_feedback",
-                             "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_name_and_type_should_not_exist_positive_feedback",
+                         "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_column_constraint_name_and_type_should_not_exist_negative_feedback",
+                         "params": [self.name, self.column_name, self.constraint_name, self.constraint_type]},
+                    )
             else:
                 if self.constraint_name is not None and self.constraint_type is None:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_should_not_exist_positive_feedback",
-                             "params": [self.constraint_name, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_should_not_exist_negative_feedback",
-                             "params": [self.constraint_name, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_should_not_exist_positive_feedback",
+                         "params": [self.constraint_name, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_should_not_exist_negative_feedback",
+                         "params": [self.constraint_name, self.name]},
+                    )
                 elif self.constraint_name is None and self.constraint_type is not None:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_type_should_not_exist_positive_feedback",
-                             "params": [self.constraint_type, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_type_should_not_exist_negative_feedback",
-                             "params": [self.constraint_type, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_type_should_not_exist_positive_feedback",
+                         "params": [self.constraint_type, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_type_should_not_exist_negative_feedback",
+                         "params": [self.constraint_type, self.name]},
+                    )
                 else:
-                    if self.custom_feedback is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_and_type_should_not_exist_positive_feedback",
-                             "params": [self.constraint_name, self.constraint_type, self.name]},
-                            {"test_type": "constraint_test",
-                             "test_key": "table_constraint_name_and_type_should_not_exist_negative_feedback",
-                             "params": [self.constraint_name, self.constraint_type, self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                            {"test_type": "constraint_test",
-                             "test_key": "custom_feedback",
-                             "params": [self.custom_feedback]},
-                        )
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_and_type_should_not_exist_positive_feedback",
+                         "params": [self.constraint_name, self.constraint_type, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "table_constraint_name_and_type_should_not_exist_negative_feedback",
+                         "params": [self.constraint_name, self.constraint_type, self.name]},
+                    )
 
     def check_columns(self, cursor):
         if self.column_name is None or self.constraint_type == 'CHECK':
@@ -376,60 +243,27 @@ class ConstraintTest(TestDefinition):
             if is_correct:
                 return None
         if self.constraint_name is None:
-            if self.custom_feedback is None:
+            return super().response(
+                False,
+                None,
+                {"test_type": self.test_type,
+                 "test_key": "multi_column_name_negative_feedback",
+                 "params": [self.column_name, columns]},
+            )
+        else:
+            if len(columns) > 0:
                 return super().response(
                     False,
                     None,
-                    {"test_type": "constraint_test",
-                     "test_key": "multi_column_name_negative_feedback",
-                     "params": [self.column_name, columns]},
+                    {"test_type": self.test_type,
+                     "test_key": "multi_column_constraint_name_negative_feedback",
+                     "params": [self.constraint_name, self.column_name, columns]},
                 )
             else:
                 return super().response(
                     False,
-                    {"test_type": "constraint_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
-                    {"test_type": "constraint_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
+                    None,
+                    {"test_type": self.test_type,
+                     "test_key": "multi_column_constraint_name_column_not_found_negative_feedback",
+                     "params": [self.constraint_name, self.column_name]},
                 )
-        else:
-            if len(columns) > 0:
-                if self.custom_feedback is None:
-                    return super().response(
-                        False,
-                        None,
-                        {"test_type": "constraint_test",
-                         "test_key": "multi_column_constraint_name_negative_feedback",
-                         "params": [self.constraint_name, self.column_name, columns]},
-                    )
-                else:
-                    return super().response(
-                        False,
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
-            else:
-                if self.custom_feedback is None:
-                    return super().response(
-                        False,
-                        None,
-                        {"test_type": "constraint_test",
-                         "test_key": "multi_column_constraint_name_column_not_found_negative_feedback",
-                         "params": [self.constraint_name, self.column_name]},
-                    )
-                else:
-                    return super().response(
-                        False,
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "constraint_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )

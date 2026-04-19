@@ -11,27 +11,17 @@ class IndexTest(TestDefinition):
             custom_feedback=custom_feedback,
             query=f"SELECT * FROM pg_indexes WHERE indexname = '{name}'",
         )
+        self.test_type = "index_test"
 
     def execute(self, cursor):
         cursor.execute(self.query)
         result = cursor.fetchall()
-        if self.custom_feedback is None:
-            return super().response(
-                len(result) > 0,
-                {"test_type": "index_test",
-                 "test_key": "index_positive_feedback",
-                 "params": [self.name]},
-                {"test_type": "index_test",
-                 "test_key": "index_negative_feedback",
-                 "params": [self.name]}
-            )
-        else:
-            return super().response(
-                len(result) > 0,
-                {"test_type": "index_test",
-                 "test_key": "custom_feedback",
-                 "params": [self.custom_feedback]},
-                {"test_type": "index_test",
-                 "test_key": "custom_feedback",
-                 "params": [self.custom_feedback]},
-            )
+        return super().response(
+            len(result) > 0,
+            {"test_type": self.test_type,
+             "test_key": "index_positive_feedback",
+             "params": [self.name]},
+            {"test_type": self.test_type,
+             "test_key": "index_negative_feedback",
+             "params": [self.name]}
+        )

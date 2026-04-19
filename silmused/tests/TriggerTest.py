@@ -16,6 +16,7 @@ class TriggerTest(TestDefinition):
         )
 
         self.action_timing = action_timing
+        self.test_type = "trigger_test"
 
     def execute(self, cursor):
 
@@ -26,50 +27,28 @@ class TriggerTest(TestDefinition):
 
         # Check trigger event manipulation on arguments and trigger action timing
         errors = self.test_trigger_manipulation(cursor) if len(self.arguments) > 0 else []
-        if self.custom_feedback is None:
-            return super().response(
-                len(errors) == 0,
-                {"test_type": "trigger_test",
-                 "test_key": "trigger_definition_positive_feedback",
-                 "params": [self.name]},
-                {"test_type": "trigger_test",
-                 "test_key": "trigger_definition_negative_feedback",
-                 "params": [self.name, {', '.join(errors)}]},  # TODO errorid on hetkel inglise keeles
-            )
-        else:
-            return super().response(
-                len(errors) == 0,
-                {"test_type": "trigger_test",
-                 "test_key": "custom_feedback",
-                 "params": [self.custom_feedback]},
-                {"test_type": "trigger_test",
-                 "test_key": "custom_feedback",
-                 "params": [self.custom_feedback]},
-            )
+        return super().response(
+            len(errors) == 0,
+            {"test_type": self.test_type,
+             "test_key": "trigger_definition_positive_feedback",
+             "params": [self.name]},
+            {"test_type": self.test_type,
+             "test_key": "trigger_definition_negative_feedback",
+             "params": [self.name, {', '.join(errors)}]},  # TODO errorid on hetkel inglise keeles
+        )
     def test_trigger_exists(self, cursor):
         cursor.execute(f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}'")
 
         if len(cursor.fetchall()) <= 0:
-            if self.custom_feedback is None:
-                return super().response(
-                    False,
-                    {"test_type": "trigger_test",
-                     "test_key": "trigger_exists_positive_feedback",
-                     "params": [self.name]},
-                    {"test_type": "trigger_test",
-                     "test_key": "trigger_exists_negative_feedback",
-                     "params": [self.name]},
-                )
-            else:
-                return super().response(
-                    False,
-                    {"test_type": "trigger_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
-                    {"test_type": "trigger_test",
-                     "test_key": "custom_feedback",
-                     "params": [self.custom_feedback]},
-                )
+            return super().response(
+                False,
+                {"test_type": self.test_type,
+                 "test_key": "trigger_exists_positive_feedback",
+                 "params": [self.name]},
+                {"test_type": self.test_type,
+                 "test_key": "trigger_exists_negative_feedback",
+                 "params": [self.name]},
+            )
         return None
 
     def test_trigger_manipulation(self, cursor):

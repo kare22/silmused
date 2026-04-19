@@ -47,6 +47,7 @@ class QueryStructureTest(TestDefinition):
 
         self.column_name = column_name
         self.where = where
+        self.test_type = "query_structure_test"
 
     def execute(self, cursor):
         if isinstance(self.elements, list):
@@ -60,133 +61,67 @@ class QueryStructureTest(TestDefinition):
             # TODO if in the future there is a requirement to count specific amount of elements used, then this can be used
             # select (CHAR_LENGTH(lower(view_definition)) - CHAR_LENGTH(REPLACE(lower(view_definition), lower('maletäht'), ''))) / CHAR_LENGTH(lower('maletäht')) as alamparing from information_schema.views where table_name = 'query_view';
             if self.should_exist:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_required_elements_positive_feedback",
-                         "params": [self.elements]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_required_elements_negative_feedback",
-                         "params": [self.elements]},
-                    )
-                else:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) > 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_required_elements_positive_feedback",
+                     "params": [self.elements]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_required_elements_negative_feedback",
+                     "params": [self.elements]},
+                )
             else:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_banned_elements_positive_feedback",
-                         "params": [self.elements]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_banned_elements_negative_feedback",
-                         "params": [self.elements]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_banned_elements_positive_feedback",
+                     "params": [self.elements]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_banned_elements_negative_feedback",
+                     "params": [self.elements]},
+                )
         elif self.should_exist:
             if self.column_name is None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_table_should_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_table_should_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) > 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_table_should_exist_positive_feedback",
+                     "params": [self.name]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_table_should_exist_negative_feedback",
+                     "params": [self.name]},
+                )
             else:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_column_should_exist_positive_feedback",
-                         "params": [self.column_name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_column_should_exist_negative_feedback",
-                         "params": [self.column_name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) > 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) > 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_column_should_exist_positive_feedback",
+                     "params": [self.column_name]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_column_should_exist_negative_feedback",
+                     "params": [self.column_name]},
+                )
         else:
             if self.column_name is None:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_table_should_not_exist_positive_feedback",
-                         "params": [self.name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_table_should_not_exist_negative_feedback",
-                         "params": [self.name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_table_should_not_exist_positive_feedback",
+                     "params": [self.name]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_table_should_not_exist_negative_feedback",
+                     "params": [self.name]},
+                )
             else:
-                if self.custom_feedback is None:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_column_should_not_exist_positive_feedback",
-                         "params": [self.column_name]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "query_column_should_not_exist_negative_feedback",
-                         "params": [self.column_name]},
-                    )
-                else:
-                    return super().response(
-                        len(result) == 0,
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                        {"test_type": "query_structure_test",
-                         "test_key": "custom_feedback",
-                         "params": [self.custom_feedback]},
-                    )
+                return super().response(
+                    len(result) == 0,
+                    {"test_type": self.test_type,
+                     "test_key": "query_column_should_not_exist_positive_feedback",
+                     "params": [self.column_name]},
+                    {"test_type": self.test_type,
+                     "test_key": "query_column_should_not_exist_negative_feedback",
+                     "params": [self.column_name]},
+                )
 
     def _check_separately_for_all_elements(self, cursor):
         found = []
