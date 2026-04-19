@@ -41,6 +41,9 @@
 		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Vale, kitsendust '$param1' ja kitsendustüüpi '$param2' on olemas tabelil '$param3'",
 		"custom_feedback": "'$param1'"
 	},
+	"custom_feedback": {
+		"custom_feedback": "'$param1'"
+	},
 	"data_test": {
 		"table_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas tabelis '$param1'",
 		"table_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas tabelis '$param1'",

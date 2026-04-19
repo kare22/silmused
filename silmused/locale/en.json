@@ -41,6 +41,9 @@
 		"table_constraint_name_and_type_should_not_exist_negative_feedback": "Wrong, expected to not find constraint '$param1' and constraint type '$param2' in table '$param3'",
 		"custom_feedback": "'$param1'"
 	},
+	"custom_feedback": {
+		"custom_feedback": "'$param1'"
+	},
 	"data_test": {
 		"table_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table '$param1'",
 		"table_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for table '$param1', but none were found",

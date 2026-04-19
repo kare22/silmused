@@ -11,7 +11,7 @@ class TestDefinition:
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
 
-        #if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
+        # if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
         #    raise Exception('Parameter "expected_count" must be an integer or list')
 
         if not isinstance(points, int) and not isinstance(points, float):
@@ -63,7 +63,7 @@ class TestDefinition:
             return self.execute(cursor)
         except:
             # TODO better handler for rollback?
-            #print(sys.exc_info())
+            # print(sys.exc_info())
             cursor.execute('ROLLBACK')
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
@@ -84,9 +84,23 @@ class TestDefinition:
     # TODO should be callable only inside the scope
     def response(self, is_success, message_success=None, message_failure=None, points=None, is_sys_fail=None):
         if is_success:
-            message_statement = 'Correct' if message_success is None else message_success
+            if message_success is None:
+                message_statement = 'Correct'
+            elif self.custom_feedback is not None:
+                message_statement = {"test_type": "custom_feedback",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]}
+            else:
+                message_statement = message_success
         else:
-            message_statement = 'Wrong' if message_failure is None else message_failure
+            if message_failure is None:
+                message_statement = 'Wrong'
+            elif self.custom_feedback is not None:
+                message_statement = {"test_type": "custom_feedback",
+                                     "test_key": "custom_feedback",
+                                     "params": [self.custom_feedback]}
+            else:
+                message_statement = message_failure
 
         return {
             'is_success': is_success,
@@ -148,10 +162,10 @@ class TestDefinition:
                 )
 
         return self.response(
-                False,
-                message_failure=sysfeedback,
-                is_sys_fail=True
-            )
+            False,
+            message_failure=sysfeedback,
+            is_sys_fail=True
+        )
 
     def _index_error(self):
         return self.response(
