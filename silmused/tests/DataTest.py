@@ -73,7 +73,7 @@ class DataTest(TestDefinition):
                           f" WHERE ({self.where})") if self.where is not None else ""
         cursor.execute(self.query)
         result = cursor.fetchall()
-        # TODO If the result is empty, then should return error that no result found, ideally it would be under the correct test
+
         if not self.isView:
             if self.expected_value is None:
                 if self.should_exist:
@@ -142,8 +142,8 @@ class DataTest(TestDefinition):
                             False,
                             "",
                             {"test_type": self.test_type,
-                             "test_key": "query_no_result",
-                             "params": []},
+                             "test_key": "view_query_no_result",
+                             "params": [self.expected_value, self.name]},
                         )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
                         if result[0][0] is None and len(result) > 0:
@@ -304,8 +304,8 @@ class DataTest(TestDefinition):
                             False,
                             "",
                             {"test_type": self.test_type,
-                             "test_key": "query_no_result",
-                             "params": []},
+                             "test_key": "table_query_no_result",
+                             "params": [self.expected_value, self.name]},
                         )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
                         if result[0][0] is None and len(result) > 0:

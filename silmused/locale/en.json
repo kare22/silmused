@@ -85,7 +85,8 @@
 		"view_expected_value_group_strings_no_result_negative_feedback": "Wrong, no result was found for test query in view '$param1' column '$param2'",
 		"custom_feedback": "'$param1'",
 		"no_feedback": "Automated feedback error, no feedback was found.",
-		"query_no_result": "Wrong, query returns no result"
+		"table_query_no_result": "Wrong, result '$param1' is not found in table '$param2'",
+		"view_query_no_result": "Wrong, result '$param1' is not found in view '$param2'"
 	},
 	"default_feedback": {
 		"default_positive_feedback": "Correct result",
