@@ -7,10 +7,9 @@ class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
                  expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None,
-                 elements=None, column_name_fallback=None, expected_value_query=None, llm_check=None):
+                 elements=None, column_name_fallback=None, expected_value_query=None, llm_check=None, debug=None):
         if arguments is not None and not isinstance(arguments, list):
             raise Exception('Parameter "arguments" must be a list')
-
         # if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
         #    raise Exception('Parameter "expected_count" must be an integer or list')
 
@@ -33,6 +32,7 @@ class TestDefinition:
         self.points = points
         self.name = name
         self.column_name = column_name
+        self.where = where
         self.description = description
         self.arguments = arguments  # TODO arguments could be a class
         self.expected_value = expected_value
@@ -48,6 +48,8 @@ class TestDefinition:
         self.column_name_fallback = column_name_fallback
         self.expected_value_query = expected_value_query
         self.llm_check = llm_check
+        if debug is not None: self.debug = debug.upper()
+        else: self.debug = debug
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):
@@ -65,6 +67,10 @@ class TestDefinition:
             # TODO better handler for rollback?
             # print(sys.exc_info())
             cursor.execute('ROLLBACK')
+            if self.debug is not None:
+                if self.debug == 'DEBUG' or self.debug == 'ALL':
+                    print('SYS ERROR DEBUG:')
+                    print(sys.exc_info())
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
             if 'UndefinedTable' in str(sys.exc_info()[0]):
@@ -101,6 +107,17 @@ class TestDefinition:
                                      "params": [self.custom_feedback]}
             else:
                 message_statement = message_failure
+        if self.debug is not None:
+            print('\nFEEDBACK DEBUG:')
+            if self.debug == 'DEBUG':
+                print(f"Feedback: {message_statement}\n")
+            if self.debug == 'ALL':
+                if self.title is not None: print(f"title: {self.title}")
+                if is_success is not None: print(f"is_success: {is_success}")
+                if self.points is not None: print(f"points: {self.points}")
+                if self.description is not None: print(f"description: {self.description}")
+                if is_sys_fail is not None: print(f"is_sys_fail: {is_sys_fail}")
+                print(f"Feedback: {message_statement}\n")
 
         return {
             'is_success': is_success,
@@ -117,36 +134,62 @@ class TestDefinition:
 
     def _undefined_column_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
-
-        return self.response(
-            False,
-            '',
-            {"test_type": "sys_fail",
-             "test_key": "undefined_column",
-             "params": [split_sys_feedback[1]]},
-        )
+        if len(split_sys_feedback) > 1:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "undefined_column",
+                 "params": [split_sys_feedback[1]]},
+            )
+        else:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "custom_feedback",
+                 "params": [sysfeedback]},
+            )
 
     def _undefined_table_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
 
-        return self.response(
-            False,
-            '',
-            {"test_type": "sys_fail",
-             "test_key": "undefined_table",
-             "params": [split_sys_feedback[1]]},
-        )
+        if len(split_sys_feedback) > 1:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "undefined_table",
+                 "params": [split_sys_feedback[1]]},
+            )
+        else:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "custom_feedback",
+                 "params": [sysfeedback]},
+            )
 
     def _ambiguous_column_error_feedback(self, sysfeedback):
         split_sys_feedback = sysfeedback.split('"')
-        # print(sysfeedback)
-        return self.response(
-            False,
-            '',
-            {"test_type": "sys_fail",
-             "test_key": "ambiguous_column",
-             "params": [split_sys_feedback[1]]},
-        )
+
+        if len(split_sys_feedback) > 1:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "ambiguous_column",
+                 "params": [split_sys_feedback[1]]},
+            )
+        else:
+            return self.response(
+                False,
+                '',
+                {"test_type": "sys_fail",
+                 "test_key": "custom_feedback",
+                 "params": [sysfeedback]},
+            )
 
     def _undefined_function_error_feedback(self, sysfeedback):
         if 'round' in sysfeedback:
