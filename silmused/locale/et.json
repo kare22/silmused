@@ -85,7 +85,8 @@
 		"view_expected_value_group_strings_no_result_negative_feedback": "Vale, tulemust ei leitud testist vaates '$param1' veerus '$param2'",
 		"custom_feedback": "'$param1'",
 		"no_feedback": "Kontrolli viga, tagasiside ei leitud.",
-		"query_no_result": "Vale, kontrollitud väärtust ei leitud"
+		"table_query_no_result": "Vale, tulemust '$param1' ei leitud tabelis '$param2'",
+		"view_query_no_result": "Vale, tulemust '$param1' ei leitud vaates '$param2'"
 	},
 	"default_feedback": {
 		"default_positive_feedback": "Õige tulemus",
