@@ -48,8 +48,7 @@ class TestDefinition:
         self.column_name_fallback = column_name_fallback
         self.expected_value_query = expected_value_query
         self.llm_check = llm_check
-        if debug is not None: self.debug = debug.upper()
-        else: self.debug = debug
+        self.debug = debug.upper() if debug is not None else debug
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):

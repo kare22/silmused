@@ -323,5 +323,5 @@ class FunctionTest(TestDefinition):
             if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
             if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
             if self.test_type is not None: print(f"test_type: {self.test_type}")
-        if self.debug != 'DEBUG' or self.debug != 'ALL':
+        if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")
