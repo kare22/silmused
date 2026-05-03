@@ -121,8 +121,15 @@ class ProcedureTest(TestDefinition):
         # )
 
     def test_procedure_exists(self, cursor):
-        cursor.execute(f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
-        if len(cursor.fetchall()) <= 0:
+        query = f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"result: {result}")
+
+        # Result assessment
+        if len(result) <= 0:
             return super().response(
                 False,
                 {"test_type": self.test_type,
@@ -135,8 +142,14 @@ class ProcedureTest(TestDefinition):
         return None
 
     def test_procedure_type(self, cursor):
-        cursor.execute(
-            f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'PROCEDURE' AND routine_name='{self.name}'")
+        query = f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'PROCEDURE' AND routine_name='{self.name}'"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"result: {result}")
+
+        # Result assessment
         if not len(cursor.fetchall()) > 0:
             return super().response(
                 False,
@@ -150,8 +163,14 @@ class ProcedureTest(TestDefinition):
         return None
 
     def test_procedure_args(self, cursor):
-        cursor.execute(f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
+        query = f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.name}'"
+        cursor.execute(query)
         number_of_parameters_result = cursor.fetchall()[0][0]
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"number_of_parameters_result: {number_of_parameters_result}")
+
+        # Result assessment
         if not number_of_parameters_result == self.number_of_parameters:
             return super().response(
                 False,
