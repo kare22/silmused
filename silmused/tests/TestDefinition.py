@@ -42,7 +42,7 @@ class TestDefinition:
         self.query = query_builder
         self.pre_query = pre_query
         self.after_query = after_query
-        self.should_exist = should_exist  # TODO should be renamed to something more descriptive (should_be_false/falsy)
+        self.should_exist = should_exist
         self.custom_feedback = custom_feedback
         self.elements = elements
         self.column_name_fallback = column_name_fallback

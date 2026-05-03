@@ -2,12 +2,15 @@ import sys
 
 
 class ExecuteLayer:
-    def __init__(self, query):
+    def __init__(self, query, debug=None):
         self.query = query
+        self.debug = debug
 
     def run(self, cursor):
         try:
             cursor.execute(self.query)
+
+            if self.debug is not None: print(f"query: {self.query}")
 
             return {
                 'type': 'execution',
@@ -16,6 +19,8 @@ class ExecuteLayer:
             }
         except:
             cursor.execute('ROLLBACK')
+
+            if self.debug is not None: print(f"sys_error: {sys.exc_info()}")
 
             return {
                 'type': 'execution',

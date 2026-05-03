@@ -4,7 +4,7 @@ from silmused.tests.TestDefinition import TestDefinition
 class QueryDataTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, expected_value_query=None, column_name_fallback=None,
-                 custom_feedback=None, llm_check=False, points=0):
+                 custom_feedback=None, llm_check=False, debug=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -52,6 +52,7 @@ class QueryDataTest(TestDefinition):
             column_name_fallback=column_name_fallback,
             expected_value_query=expected_value_query,
             llm_check=llm_check,
+            debug=debug,
         )
 
         self.column_name = column_name
@@ -71,7 +72,9 @@ class QueryDataTest(TestDefinition):
 
         cursor.execute(self.query)
         result = cursor.fetchall()
+        if self.debug is not None: self.debug_output(result)
 
+        # Result Assessment
         # TODO Add an overall test response to the end, incase of oversight
         if self.expected_value is None:
             if self.should_exist:
@@ -247,3 +250,33 @@ class QueryDataTest(TestDefinition):
             if len(result[0][0]) > 0:
                 return result[0][0]
         return self.column_name
+
+    def debug_output(self, result):
+        print('QUERY DATA TEST DEBUG: ')
+        if self.debug == 'DEBUG':
+            if self.title is not None: print(f"Test title: {self.title}")
+            print(f"query: {self.query}")
+            print(f"result: {result}")
+        if self.debug == 'ALL':
+            if self.name is not None: print(f"name: {self.name}")
+            if self.arguments is not None: print(f"arguments: {self.arguments}")
+            if self.column_name is not None: print(f"column_name: {self.column_name}")
+            if self.where is not None: print(f"where: {self.where}")
+            if self.join is not None: print(f"join: {self.join}")
+            if self.description is not None: print(f"description: {self.description}")
+            if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
+            if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
+            if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
+            if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
+            if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
+            if self.elements is not None: print(f"elements: {self.elements}")
+            if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
+            if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
+            if self.points is not None: print(f"points: {self.points}")
+            if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
+            if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
+            if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
+            if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
+        if self.debug != 'DEBUG' or self.debug != 'ALL':
+            print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

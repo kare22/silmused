@@ -5,7 +5,7 @@ from silmused.utils import list_to_string
 class ProcedureTest(TestDefinition):
     def __init__(self, name, arguments, title=None, description=None, expected_value=None,
                  expected_count=None, number_of_parameters=None, pre_query=None, after_query=None,
-                 should_exist=True, elements=None, custom_feedback=None, llm_check=False, points=0):
+                 should_exist=True, elements=None, custom_feedback=None, llm_check=False, debug=None, points=0):
         query = f"CALL {name}({list_to_string(arguments)})"
         if after_query is None:
             raise Exception('Parameter "after_query" is required')
@@ -35,6 +35,7 @@ class ProcedureTest(TestDefinition):
             after_query=after_query,
             custom_feedback=custom_feedback,
             llm_check=llm_check,
+            debug=debug,
         )
 
         self.number_of_parameters = number_of_parameters
@@ -68,10 +69,9 @@ class ProcedureTest(TestDefinition):
             self.query = self._check_separately_for_all_elements(cursor)
 
         cursor.execute(self.query)
-
         cursor.execute(self.after_query)
-
         result = cursor.fetchall()
+        if self.debug is not None: self.debug_output(result)
 
         if self.elements is not None:
             if self.should_exist:
@@ -182,3 +182,27 @@ class ProcedureTest(TestDefinition):
             query += f" {operator} prosrc ILIKE '%{arg}%'"
         query += ")"
         return query
+
+    def debug_output(self, result):
+        print('PROCEDURE TEST DEBUG: ')
+        if self.debug == 'DEBUG':
+            if self.title is not None: print(f"Test title: {self.title}")
+            print(f"query: {self.query}")
+            print(f"result: {result}")
+        if self.debug == 'ALL':
+            if self.name is not None: print(f"name: {self.name}")
+            if self.arguments is not None: print(f"arguments: {self.arguments}")
+            if self.description is not None: print(f"description: {self.description}")
+            if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
+            if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
+            if self.number_of_parameters is not None: print(f"number_of_parameters: {self.number_of_parameters}")
+            if self.pre_query is not None: print(f"pre_query: {self.pre_query}")
+            if self.after_query is not None: print(f"after_query: {self.after_query}")
+            if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
+            if self.elements is not None: print(f"elements: {self.elements}")
+            if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
+            if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
+            if self.points is not None: print(f"points: {self.points}")
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
+        if self.debug != 'DEBUG' or self.debug != 'ALL':
+            print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

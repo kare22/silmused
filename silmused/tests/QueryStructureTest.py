@@ -4,7 +4,7 @@ from silmused.utils import list_to_string
 
 class QueryStructureTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, should_exist=True, where=None,
-                 description=None, custom_feedback=None, elements=None, llm_check=False, points=0):
+                 description=None, custom_feedback=None, elements=None, llm_check=False, debug=None, points=0):
 
         query = f"SELECT {list_to_string(arguments)[1:-1] if arguments is not None else '*'} FROM information_schema.columns WHERE table_name = '{name}'"
 
@@ -43,6 +43,7 @@ class QueryStructureTest(TestDefinition):
             custom_feedback=custom_feedback,
             elements=elements,
             llm_check=llm_check,
+            debug=debug,
         )
 
         self.column_name = column_name
@@ -56,7 +57,9 @@ class QueryStructureTest(TestDefinition):
             self.query = self._check_separately_for_all_columns(cursor)
         cursor.execute(self.query)
         result = cursor.fetchall()
+        if self.debug is not None: self.debug_output(result)
 
+        # Result Assessment
         if self.elements is not None:
             # TODO if in the future there is a requirement to count specific amount of elements used, then this can be used
             # select (CHAR_LENGTH(lower(view_definition)) - CHAR_LENGTH(REPLACE(lower(view_definition), lower('maletäht'), ''))) / CHAR_LENGTH(lower('maletäht')) as alamparing from information_schema.views where table_name = 'query_view';
@@ -160,3 +163,28 @@ class QueryStructureTest(TestDefinition):
             query += f" {operator} column_name = '{c_name}'"
         query += ")"
         return query
+
+    def debug_output(self, result):
+        print('QUERY STRUCTURE TEST DEBUG: ')
+        if self.debug == 'DEBUG':
+            if self.title is not None: print(f"Test title: {self.title}")
+            print(f"query: {self.query}")
+            print(f"result: {result}")
+        if self.debug == 'ALL':
+            if self.name is not None: print(f"name: {self.name}")
+            if self.arguments is not None: print(f"arguments: {self.arguments}")
+            if self.column_name is not None: print(f"column_name: {self.column_name}")
+            if self.where is not None: print(f"where: {self.where}")
+            if self.description is not None: print(f"description: {self.description}")
+            if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
+            if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
+            if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
+            if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
+            if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
+            if self.elements is not None: print(f"elements: {self.elements}")
+            if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
+            if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
+            if self.points is not None: print(f"points: {self.points}")
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
+        if self.debug != 'DEBUG' or self.debug != 'ALL':
+            print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

@@ -5,7 +5,8 @@ from silmused.utils import list_to_string
 class StructureTest(TestDefinition):
     def __init__(self, name, title=None, column_name=None, arguments=None, expected_value=None, expected_type=None,
                  expected_character_maximum_length=None, should_exist=True, where=None,
-                 description=None, custom_feedback=None, llm_check=False, points=0):
+                 description=None, custom_feedback=None, llm_check=False, debug=None, points=0):
+
         if column_name is None and expected_type is not None:
             raise Exception('Expected type needs a column to be set!')
 
@@ -36,6 +37,7 @@ class StructureTest(TestDefinition):
             should_exist=should_exist,
             custom_feedback=custom_feedback,
             llm_check=llm_check,
+            debug=debug,
         )
 
         self.column_name = column_name
@@ -47,6 +49,9 @@ class StructureTest(TestDefinition):
             self.query = self._check_separately_for_all_columns(cursor)
         cursor.execute(self.query)
         result = cursor.fetchall()
+        if self.debug is not None: self.debug_output(result)
+
+        # Result Assessment
         test_type_result = self.result_test_type(result)
         if test_type_result is not None:
             return test_type_result
@@ -177,3 +182,28 @@ class StructureTest(TestDefinition):
             query += f" {operator} column_name = '{c_name}'"
         query += ")"
         return query
+
+    def debug_output(self, result):
+        print('STRUCTURE TEST DEBUG: ')
+        if self.debug == 'DEBUG':
+            if self.title is not None: print(f"Test title: {self.title}")
+            print(f"query: {self.query}")
+            print(f"result: {result}")
+        if self.debug == 'ALL':
+            if self.name is not None: print(f"name: {self.name}")
+            if self.arguments is not None: print(f"arguments: {self.arguments}")
+            if self.column_name is not None: print(f"column_name: {self.column_name}")
+            if self.where is not None: print(f"where: {self.where}")
+            if self.description is not None: print(f"description: {self.description}")
+            if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
+            if self.expected_type is not None: print(f"expected_type: {self.expected_type}")
+            if self.expected_character_maximum_length is not None: print(f"expected_character_maximum_length: {self.expected_character_maximum_length}")
+            if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
+            if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
+            if self.elements is not None: print(f"elements: {self.elements}")
+            if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
+            if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
+            if self.points is not None: print(f"points: {self.points}")
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
+        if self.debug != 'DEBUG' or self.debug != 'ALL':
+            print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

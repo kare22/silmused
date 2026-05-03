@@ -5,7 +5,7 @@ from silmused.utils import list_to_string
 class FunctionTest(TestDefinition):
     def __init__(self, name, title=None, arguments=None, column_name=None, where=None, description=None,
                  expected_value=None, expected_count=None, expected_value_query=None, number_of_parameters=None,
-                 should_exist=True, elements=None, custom_feedback=None, llm_check=False, points=0):
+                 should_exist=True, elements=None, custom_feedback=None, llm_check=False, debug=None, points=0):
 
         query = f"SELECT {column_name if column_name is not None else '*'} FROM {name}({list_to_string(arguments if arguments is not None else '')})"
 
@@ -79,6 +79,7 @@ class FunctionTest(TestDefinition):
             expected_count=expected_count,
             custom_feedback=custom_feedback,
             llm_check=llm_check,
+            debug=debug,
             # TODO implement parameters,
         )
 
@@ -118,7 +119,9 @@ class FunctionTest(TestDefinition):
 
         cursor.execute(self.query)
         result = cursor.fetchall()
+        if self.debug is not None: self.debug_output(result)
 
+        # Result assessment
         if self.elements is not None:
             if self.should_exist:
                 return super().response(
@@ -293,3 +296,32 @@ class FunctionTest(TestDefinition):
             query += f" {operator} prosrc ILIKE '%{arg}%'"
         query += ")"
         return query
+
+    def debug_output(self, result):
+        print('FUNCTION TEST DEBUG: ')
+        if self.debug == 'DEBUG':
+            if self.title is not None: print(f"Test title: {self.title}")
+            print(f"query: {self.query}")
+            print(f"result: {result}")
+        if self.debug == 'ALL':
+            if self.name is not None: print(f"name: {self.name}")
+            if self.arguments is not None: print(f"arguments: {self.arguments}")
+            if self.column_name is not None: print(f"column_name: {self.column_name}")
+            if self.where is not None: print(f"where: {self.where}")
+            if self.description is not None: print(f"description: {self.description}")
+            if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
+            if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
+            if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
+            if self.number_of_parameters is not None: print(f"number_of_parameters: {self.number_of_parameters}")
+            if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
+            if self.elements is not None: print(f"elements: {self.elements}")
+            if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
+            if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
+            if self.points is not None: print(f"points: {self.points}")
+            if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
+            if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
+            if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
+            if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
+        if self.debug != 'DEBUG' or self.debug != 'ALL':
+            print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")
