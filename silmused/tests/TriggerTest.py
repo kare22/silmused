@@ -29,7 +29,11 @@ class TriggerTest(TestDefinition):
             return test_trigger_exists_result
 
         # Check trigger event manipulation on arguments and trigger action timing
-        errors, manipulation_errors, action_timing_error = self.test_trigger_manipulation(cursor) if len(self.arguments) > 0 else []
+
+        if len(self.arguments) > 0:
+            manipulation_errors, action_timing_error = self.test_trigger_manipulation(cursor)
+        else:
+            manipulation_errors, action_timing_error = [], ''
 
         if len(manipulation_errors) > 0:
             return super().response(
@@ -85,7 +89,6 @@ class TriggerTest(TestDefinition):
         return None
 
     def test_trigger_manipulation(self, cursor):
-        errors = []
         manipulations = []
         for manipulation in self.arguments:
             query = (f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
@@ -99,7 +102,6 @@ class TriggerTest(TestDefinition):
 
             if len(result) <= 0:
                 manipulations.append(manipulation)
-                errors.append(f"manipulation {manipulation} was not found")
 
         action_timing = ''
         query = (f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
@@ -108,15 +110,13 @@ class TriggerTest(TestDefinition):
         result = cursor.fetchall()
 
         if len(result) <= 0:
-            errors.append(f"action timing {self.action_timing} was not found")
             action_timing = self.action_timing
 
         if self.debug is not None:
             print(f"query: {query}")
             print(f"result: {result}")
-            print(f"errors: {errors}")
 
-        return errors, manipulations, action_timing
+        return manipulations, action_timing
 
     def debug_output(self):
         print('TRIGGER TEST DEBUG: ')
