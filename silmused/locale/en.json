@@ -116,9 +116,8 @@
 		"custom_feedback": "'$param1'"
 	},
 	"index_test": {
-		"index_positive_feedback": "Correct, index '$param1' was found",
-		"index_negative_feedback": "Wrong, expected to find index '$param1', but none were found",
-		"custom_feedback": "'$param1'"
+		"index_positive_feedback": "Correct, index '$index_name' was found",
+		"index_negative_feedback": "Wrong, expected to find index '$index_name', but none were found"
 	},
 	"query_structure_test": {
 		"query_table_should_exist_positive_feedback": "Correct, query was found",
@@ -207,10 +206,14 @@
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {
-		"trigger_exists_positive_feedback": "Correct, trigger '$param1' was found",
-		"trigger_exists_negative_feedback": "Wrong, expected to find trigger '$param1', but none were found",
-		"trigger_definition_positive_feedback": "Correct, trigger '$param1' definition is correct",
-		"trigger_definition_negative_feedback": "Wrong, trigger '$param1' had the following errors: '$param2'",
+		"trigger_exists_positive_feedback": "Correct, trigger '$trigger_name' was found",
+		"trigger_exists_negative_feedback": "Wrong, expected to find trigger '$trigger_name', but none were found",
+		"trigger_definition_manipulation_positive_feedback": "Correct, trigger '$trigger_name' definition manipulation is correct",
+		"trigger_definition_manipulation_negative_feedback": "Wrong, trigger '$trigger_name' had the following definition manipulation(s) missing: '$manipulation'",
+		"trigger_definition_action_timing_positive_feedback": "Correct, trigger '$trigger_name' definition action timing is correct",
+		"trigger_definition_action_timing_negative_feedback": "Wrong, trigger '$trigger_name' had the following definition action timing missing: '$action_timing'",
+		"trigger_definition_positive_feedback": "Correct, trigger '$trigger_name' definition is correct",
+		"trigger_definition_negative_feedback": "Wrong, trigger '$trigger_name' had an error",
 		"custom_feedback": "'$param1'"
 	},
 	"view_test": {

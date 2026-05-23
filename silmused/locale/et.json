@@ -116,9 +116,8 @@
 		"custom_feedback": "'$param1'"
 	},
 	"index_test": {
-		"index_positive_feedback": "Õige, indeks '$param1' on olemas",
-		"index_negative_feedback": "Vale, indeks '$param1' ei ole olemas",
-		"custom_feedback": "'$param1'"
+		"index_positive_feedback": "Õige, indeks '$index_name' on olemas",
+		"index_negative_feedback": "Vale, indeks '$index_name' ei ole olemas"
 	},
 	"query_structure_test": {
 		"query_table_should_exist_positive_feedback": "Õige, päring on olemas",
@@ -207,11 +206,14 @@
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {
-		"trigger_exists_positive_feedback": "Õige, triger '$param1' on olemas",
-		"trigger_exists_negative_feedback": "Vale, triger '$param1' ei ole olemas",
-		"trigger_definition_positive_feedback": "Õige, trigeri '$param1' on koostatud õigesti",
-		"trigger_definition_negative_feedback": "Vale, trigeril '$param1' on järgmised probleemid: '$param2'",
-		"custom_feedback": "'$param1'"
+		"trigger_exists_positive_feedback": "Õige, triger '$trigger_name' on olemas",
+		"trigger_exists_negative_feedback": "Vale, triger '$trigger_name' ei ole olemas",
+		"trigger_definition_manipulation_positive_feedback": "Õige, trigeril '$trigger_name'  on õige definitsiooni",
+		"trigger_definition_manipulation_negative_feedback": "Vale, trigeril '$trigger_name' on puudu definitsioonist manipulatsioonid: '$manipulation'",
+		"trigger_definition_action_timing_positive_feedback": "Õige, trigeril '$trigger_name'  on õige definitsioon",
+		"trigger_definition_action_timing_negative_feedback": "Vale, trigeril '$trigger_name' on puudu definitsioonist trigeri hetk: '$action_timing'",
+		"trigger_definition_positive_feedback": "Õige, trigeri '$trigger_name' on koostatud õigesti",
+		"trigger_definition_negative_feedback": "Vale, trigeril '$trigger_name' on probleem"
 	},
 	"view_test": {
 		"expected_value_should_exist_positive_feedback": "Õige, oodati tulemust '$param1'",

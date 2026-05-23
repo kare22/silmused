@@ -24,10 +24,10 @@ class IndexTest(TestDefinition):
             len(result) > 0,
             {"test_type": self.test_type,
              "test_key": "index_positive_feedback",
-             "params": [self.name]},
+             "params": {"index_name": self.name}},
             {"test_type": self.test_type,
              "test_key": "index_negative_feedback",
-             "params": [self.name]}
+             "params": {"index_name": self.name}}
         )
 
     def debug_output(self, result):
