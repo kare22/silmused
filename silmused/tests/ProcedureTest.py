@@ -69,98 +69,117 @@ class ProcedureTest(TestDefinition):
             self.query = self._check_separately_for_all_elements(cursor)
 
         cursor.execute(self.query)
-        cursor.execute(self.after_query)
+        if self.elements is None: cursor.execute(self.after_query)
+
         result = cursor.fetchall()
+
         if self.debug is not None: self.debug_output(result)
 
+        # Result assessment
         if self.elements is not None:
             if self.should_exist:
                 return super().response(
                     len(result) > 0,
                     {"test_type": self.test_type,
                      "test_key": "procedure_required_elements_positive_feedback",
-                     "params": [self.elements, self.name]},
+                     "params": {"required_elements": self.elements, "procedure_name": self.name}},
                     {"test_type": self.test_type,
                      "test_key": "procedure_required_elements_negative_feedback",
-                     "params": [self.elements, self.name]},
+                     "params": {"required_elements": self.elements, "procedure_name": self.name}},
                 )
             else:
                 return super().response(
                     len(result) == 0,
                     {"test_type": self.test_type,
                      "test_key": "procedure_banned_elements_positive_feedback",
-                     "params": [self.elements, self.name]},
+                     "params": {"required_elements": self.elements, "procedure_name": self.name}},
                     {"test_type": self.test_type,
                      "test_key": "procedure_banned_elements_negative_feedback",
-                     "params": [self.elements, self.name]},
+                     "params": {"required_elements": self.elements, "procedure_name": self.name}},
                 )
         elif self.expected_count is None:
             return super().response(
                 len(result) > 0,
                 {"test_type": self.test_type,
-                 "test_key": "procedure_not_expected_result_count_negative_feedback",
-                 "params": [self.name, list_to_string(self.arguments)]},
+                 "test_key": "procedure_not_expected_result_count_positive_feedback",
+                 "params": {"procedure_name": self.name, "procedure_arguments": list_to_string(self.arguments)}},
                 {"test_type": self.test_type,
                  "test_key": "procedure_not_expected_result_count_negative_feedback",
-                 "params": [self.name, list_to_string(self.arguments)]}
+                 "params": {"procedure_name": self.name, "procedure_arguments": list_to_string(self.arguments)}}
             )
         else:
             return super().response(
                 len(result) == self.expected_count,
                 {"test_type": self.test_type,
-                 "test_key": "procedure_expected_result_count_negative_feedback",
-                 "params": [self.expected_count, self.name, list_to_string(self.arguments), len(result)]},
+                 "test_key": "procedure_expected_result_count_positive_feedback",
+                 "params": {"expected_count": self.expected_count, "procedure_name": self.name,
+                            "procedure_arguments": list_to_string(self.arguments)}},
                 {"test_type": self.test_type,
                  "test_key": "procedure_expected_result_count_negative_feedback",
-                 "params": [self.expected_count, self.name, list_to_string(self.arguments), len(result)]}
+                 "params": {"expected_count": self.expected_count, "procedure_name": self.name,
+                            "procedure_arguments": list_to_string(self.arguments), "real_result": len(result)}}
             )
-        # return super().response(
-        #    len(result) > 0,
-        #    f"Correct count > 0 for procedure \"{self.name}({list_to_string(self.arguments)})\"",
-        #    f"Expected count > 0 for procedure \"{self.name}({list_to_string(self.arguments)})\" but none was found",
-        # )
 
     def test_procedure_exists(self, cursor):
-        cursor.execute(f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
-        if len(cursor.fetchall()) <= 0:
+        query = f"SELECT * FROM pg_catalog.pg_proc WHERE proname='{self.name}'"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"result: {result}")
+
+        # Result assessment
+        if len(result) <= 0:
             return super().response(
                 False,
                 {"test_type": self.test_type,
                  "test_key": "procedure_exists_positive_feedback",
-                 "params": [self.name]},
+                 "params": {"procedure_name": self.name}},
                 {"test_type": self.test_type,
                  "test_key": "procedure_exists_negative_feedback",
-                 "params": [self.name]}
+                 "params": {"procedure_name": self.name}}
             )
         return None
 
     def test_procedure_type(self, cursor):
-        cursor.execute(
-            f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'PROCEDURE' AND routine_name='{self.name}'")
-        if not len(cursor.fetchall()) > 0:
+        query = f"SELECT routine_name FROM information_schema.routines WHERE routine_type = 'PROCEDURE' AND routine_name='{self.name}'"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"result: {result}")
+
+        # Result assessment
+        if not len(result) > 0:
             return super().response(
                 False,
                 {"test_type": self.test_type,
                  "test_key": "procedure_type_positive_feedback",
-                 "params": [self.name]},
+                 "params": {"procedure_name": self.name}},
                 {"test_type": self.test_type,
                  "test_key": "procedure_type_negative_feedback",
-                 "params": [self.name]}
+                 "params": {"procedure_name": self.name}}
             )
         return None
 
     def test_procedure_args(self, cursor):
-        cursor.execute(f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.name}'")
+        query = f"SELECT pronargs FROM pg_catalog.pg_proc WHERE proname='{self.name}'"
+        cursor.execute(query)
         number_of_parameters_result = cursor.fetchall()[0][0]
+        if self.debug is not None:
+            print(f"query: {query}")
+            print(f"number_of_parameters_result: {number_of_parameters_result}")
+
+        # Result assessment
         if not number_of_parameters_result == self.number_of_parameters:
             return super().response(
                 False,
                 {"test_type": self.test_type,
                  "test_key": "procedure_parameters_exists_positive_feedback",
-                 "params": [self.name]},
+                 "params": {"procedure_name": self.name}},
                 {"test_type": self.test_type,
                  "test_key": "procedure_parameters_exists_negative_feedback",
-                 "params": [self.number_of_parameters, self.name, number_of_parameters_result]}
+                 "params": {"number_of_parameters": self.number_of_parameters, "procedure_name": self.name, "real_result": number_of_parameters_result}}
             )
         return None
 
@@ -204,5 +223,6 @@ class ProcedureTest(TestDefinition):
             if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
             if self.points is not None: print(f"points: {self.points}")
             if self.test_type is not None: print(f"test_type: {self.test_type}")
-        if self.debug != 'DEBUG' or self.debug != 'ALL':
+        if self.debug not in ['DEBUG', 'ALL']:
+            print(self.debug == 'DEBUG', self.debug == 'ALL')
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

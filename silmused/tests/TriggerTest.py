@@ -29,17 +29,42 @@ class TriggerTest(TestDefinition):
             return test_trigger_exists_result
 
         # Check trigger event manipulation on arguments and trigger action timing
-        errors = self.test_trigger_manipulation(cursor) if len(self.arguments) > 0 else []
 
-        return super().response(
-            len(errors) == 0,
-            {"test_type": self.test_type,
-             "test_key": "trigger_definition_positive_feedback",
-             "params": [self.name]},
-            {"test_type": self.test_type,
-             "test_key": "trigger_definition_negative_feedback",
-             "params": [self.name, {', '.join(errors)}]},  # TODO errorid on hetkel inglise keeles
-        )
+        if len(self.arguments) > 0:
+            manipulation_errors, action_timing_error = self.test_trigger_manipulation(cursor)
+        else:
+            manipulation_errors, action_timing_error = [], ''
+
+        if len(manipulation_errors) > 0:
+            return super().response(
+                False,
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_manipulation_positive_feedback",
+                 "params": {"trigger_name": self.name}},
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_manipulation_negative_feedback",
+                 "params": {"trigger_name": self.name, "manipulation": manipulation_errors}},
+            )
+        elif len(action_timing_error) > 0:
+            return super().response(
+                False,
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_action_timing_positive_feedback",
+                 "params": {"trigger_name": self.name}},
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_action_timing_negative_feedback",
+                 "params": {"trigger_name": self.name, "action_timing": action_timing_error}},
+            )
+        else:
+            return super().response(
+                True,
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_positive_feedback",
+                 "params": {"trigger_name": self.name}},
+                {"test_type": self.test_type,
+                 "test_key": "trigger_definition_negative_feedback",
+                 "params": {"trigger_name": self.name}},
+            )
 
     def test_trigger_exists(self, cursor):
         query = f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}'"
@@ -56,15 +81,15 @@ class TriggerTest(TestDefinition):
                 False,
                 {"test_type": self.test_type,
                  "test_key": "trigger_exists_positive_feedback",
-                 "params": [self.name]},
+                 "params": {"trigger_name": self.name}},
                 {"test_type": self.test_type,
                  "test_key": "trigger_exists_negative_feedback",
-                 "params": [self.name]},
+                 "params": {"trigger_name": self.name}},
             )
         return None
 
     def test_trigger_manipulation(self, cursor):
-        errors = []
+        manipulations = []
         for manipulation in self.arguments:
             query = (f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
                      f"AND event_manipulation = '{manipulation}'")
@@ -76,22 +101,22 @@ class TriggerTest(TestDefinition):
                 print(f"result: {result}")
 
             if len(result) <= 0:
-                errors.append(f"manipulation {manipulation} was not found")
+                manipulations.append(manipulation)
 
+        action_timing = ''
         query = (f"SELECT trigger_name FROM information_schema.triggers WHERE trigger_name = '{self.name}' "
                  f"AND action_timing = '{self.action_timing}'")
         cursor.execute(query)
         result = cursor.fetchall()
 
         if len(result) <= 0:
-            errors.append(f"action timing {self.action_timing} was not found")
+            action_timing = self.action_timing
 
         if self.debug is not None:
             print(f"query: {query}")
             print(f"result: {result}")
-            print(f"errors: {errors}")
 
-        return errors
+        return manipulations, action_timing
 
     def debug_output(self):
         print('TRIGGER TEST DEBUG: ')

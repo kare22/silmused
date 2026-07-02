@@ -116,9 +116,8 @@
 		"custom_feedback": "'$param1'"
 	},
 	"index_test": {
-		"index_positive_feedback": "Correct, index '$param1' was found",
-		"index_negative_feedback": "Wrong, expected to find index '$param1', but none were found",
-		"custom_feedback": "'$param1'"
+		"index_positive_feedback": "Correct, index '$index_name' was found",
+		"index_negative_feedback": "Wrong, expected to find index '$index_name', but none were found"
 	},
 	"query_structure_test": {
 		"query_table_should_exist_positive_feedback": "Correct, query was found",
@@ -160,21 +159,20 @@
 		"no_feedback": "Automated feedback error, no feedback was found."
 	},
 	"procedure_test": {
-		"procedure_exists_positive_feedback": "Correct, procedure '$param1' was found",
-		"procedure_exists_negative_feedback": "Wrong, expected to find procedure '$param1', but none were found",
-		"procedure_type_positive_feedback": "Correct procedure '$param1' is type PROCEDURE",
-		"procedure_type_negative_feedback": "Wrong, expected procedure '$param1' to be of type PROCEDURE",
-		"procedure_parameters_exists_positive_feedback": "Correct, procedure '$param1' parameter amount is correct",
-		"procedure_parameters_exists_negative_feedback": "Wrong, expected parameter amount '$param1' for procedure '$param2', but found parameter amount '$param3'",
-		"procedure_not_expected_result_count_positive_feedback": "Correct, result count for procedure '$param1'('$param2') is correct",
-		"procedure_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for procedure '$param1'('$param2'), but none was found",
-		"procedure_expected_result_count_positive_feedback": "Correct, result count '$param1' for procedure '$param2'('$param3') is correct",
-		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count '$param1' for procedure '$param2'('$param3'), but got '$param4'",
-		"procedure_required_elements_positive_feedback": "Correct, all required element(s) '$param1' were used in procedure named '$param2'",
-		"procedure_required_elements_negative_feedback": "Wrong, not all required element(s) '$param1' were used in procedure named '$param2'",
-		"procedure_banned_elements_positive_feedback": "Correct, no banned element(s) '$param1' were used in procedure named '$param2'",
-		"procedure_banned_elements_negative_feedback": "Wrong, banned element(s) '$param1' were used in procedure named '$param2'",
-		"custom_feedback": "'$param1'"
+		"procedure_exists_positive_feedback": "Correct, procedure '$procedure_name' was found",
+		"procedure_exists_negative_feedback": "Wrong, expected to find procedure '$procedure_name', but none were found",
+		"procedure_type_positive_feedback": "Correct procedure '$procedure_name' is type PROCEDURE",
+		"procedure_type_negative_feedback": "Wrong, expected procedure '$procedure_name' to be of type PROCEDURE",
+		"procedure_parameters_exists_positive_feedback": "Correct, procedure '$procedure_name' parameter amount is correct",
+		"procedure_parameters_exists_negative_feedback": "Wrong, expected parameter amount '$number_of_parameters' for procedure '$procedure_name', but found parameter amount '$real_result'",
+		"procedure_not_expected_result_count_positive_feedback": "Correct, result count for procedure '$procedure_name($procedure_arguments)' is correct",
+		"procedure_not_expected_result_count_negative_feedback": "Wrong, expected result count > 0 for procedure '$procedure_name($procedure_arguments)', but none was found",
+		"procedure_expected_result_count_positive_feedback": "Correct, result count '$expected_count' for procedure '$procedure_name($procedure_arguments)' is correct",
+		"procedure_expected_result_count_negative_feedback": "Wrong, expected result count '$expected_count' for procedure '$procedure_name($procedure_arguments)', but got '$real_result'",
+		"procedure_required_elements_positive_feedback": "Correct, all required element(s) '$required_elements' were used in procedure named '$procedure_name'",
+		"procedure_required_elements_negative_feedback": "Wrong, not all required element(s) '$required_elements' were used in procedure named '$procedure_name'",
+		"procedure_banned_elements_positive_feedback": "Correct, no banned element(s) '$required_elements' were used in procedure named '$procedure_name'",
+		"procedure_banned_elements_negative_feedback": "Wrong, banned element(s) '$required_elements' were used in procedure named '$procedure_name'"
 	},
 	"structure_test" : {
 		"expected_character_maximum_length_type_check_positive_feedback": "Correct, found character maximum length '$param1' in table '$param2' and column '$param3'",
@@ -208,10 +206,14 @@
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {
-		"trigger_exists_positive_feedback": "Correct, trigger '$param1' was found",
-		"trigger_exists_negative_feedback": "Wrong, expected to find trigger '$param1', but none were found",
-		"trigger_definition_positive_feedback": "Correct, trigger '$param1' definition is correct",
-		"trigger_definition_negative_feedback": "Wrong, trigger '$param1' had the following errors: '$param2'",
+		"trigger_exists_positive_feedback": "Correct, trigger '$trigger_name' was found",
+		"trigger_exists_negative_feedback": "Wrong, expected to find trigger '$trigger_name', but none were found",
+		"trigger_definition_manipulation_positive_feedback": "Correct, trigger '$trigger_name' definition manipulation is correct",
+		"trigger_definition_manipulation_negative_feedback": "Wrong, trigger '$trigger_name' had the following definition manipulation(s) missing: '$manipulation'",
+		"trigger_definition_action_timing_positive_feedback": "Correct, trigger '$trigger_name' definition action timing is correct",
+		"trigger_definition_action_timing_negative_feedback": "Wrong, trigger '$trigger_name' had the following definition action timing missing: '$action_timing'",
+		"trigger_definition_positive_feedback": "Correct, trigger '$trigger_name' definition is correct",
+		"trigger_definition_negative_feedback": "Wrong, trigger '$trigger_name' had an error",
 		"custom_feedback": "'$param1'"
 	},
 	"view_test": {

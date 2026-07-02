@@ -24,10 +24,10 @@ class IndexTest(TestDefinition):
             len(result) > 0,
             {"test_type": self.test_type,
              "test_key": "index_positive_feedback",
-             "params": [self.name]},
+             "params": {"index_name": self.name}},
             {"test_type": self.test_type,
              "test_key": "index_negative_feedback",
-             "params": [self.name]}
+             "params": {"index_name": self.name}}
         )
 
     def debug_output(self, result):
@@ -41,5 +41,5 @@ class IndexTest(TestDefinition):
             if self.description is not None: print(f"description: {self.description}")
             if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
             if self.test_type is not None: print(f"test_type: {self.test_type}")
-        if self.debug != 'DEBUG' or self.debug != 'ALL':
+        if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")
