@@ -1,0 +1,6 @@
+[submodule "test_cases"]
+	path = test_cases
+	url = https://github.com/nuubis/silmused-test-cases.git
+[submodule "silmused/test_cases"]
+	path = silmused/test_cases
+	url = https://github.com/nuubis/silmused-test-cases.git
