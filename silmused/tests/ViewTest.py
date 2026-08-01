@@ -13,11 +13,27 @@ class ViewTest(TestDefinition):
 
         if column_name is not None:
             if type(column_name) == str:
-                query += f" AND column_name = '{column_name}'"
+                if isMaterialized:
+                    query = (f"select pa.attname from pg_catalog.pg_class "
+                             f"JOIN pg_catalog.pg_namespace ON pg_class.relnamespace = pg_namespace.oid "
+                             f"JOIN pg_catalog.pg_attribute pa ON pg_class.oid = pa.attrelid "
+                             f"where relname = '{name}' and attname = '{column_name}'")
+                else:
+                    query += f" AND column_name = '{column_name}'"
             elif type(column_name) == list:
-                for (index, name) in enumerate(column_name):
-                    operator = 'AND' if index == 0 else 'OR'
-                    query += f" {operator} column_name = '{name}'"
+                if isMaterialized:
+                    query = (f"select pa.attname from pg_catalog.pg_class "
+                             f"JOIN pg_catalog.pg_namespace ON pg_class.relnamespace = pg_namespace.oid "
+                             f"JOIN pg_catalog.pg_attribute pa ON pg_class.oid = pa.attrelid "
+                             f"where relname = '{name}'")
+                    for (index, c_name) in enumerate(column_name):
+                        operator = 'AND (' if index == 0 else 'OR'
+                        query += f" {operator} attname = '{c_name}'"
+                else:
+                    for (index, c_name) in enumerate(column_name):
+                        operator = 'AND (' if index == 0 else 'OR'
+                        query += f" {operator} column_name = '{c_name}'"
+                query += ")"
             else:
                 raise AttributeError('Parameter column_name must be list or string')
 
@@ -88,25 +104,47 @@ class ViewTest(TestDefinition):
                          "params": [self.elements,self.name]},
                     )
             elif self.should_exist:
-                return super().response(
-                    len(result) > 0,
-                    {"test_type": self.test_type,
-                     "test_key": "mat_view_should_exist_positive_feedback",
-                     "params": [self.name]},
-                    {"test_type": self.test_type,
-                     "test_key": "mat_view_should_exist_negative_feedback",
-                     "params": [self.name]},
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_column_should_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_column_should_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
             else:
-                return super().response(
-                    len(result) == 0,
-                    {"test_type": self.test_type,
-                     "test_key": "mat_view_should_not_exist_positive_feedback",
-                     "params": [self.name]},
-                    {"test_type": self.test_type,
-                     "test_key": "mat_view_should_not_exist_negative_feedback",
-                     "params": [self.name]},
-                )
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
+                else:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_column_should_not_exist_positive_feedback",
+                         "params": [self.column_name, self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "mat_view_column_should_not_exist_negative_feedback",
+                         "params": [self.column_name, self.name]},
+                    )
         if self.elements is not None:
             if self.should_exist:
                 return super().response(
@@ -169,10 +207,10 @@ class ViewTest(TestDefinition):
                     return super().response(
                         len(result) > 0,
                         {"test_type": self.test_type,
-                         "test_key": "column_should_exist_positive_feedback",
+                         "test_key": "view_column_should_exist_positive_feedback",
                          "params": [self.column_name, self.name]},
                         {"test_type": self.test_type,
-                         "test_key": "column_should_exist_negative_feedback",
+                         "test_key": "view_column_should_exist_negative_feedback",
                          "params": [self.column_name, self.name]},
                     )
             else:
@@ -190,10 +228,10 @@ class ViewTest(TestDefinition):
                     return super().response(
                         len(result) == 0,
                         {"test_type": self.test_type,
-                         "test_key": "column_should_not_exist_positive_feedback",
+                         "test_key": "view_column_should_not_exist_positive_feedback",
                          "params": [self.column_name, self.name]},
                         {"test_type": self.test_type,
-                         "test_key": "column_should_not_exist_negative_feedback",
+                         "test_key": "view_column_should_not_exist_negative_feedback",
                          "params": [self.column_name, self.name]},
                     )
 
@@ -222,19 +260,38 @@ class ViewTest(TestDefinition):
     def _check_separately_for_all_columns(self, cursor):
         found = []
         for column in self.column_name:
-            query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}' AND column_name = '{column}'"
+            if self.isMaterialized:
+                query = (f"select pa.attname from pg_catalog.pg_class "
+                             f"JOIN pg_catalog.pg_namespace ON pg_class.relnamespace = pg_namespace.oid "
+                             f"JOIN pg_catalog.pg_attribute pa ON pg_class.oid = pa.attrelid "
+                             f"where relname = '{self.name}' and attname = '{column}'")
+            else:
+                query = (f"SELECT * FROM information_schema.columns "
+                         f"WHERE table_name = '{self.name}' AND column_name = '{column}'")
             cursor.execute(query)
             result = cursor.fetchall()
             if self.should_exist and len(result) == 0:
                 found.append(column)
             elif not self.should_exist and len(result) > 0:
                 found.append(column)
-        if len(found) == 0: return self.query
-        query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}'"
+        if len(found) == 0:
+            return self.query
+
+        # Creating a new query where only wrong columns exist or miss
         self.column_name = found
-        for (index, c_name) in enumerate(self.column_name):
-            operator = 'AND (' if index == 0 else 'OR'
-            query += f" {operator} column_name = '{c_name}'"
+        if self.isMaterialized:
+            query = (f"select pa.attname from pg_catalog.pg_class "
+                     f"JOIN pg_catalog.pg_namespace ON pg_class.relnamespace = pg_namespace.oid "
+                     f"JOIN pg_catalog.pg_attribute pa ON pg_class.oid = pa.attrelid "
+                     f"where relname = '{self.name}'")
+            for (index, c_name) in enumerate(self.column_name):
+                operator = 'AND' if index == 0 else 'OR'
+                query += f" {operator} attname = '{c_name}'"
+        else:
+            query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}'"
+            for (index, c_name) in enumerate(self.column_name):
+                operator = 'AND' if index == 0 else 'OR'
+                query += f" {operator} column_name = '{c_name}'"
         query += ")"
         return query
 

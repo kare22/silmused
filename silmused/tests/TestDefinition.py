@@ -70,6 +70,8 @@ class TestDefinition:
                 if self.debug == 'DEBUG' or self.debug == 'ALL':
                     print('SYS ERROR DEBUG:')
                     print(sys.exc_info())
+                    print('ERROR QUERY:')
+                    print(self.query)
             if 'UndefinedColumn' in str(sys.exc_info()[0]):
                 return self._undefined_column_error_feedback(str(sys.exc_info()[1]))
             if 'UndefinedTable' in str(sys.exc_info()[0]):
