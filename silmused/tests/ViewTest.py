@@ -285,12 +285,12 @@ class ViewTest(TestDefinition):
                      f"JOIN pg_catalog.pg_attribute pa ON pg_class.oid = pa.attrelid "
                      f"where relname = '{self.name}'")
             for (index, c_name) in enumerate(self.column_name):
-                operator = 'AND' if index == 0 else 'OR'
+                operator = 'AND (' if index == 0 else 'OR'
                 query += f" {operator} attname = '{c_name}'"
         else:
             query = f"SELECT * FROM information_schema.columns WHERE table_name = '{self.name}'"
             for (index, c_name) in enumerate(self.column_name):
-                operator = 'AND' if index == 0 else 'OR'
+                operator = 'AND (' if index == 0 else 'OR'
                 query += f" {operator} column_name = '{c_name}'"
         query += ")"
         return query

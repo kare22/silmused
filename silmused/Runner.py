@@ -189,17 +189,8 @@ class Runner:
 
     # TODO Param assignment should be better
     def _message_to_feedback(self, message):
-        feedback = ''
-        feedback_params = [key for key, value in message.items() if key not in ['test_type', 'test_key']]
-        if len(feedback_params) > 0:
-            dynamic_kwargs = {
-                f"param{index + 1}": (
-                    param if not isinstance(param, list)
-                    else self._translate_param_separation(param)
-                )
-                for index, param in enumerate(message['params'])
-            }
-            feedback = self.translator.translate(message['test_type'], message['test_key'], **dynamic_kwargs)
+        if 'params' in message:
+            feedback = self.translator.translate(message['test_type'], message['test_key'], message['params'])
         else:
             feedback = self.translator.translate(message['test_type'], message['test_key'])
         return feedback
