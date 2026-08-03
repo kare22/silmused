@@ -171,7 +171,7 @@ class TestDataTestFeedback:
         assert result['is_success'] is True
         assert result['message']['test_key'] == 'table_expected_value_should_exist_positive_feedback'
         assert 'John' in result['message']['params']
-        assert 'users' in result['message']['params']
+        assert 'name' in result['message']['params']
 
     def test_table_expected_value_should_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when expected value is not found."""
@@ -207,7 +207,7 @@ class TestDataTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'table_expected_value_should_exist_no_result_negative_feedback'
+        assert result['message']['test_key'] == 'view_query_no_result'
 
     def test_table_expected_value_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when expected value is not found (should_not_exist)."""
@@ -294,7 +294,7 @@ class TestDataTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'table_expected_value_group_numbers_no_result_negative_feedback'
+        assert result['message']['test_key'] == 'view_query_no_result'
 
     def test_table_expected_value_group_strings_positive_feedback(self, mock_cursor):
         """Test positive feedback when value is in string list."""

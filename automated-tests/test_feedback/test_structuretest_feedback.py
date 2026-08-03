@@ -215,8 +215,8 @@ class TestStructureTestFeedback:
         result = test.run(mock_cursor)
         assert result['is_success'] is False
         assert result['message']['test_key'] == 'expected_character_maximum_length_type_check_negative_feedback'
-        assert '255' in result['message']['params']
-        assert '100' in result['message']['params']
+        assert 255 in result['message']['params']
+        assert 100 in result['message']['params']
 
     def test_expected_value_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when expected value matches."""

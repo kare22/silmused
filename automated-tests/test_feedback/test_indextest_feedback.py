@@ -24,7 +24,7 @@ class TestIndexTestFeedback:
         assert result['is_success'] is True
         assert result['message']['test_type'] == 'index_test'
         assert result['message']['test_key'] == 'index_positive_feedback'
-        assert 'idx_users_email' in result['message']['params']
+        assert result['message']['params']['index_name'] == 'idx_users_email'
 
     def test_index_negative_feedback(self, mock_cursor):
         """Test negative feedback when index does not exist."""
@@ -39,7 +39,7 @@ class TestIndexTestFeedback:
         result = test.run(mock_cursor)
         assert result['is_success'] is False
         assert result['message']['test_key'] == 'index_negative_feedback'
-        assert 'nonexistent_index' in result['message']['params']
+        assert result['message']['params']['index_name'] == 'nonexistent_index'
 
     def test_custom_feedback(self, mock_cursor):
         """Test that custom feedback overrides default feedback."""

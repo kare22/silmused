@@ -28,7 +28,7 @@ class TestExecuteLayer:
     def test_execute_layer_run_failed_query(self):
         """Test failed query execution with rollback."""
         mock_cursor = Mock()
-        mock_cursor.execute.side_effect = Exception("SQL Error")
+        mock_cursor.execute.side_effect = [Exception("SQL Error"), None]
         query = "SELECT * FROM nonexistent"
         layer = ExecuteLayer(query=query)
         
@@ -70,7 +70,7 @@ class TestExecuteLayer:
     def test_execute_layer_run_result_structure_failure(self):
         """Test result structure for failed execution."""
         mock_cursor = Mock()
-        mock_cursor.execute.side_effect = Exception("Error")
+        mock_cursor.execute.side_effect = [Exception("Error"), None]
         query = "INVALID SQL"
         layer = ExecuteLayer(query=query)
         

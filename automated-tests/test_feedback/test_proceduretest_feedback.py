@@ -47,7 +47,7 @@ class TestProcedureTestFeedback:
         result = test.run(mock_cursor)
         assert result['is_success'] is False
         assert result['message']['test_key'] == 'procedure_exists_negative_feedback'
-        assert 'nonexistent_procedure' in result['message']['params']
+        assert result['message']['params']['procedure_name'] == 'nonexistent_procedure'
 
     def test_procedure_type_positive_feedback(self, mock_cursor):
         """Test positive feedback when procedure type is correct."""
@@ -214,8 +214,8 @@ class TestProcedureTestFeedback:
         result = test.run(mock_cursor)
         assert result['is_success'] is False
         assert result['message']['test_key'] == 'procedure_expected_result_count_negative_feedback'
-        assert '3' in result['message']['params']
-        assert '2' in result['message']['params']
+        assert result['message']['params']['expected_count'] == 3
+        assert result['message']['params']['real_result'] == 2
 
     def test_custom_feedback(self, mock_cursor):
         """Test that custom feedback overrides default feedback."""

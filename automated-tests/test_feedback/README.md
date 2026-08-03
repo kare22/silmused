@@ -59,15 +59,21 @@ This directory contains comprehensive tests for all feedback types in the Silmus
 
 ## Running Tests
 
+Run these commands from the repository root. Install the test dependencies first if the package is not already installed in the active Python environment:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
 ```bash
 # Run all feedback tests
-pytest tests/test_feedback/ -v
+python -m pytest automated-tests/test_feedback/ -v
 
 # Run specific test file
-pytest tests/test_feedback/test_datatest_feedback.py -v
+python -m pytest automated-tests/test_feedback/test_datatest_feedback.py -v
 
 # Run with markers
-pytest tests/test_feedback/ -m feedback -v
+python -m pytest automated-tests/test_feedback/ -m feedback -v
 ```
 
 ## Test Structure

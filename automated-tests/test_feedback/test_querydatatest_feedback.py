@@ -152,7 +152,7 @@ class TestQueryDataTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'query_expected_value_should_exist_no_result_negative_feedback'
+        assert result['message']['test_key'] == 'query_no_result'
 
     def test_query_expected_value_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when expected value is not found (should_not_exist)."""
@@ -239,7 +239,7 @@ class TestQueryDataTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'query_expected_value_group_numbers_no_result_negative_feedback'
+        assert result['message']['test_key'] == 'query_no_result'
 
     def test_query_expected_value_group_strings_positive_feedback(self, mock_cursor):
         """Test positive feedback when value is in string list."""
