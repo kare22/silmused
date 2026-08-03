@@ -17,7 +17,7 @@ Run these commands from the repository root.
 Run the full suite:
 
 ```bash
-python -m pytest automated-tests
+python -m pytest .
 ```
 
 Run focused suites:

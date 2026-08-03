@@ -187,21 +187,20 @@ class Runner:
 
         return connection_layer
 
-    # TODO Param assignment should be better
     def _message_to_feedback(self, message):
         if 'params' in message:
-            feedback = self.translator.translate(message['test_type'], message['test_key'], message['params'])
+            dynamic_params = {
+                f"param{index + 1}": (
+                    param if not isinstance(param, list)
+                    else self.translator.translate_param_separation(param)
+                )
+                for index, param in enumerate(message['params'])
+            }
+
+            feedback = self.translator.translate(message['test_type'], message['test_key'], **dynamic_params)
         else:
             feedback = self.translator.translate(message['test_type'], message['test_key'])
         return feedback
-
-    def _translate_param_separation(self, param_list):
-        or_lang = {'en': 'or', 'et': 'või'}
-        output = ''
-        for (index, param) in enumerate(param_list):
-            operator = '' if index == 0 else f"' {or_lang[self.translator.locale]} '"
-            output += f"{operator}{param}"
-        return output
 
     def _checks_to_object(self, checks):
         outputs = []

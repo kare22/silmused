@@ -41,24 +41,16 @@ class Translator():
         if test_key not in self.data[self.locale][test_type]:
             return "Test_key not supported: " + test_key + " FOR test_type: " + test_type
 
-        dynamic_kwargs = {
-            f"param{index + 1}": (
-                param if not isinstance(param, list)
-                else self._translate_param_separation(param)
-            )
-            for index, param in enumerate(kwargs)
-        }
-
         # print(self.data[self.locale][test_type])
         text = self.data[self.locale][test_type].get(test_key, test_key)
 
-        return Template(text).safe_substitute(dynamic_kwargs)
+        return Template(text).safe_substitute(**kwargs)
 
     def _get_lang_param_separator(self, test_type, test_key):
         text = self.data[self.locale][test_type].get(test_key, test_key)
         return text
 
-    def _translate_param_separation(self, param_list):
+    def translate_param_separation(self, param_list):
         or_lang = self._get_lang_param_separator("custom", "or")
         output = ''
         for (index, param) in enumerate(param_list):
