@@ -184,3 +184,26 @@ class TestTriggerTestFeedback:
         assert "TRIGGER TEST DEBUG" in captured.out
         assert "name: trg_users_updated" in captured.out
 
+    def test_trigger_all_debug_output(self, mock_cursor, capsys):
+        # Arrange
+        mock_cursor.fetchall.return_value = [('trg_users_updated',)]
+
+        test = TriggerTest(
+            name='trg_users_updated',
+            arguments=[],
+            title='all_debug_test',
+            points=10,
+            debug='ALL',
+        )
+
+        # Act
+        test.run(mock_cursor)
+
+        # Capture output
+        captured = capsys.readouterr()
+
+        # Assert
+        assert "TRIGGER TEST DEBUG" in captured.out
+        assert "Test title: all_debug_test" in captured.out
+        assert "name: trg_users_updated" in captured.out
+
