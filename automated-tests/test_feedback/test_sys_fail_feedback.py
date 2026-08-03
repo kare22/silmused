@@ -5,10 +5,10 @@ These tests verify error handling in TestDefinition.
 """
 import pytest
 from unittest.mock import MagicMock
-from silmused.tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition as _TestDefinition
 
 
-class FailingTest(TestDefinition):
+class FailingTest(_TestDefinition):
     """Test class that raises specific exceptions for testing error handling."""
     
     def __init__(self, exception_type, exception_message='', **kwargs):
@@ -86,7 +86,7 @@ class TestSysFailFeedback:
         """Test feedback for undefined function round error."""
         test = FailingTest(
             exception_type='UndefinedFunction',
-            exception_message='function round(column_name, 2) does not exist'
+            exception_message='function SELECT round(column_name,2) does not exist'
         )
         
         result = test.run(mock_cursor)

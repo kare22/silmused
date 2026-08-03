@@ -21,15 +21,21 @@ This directory contains integration tests for the Silmused framework that test m
 
 ## Running Integration Tests
 
+Run these commands from this `automated-tests/integration` directory. Install the test dependencies first if the package is not already installed in the active Python environment:
+
+```bash
+python -m pip install -r ../../requirements-dev.txt
+```
+
 ```bash
 # Run all integration tests
-pytest tests/integration/ -v
+python -m pytest . -v
 
 # Run specific integration test file
-pytest tests/integration/test_runner_integration.py -v
+python -m pytest test_runner_integration.py -v
 
 # Run with markers
-pytest tests/integration/ -m integration -v
+python -m pytest . -m integration -v
 ```
 
 ## Fixtures

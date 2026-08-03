@@ -4,10 +4,10 @@ import os
 import tempfile
 from unittest.mock import Mock, MagicMock, patch, mock_open
 from silmused.Runner import Runner
-from silmused.tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition as _TestDefinition
 
 
-class MockTest(TestDefinition):
+class MockTest(_TestDefinition):
     """Mock test class for testing Runner."""
     
     def __init__(self, name='test', points=10, should_succeed=True):
@@ -203,6 +203,7 @@ class TestRunner:
         """Test _message_to_feedback with more than five parameters."""
         runner = Runner.__new__(Runner)
         runner.translator = Mock()
+        runner.translator.translate.return_value = 'Translated message'
         
         message = {
             'test_type': 'test',
@@ -211,7 +212,11 @@ class TestRunner:
         }
         
         result = runner._message_to_feedback(message)
-        assert result == "Params were given, but there is more than 5"
+        assert result == 'Translated message'
+        runner.translator.translate.assert_called_once_with(
+            'test', 'key',
+            param1='1', param2='2', param3='3', param4='4', param5='5', param6='6'
+        )
 
     def test_runner_checks_to_object_execution_type(self):
         """Test _checks_to_object with execution type (should be skipped)."""

@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import Mock, MagicMock
 from silmused.ChecksLayer import ChecksLayer
-from silmused.tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition as _TestDefinition
 
 
-class MockTest(TestDefinition):
+class MockTest(_TestDefinition):
     """Mock test class for testing ChecksLayer."""
     
     def __init__(self, name='test', points=10, should_succeed=True):

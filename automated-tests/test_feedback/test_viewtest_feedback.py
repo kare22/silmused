@@ -53,7 +53,7 @@ class TestViewTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is True
-        assert result['message']['test_key'] == 'column_should_exist_positive_feedback'
+        assert result['message']['test_key'] == 'view_column_should_exist_positive_feedback'
         assert 'name' in result['message']['params']
         assert 'user_view' in result['message']['params']
 
@@ -70,7 +70,7 @@ class TestViewTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'column_should_exist_negative_feedback'
+        assert result['message']['test_key'] == 'view_column_should_exist_negative_feedback'
 
     def test_view_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when view does not exist (should_not_exist)."""
@@ -116,7 +116,7 @@ class TestViewTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is True
-        assert result['message']['test_key'] == 'column_should_not_exist_positive_feedback'
+        assert result['message']['test_key'] == 'view_column_should_not_exist_positive_feedback'
 
     def test_column_should_not_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column exists in view (should_not_exist)."""
@@ -132,7 +132,7 @@ class TestViewTestFeedback:
         
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'column_should_not_exist_negative_feedback'
+        assert result['message']['test_key'] == 'view_column_should_not_exist_negative_feedback'
 
     def test_mat_view_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when materialized view exists."""

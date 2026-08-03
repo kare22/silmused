@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import Mock, MagicMock
-from silmused.tests.TestDefinition import TestDefinition
+from silmused.tests.TestDefinition import TestDefinition as _TestDefinition
 
 
-class ConcreteTestDefinition(TestDefinition):
+class ConcreteTestDefinition(_TestDefinition):
     """Concrete implementation of TestDefinition for testing."""
     
     def execute(self, cursor):
@@ -173,7 +173,7 @@ class TestTestDefinition:
     def test_test_definition_undefined_function_error_feedback_round(self):
         """Test _undefined_function_error_feedback with round function."""
         test = ConcreteTestDefinition(name='test', points=10)
-        sysfeedback = 'function round(column_name, 2) does not exist'
+        sysfeedback = 'function SELECT round(column_name,2) does not exist'
         
         result = test._undefined_function_error_feedback(sysfeedback)
         
@@ -213,7 +213,7 @@ class TestTestDefinition:
 
     def test_test_definition_run_handles_exception(self):
         """Test that run method handles exceptions."""
-        class FailingTest(TestDefinition):
+        class FailingTest(_TestDefinition):
             def execute(self, cursor):
                 raise Exception("Test error")
         
@@ -229,9 +229,9 @@ class TestTestDefinition:
 
     def test_test_definition_run_handles_undefined_column_exception(self):
         """Test that run handles UndefinedColumn exception."""
-        class ColumnErrorTest(TestDefinition):
+        class ColumnErrorTest(_TestDefinition):
             def execute(self, cursor):
-                error = type('UndefinedColumn', (Exception,), {})()
+                error = type('UndefinedColumn', (Exception,), {})('column "missing_column" does not exist')
                 raise error
         
         test = ColumnErrorTest(name='test', points=10)
@@ -240,7 +240,9 @@ class TestTestDefinition:
         result = test.run(mock_cursor)
         
         assert result['is_success'] is False
-        assert 'undefined_column' in str(result['message'])
+        assert result['message']['test_type'] == 'sys_fail'
+        assert result['message']['test_key'] == 'undefined_column'
+        assert result['message']['params'] == ['missing_column']
 
     def test_test_definition_initialization_all_parameters(self):
         """Test initialization with all optional parameters."""

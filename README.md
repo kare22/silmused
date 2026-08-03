@@ -38,6 +38,11 @@
          - [String Handling](#string-handling)
          - [Expected Value Patterns](#expected-value-patterns)
          - [Column Name Patterns](#column-name-patterns)
+         - [Dynamic Expected Values](#dynamic-expected-values)
+         - [Alternative Column Names](#alternative-column-names)
+         - [Elements Checks](#elements-checks)
+         - [Debug Mode](#debug-mode)
+         - [LLM Check](#llm-check)
    * [Usage Patterns](#usage-patterns)
       + [Database Testing Workflow](#database-testing-workflow)
       + [Query Testing Workflow](#query-testing-workflow)
@@ -56,6 +61,7 @@
       + [Message Templates](#message-templates)
       + [Usage](#usage)
       + [Custom Feedback](#custom-feedback)
+   * [Development & Test Suite](#development-test-suite)
    * [Best Practices](#best-practices)
    * [Troubleshooting](#troubleshooting)
       + [Common Issues](#common-issues)
@@ -92,7 +98,7 @@ Silmused supports two main testing modes:
 
 - Python: 3.12
 - psycopg2: 2.9.9
-- Silmused: 1.4.6
+- Silmused: 1.7.8
 
 ## Architecture Overview
 
@@ -219,9 +225,10 @@ Tests table/view structure using `information_schema.columns`.
 
 **Key Features:**
 - Tests table/view existence
-- Tests column existence
+- Tests column existence, including multiple columns
 - Tests column data types
 - Tests column maximum length (for varchar)
+- Supports `debug` and `llm_check`
 
 **Supported Types:**
 - `'integer'` - Matches: tinyint, smallint, mediumint, int, bigint, integer
@@ -237,11 +244,17 @@ Tests table/view data content using direct SQL queries.
 **Key Features:**
 - Tests data existence
 - Tests exact values
+- Tests dynamically computed expected values with `expected_value_query`
 - Tests value ranges (for numbers)
 - Tests value lists (for strings)
 - Tests NULL values
 - Supports WHERE clauses
 - Supports JOIN clauses (INNER JOIN)
+- Supports view-specific feedback with `isView=True`
+- Supports alternative column lookup with `column_name_fallback`
+- Supports `debug` and `llm_check`
+
+**Note:** `DataTest.column_name` must be a string. List-based `column_name` checks are supported by structure-oriented tests such as `StructureTest`, `ViewTest`, and `QueryStructureTest`.
 
 #### ConstraintTest
 
@@ -252,6 +265,7 @@ Tests table/column constraints using `information_schema.table_constraints` and 
 - Tests constraint types (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK)
 - Tests constraint names
 - Tests multi-column constraints
+- Supports `debug` and `llm_check`
 
 #### FunctionTest
 
@@ -264,6 +278,10 @@ Tests database functions using `pg_catalog.pg_proc` and `information_schema.rout
 - Tests function return values
 - Tests function result count
 - Supports function arguments
+- Supports dynamically computed expected values with `expected_value_query`
+- Supports required/banned function body elements with `elements`
+- Supports result count ranges when `expected_count` is a numeric list
+- Supports `debug` and `llm_check`
 
 #### ProcedureTest
 
@@ -276,6 +294,10 @@ Tests stored procedures using similar approach to FunctionTest.
 - Tests procedure result count via `after_query`
 - Supports `pre_query` for setup
 - Requires `after_query` to verify results
+- Supports required/banned procedure body elements with `elements`
+- Supports `debug` and `llm_check`
+
+**Note:** `after_query` is required for normal procedure result verification. When using `elements`, the test checks procedure source text in `pg_proc.prosrc` rather than executing the procedure result path.
 
 #### ViewTest
 
@@ -283,8 +305,11 @@ Tests views using `information_schema.columns` and `pg_matviews`.
 
 **Key Features:**
 - Tests view existence
-- Tests view columns
+- Tests view columns, including multiple columns
 - Tests materialized views (via `isMaterialized=True`)
+- Tests materialized view columns
+- Supports required/banned view definition elements with `elements`
+- Supports `debug` and `llm_check`
 
 #### IndexTest
 
@@ -292,6 +317,7 @@ Tests database indexes using `pg_indexes`.
 
 **Key Features:**
 - Tests index existence by name
+- Supports `debug`
 
 #### TriggerTest
 
@@ -302,6 +328,7 @@ Tests database triggers using `information_schema.triggers`.
 - Tests trigger event manipulation (INSERT, UPDATE, DELETE)
 - Tests trigger action timing (BEFORE, AFTER)
 - Often used with `ExecuteLayer` for setup
+- Supports `debug` and `llm_check`
 
 #### QueryStructureTest
 
@@ -310,6 +337,9 @@ Tests query result structure (columns) using `information_schema.columns` on the
 **Key Features:**
 - Tests column existence in query results
 - Tests column absence (via `should_exist=False`)
+- Tests required/banned SQL elements in the submitted query with `elements`
+- Supports multiple-column checks
+- Supports `debug` and `llm_check`
 
 #### QueryDataTest
 
@@ -318,9 +348,14 @@ Tests query result data using direct SQL queries on the `query_test` table.
 **Key Features:**
 - Tests row counts
 - Tests specific values (using `test_id` for row ordering)
+- Tests dynamically computed expected values with `expected_value_query`
 - Tests value ranges
 - Tests value lists
 - Supports WHERE clauses
+- Supports alternative column lookup with `column_name_fallback`
+- Supports `debug` and `llm_check`
+
+**Note:** `QueryDataTest.column_name` must be a string.
 
 ### Supporting Classes
 
@@ -349,10 +384,11 @@ Executes SQL queries between tests. Useful for preparing data before trigger tes
 
 **Parameters:**
 - `query` - SQL query to execute
+- `debug` - Optional debug flag. When set, prints the executed query or system error details.
 
 **Example:**
 ```python
-ExecuteLayer("INSERT INTO users (email) VALUES ('test@example.com')")
+ExecuteLayer("INSERT INTO users (email) VALUES ('test@example.com')", debug='DEBUG')
 ```
 
 #### TitleLayer
@@ -380,37 +416,42 @@ The Translator class provides internationalization support for feedback messages
 **Translation Structure:**
 - Organized by test type (e.g., `structure_test`, `data_test`)
 - Each test type has test keys (e.g., `table_should_exist_positive_feedback`)
-- Messages support up to 5 parameters (`$param1` through `$param5`)
+- Messages support positional parameters (`$param1`, `$param2`, etc.) and, for some test types, named placeholders such as `$index_name`, `$trigger_name`, and `$procedure_name`
 
 ## Test Parameters Reference
 
 All test classes inherit common parameters from `TestDefinition`. The following table describes all available parameters:
 
-| Parameter                           | Type        | Default | Required | Description                                                                                                                                       |
-|-------------------------------------|-------------|---------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `name`                              | string      | -       | **Yes** | Table/view/function/procedure/trigger/index name (must be lowercase, cannot be empty)                                                             |
-| `points`                            | int/float   | `0`     | No | Points awarded for this test                                                                                                                      |
-| `title`                             | string      | `None`  | No | Test description shown in feedback                                                                                                                |
-| `column_name`                       | string/list | `None`  | No | Column name(s) to test (must be lowercase; can be string or list for multiple columns)                                                            |
-| `should_exist`                      | boolean     | `True`  | No | Whether result should exist (`True`) or not exist (`False`)                                                                                       |
-| `expected_value`                    | any         | `None`  | No | Expected value; can be: single value, `'NULL'`, or list `[min, max]` for numeric range, or list of strings for value matching                     |
-| `where`                             | string      | `None`  | No | WHERE clause for filtering (SQL values use single quotes inside Python double quotes)                                                             |
-| `join`                              | string      | `None`  | No | JOIN clause (currently only INNER JOIN supported)                                                                                                 |
-| `description`                       | string      | `None`  | No | Internal description (not displayed in feedback, only visible to test writer)                                                                     |
-| `arguments`                         | list        | `None`  | No | Function/procedure arguments, or info_schema column selection                                                                                     |
-| `expected_type`                     | string      | `None`  | No | Expected column type (`'varchar'`, `'integer'`, `'decimal'`, `'float'`, `'text'`, `'boolean'`)                                                    |
-| `expected_character_maximum_length` | int         | `None`  | No | Expected column maximum length (for varchar types)                                                                                                |
-| `expected_count`                    | int/list    | `None`  | No | Expected row count (for functions/procedures); can be integer or list for range                                                                   |
-| `pre_query`                         | string      | `None`  | No | SQL to run before test (procedure tests only)                                                                                                     |
-| `after_query`                       | string      | `None`  | No | SQL to run after test (required for procedure tests)                                                                                              |
-| `custom_feedback`                   | string      | `None`  | No | Custom feedback message (overwrites default translated feedback)                                                                                  |
-| `query`                             | string      | `None`  | No | **Should not be used** - automatically generated by test classes                                                                                  |
-| `constraint_name`                   | string      | `None`  | No | Constraint name (ConstraintTest only)                                                                                                             |
-| `constraint_type`                   | string      | `None`  | No | Constraint type: `'PRIMARY KEY'`, `'FOREIGN KEY'`, `'UNIQUE'`, `'CHECK'` (ConstraintTest only)                                                    |
-| `number_of_parameters`              | int         | `None`  | No | Expected number of function/procedure parameters (FunctionTest/ProcedureTest only)                                                                |
-| `isMaterialized`                    | boolean     | `False` | No | Whether view is materialized (ViewTest only)                                                                                                      |
-| `action_timing`                     | string      | `None`  | No | Trigger action timing: `'BEFORE'` or `'AFTER'` (TriggerTest only)                                                                                 |
-| `elements`                          | str/list    | `None`  | No | String or list of elements in the query, which are required or not allowed to be used in the query (ie. LIMIT) (QueryStructure and ViewTest only) |
+| Parameter                           | Type        | Default | Required | Applies to | Description |
+|-------------------------------------|-------------|---------|----------|------------|-------------|
+| `name`                              | string      | -       | **Yes** | All tests | Table/view/function/procedure/trigger/index name. Use lowercase names unless the underlying SQL object was created with quoted case-sensitive identifiers. |
+| `points`                            | int/float   | `0`     | No | All tests | Points awarded for this test. |
+| `title`                             | string      | `None`  | No | All tests | Test description shown in feedback. |
+| `column_name`                       | string/list | `None`  | No | Varies by test | Column name(s) to test. `DataTest` and `QueryDataTest` accept a string only; `StructureTest`, `ViewTest`, and `QueryStructureTest` also accept lists. |
+| `should_exist`                      | boolean     | `True`  | No | Most tests | Whether the tested result should exist. For `elements`, `True` means required elements and `False` means banned elements. |
+| `expected_value`                    | any         | `None`  | No | Data/query/function/view tests | Expected value; can be a single value, `'NULL'`, numeric range/list, or list of strings depending on the test type. |
+| `expected_value_query`              | string      | `None`  | No | `DataTest`, `QueryDataTest`, `FunctionTest` | SQL query executed before the assertion; the first result cell becomes `expected_value`. |
+| `where`                             | string      | `None`  | No | Data/query/function/structure/view tests | WHERE clause for filtering. SQL values use single quotes inside Python double quotes. |
+| `join`                              | string      | `None`  | No | `DataTest`, `QueryDataTest` | JOIN clause. Currently one direct JOIN clause is supported. |
+| `description`                       | string      | `None`  | No | All tests | Internal description; included in raw test response but not shown in final feedback. |
+| `arguments`                         | list        | `None`  | No | Function/procedure/trigger tests, info_schema selection | Function/procedure arguments, trigger event manipulations, or selected information schema columns. |
+| `expected_type`                     | string      | `None`  | No | `StructureTest` | Expected column type: `'varchar'`, `'integer'`, `'float'`, `'text'`, or `'boolean'`. |
+| `expected_character_maximum_length` | int         | `None`  | No | `StructureTest` | Expected column maximum length for varchar columns. |
+| `expected_count`                    | int/list    | `None`  | No | `FunctionTest`, `ProcedureTest` | Expected row count. Numeric list/range behavior is implemented for `FunctionTest`; `ProcedureTest` uses exact count comparison. |
+| `pre_query`                         | string      | `None`  | No | `ProcedureTest` | SQL to run before the procedure call. |
+| `after_query`                       | string      | `None`  | **Yes** for `ProcedureTest` | `ProcedureTest` | SQL to run after the procedure call to verify results. |
+| `custom_feedback`                   | string      | `None`  | No | Most tests | Custom feedback message. It is routed through the translation system and overrides default positive and negative feedback. |
+| `query`                             | string      | `None`  | No | Internal | **Do not set manually** in normal tests; generated by test classes. |
+| `constraint_name`                   | string      | `None`  | No | `ConstraintTest` | Constraint name. |
+| `constraint_type`                   | string      | `None`  | No | `ConstraintTest` | Constraint type: `'PRIMARY KEY'`, `'FOREIGN KEY'`, `'UNIQUE'`, or `'CHECK'`. |
+| `number_of_parameters`              | int         | `None`  | No | `FunctionTest`, `ProcedureTest` | Expected number of function/procedure parameters. |
+| `isMaterialized`                    | boolean     | `False` | No | `ViewTest` | Whether the target view is materialized. Supports existence and column checks. |
+| `isView`                            | boolean     | `False` | No | `DataTest` | Uses view-specific feedback wording for data tests against views. |
+| `action_timing`                     | string      | `None`  | No | `TriggerTest` | Trigger action timing: `'BEFORE'` or `'AFTER'`. |
+| `elements`                          | str/list    | `None`  | No | `QueryStructureTest`, `ViewTest`, `FunctionTest`, `ProcedureTest` | Required or banned SQL/source fragments. Controlled by `should_exist`. |
+| `column_name_fallback`              | list        | `None`  | No | `DataTest`, `QueryDataTest` | Alternative column name patterns checked with `ILIKE`; the first matching column is used. |
+| `llm_check`                         | boolean     | `False` | No | Most `TestDefinition` tests | Pre-runs the generated query and fails if row existence contradicts `should_exist`. |
+| `debug`                             | string      | `None`  | No | Most tests, `ExecuteLayer` | Enables debug print output. Valid values are `'DEBUG'` and `'ALL'`. |
 
 ### Parameter Usage Patterns
 
@@ -467,6 +508,86 @@ column_name='email'
 **Multiple Columns:**
 ```python
 column_name=['email', 'username']  # Tests for multiple columns
+```
+
+Multiple-column checks are intended for structure-style tests such as `StructureTest`, `ViewTest`, and `QueryStructureTest`. `DataTest` and `QueryDataTest` require `column_name` to be a single string.
+
+#### Dynamic Expected Values
+
+Use `expected_value_query` when the expected value should be computed from the database at runtime. The first cell of the query result becomes `expected_value`.
+
+```python
+DataTest(
+    name='orders',
+    column_name='COUNT(*)',
+    expected_value_query='SELECT COUNT(*) FROM expected_orders',
+    points=20
+)
+```
+
+This is supported by `DataTest`, `QueryDataTest`, and `FunctionTest`.
+
+#### Alternative Column Names
+
+Use `column_name_fallback` when student queries may use acceptable alternative column names. Silmused checks the fallback list with `ILIKE` and uses the first matching column.
+
+```python
+QueryDataTest(
+    name='query_test',
+    column_name='title',
+    column_name_fallback=['title', 'pealkiri', '%song%'],
+    expected_value='Madness of Love',
+    where='test_id=1',
+    points=20
+)
+```
+
+#### Elements Checks
+
+Use `elements` to require or ban SQL/source fragments. `should_exist=True` means the element is required; `should_exist=False` means it is banned.
+
+```python
+QueryStructureTest(
+    name='query_test',
+    elements='LIMIT',
+    should_exist=False,
+    title='Query must not use LIMIT',
+    points=10
+)
+```
+
+`elements` can be a string or list. Lists are checked item by item so feedback can identify the missing required elements or the banned elements that were found. `QueryStructureTest` checks the generated `query_view`, `ViewTest` checks view definitions, and `FunctionTest`/`ProcedureTest` check `pg_proc.prosrc`.
+
+#### Debug Mode
+
+Most tests and `ExecuteLayer` support `debug='DEBUG'` or `debug='ALL'`.
+
+- `DEBUG` prints the test title, generated query, result, and feedback debugging information.
+- `ALL` also prints the test object's configured fields, such as `name`, `column_name`, `expected_value`, `elements`, and `points`.
+- SQL system errors print the exception and generated query when debug is enabled.
+
+```python
+StructureTest(
+    name='users',
+    column_name='email',
+    debug='DEBUG',
+    points=10
+)
+```
+
+#### LLM Check
+
+`llm_check=True` runs the generated query before the normal test execution and checks whether row existence matches `should_exist`. If the check fails, Silmused returns the `sys_fail.llm_check_fail` feedback message, or `custom_feedback` if one is provided.
+
+```python
+QueryStructureTest(
+    name='query_test',
+    elements='GROUP BY',
+    should_exist=True,
+    llm_check=True,
+    custom_feedback='The query must use GROUP BY.',
+    points=10
+)
 ```
 
 ## Usage Patterns
@@ -599,6 +720,8 @@ tests = [
 ]
 ```
 
+The final `<encoding>` argument is optional. When omitted, `encoding=None` is passed to Python file reading. Query mode reads `<query_file>` as the submitted SQL query and uses `<query_test_database>` as the database dump or SQL script that provides the execution context. Invalid dump files, empty query files, and invalid `test_query` values are reported through translated `sys_fail` messages.
+
 ### Complete Example
 
 ```python
@@ -615,7 +738,7 @@ tests = [
         tests=[
             StructureTest(name='users', title='Table exists', points=10),
             StructureTest(name='users', column_name='email', expected_type='varchar', expected_character_maximum_length=255, points=15),
-            StructureTest(name='users', column_name='created_at', expected_type='timestamp', points=10),
+            StructureTest(name='users', column_name='created_at', expected_type='text', points=10),
             ConstraintTest(name='users', constraint_type='PRIMARY KEY', points=20),
             ConstraintTest(name='users', constraint_type='UNIQUE', column_name='email', points=15),
             DataTest(name='users', column_name='COUNT(*)', expected_value=100, points=20),
@@ -656,7 +779,7 @@ Results are returned as JSON in OK_V3 format:
 {
   "result_type": "OK_V3",
   "points": 85,
-  "producer": "silmused 1.4.5",
+  "producer": "silmused 1.7.8",
   "finished_at": "2024-01-15T10:30:00Z",
   "tests": [
     {
@@ -699,17 +822,20 @@ Results are returned as JSON in OK_V3 format:
 
 Feedback messages are generated through the Translator system:
 1. Test execution determines success/failure
-2. Test type and test key are determined
+2. Test type, test key, and feedback parameters are determined
 3. Translator looks up message in locale file
 4. Parameters are substituted into message template
-5. Custom feedback (if provided) overrides default messages
+5. List parameters are rendered with localized separators, such as `or` in English and `või` in Estonian
+6. Custom feedback (if provided) overrides default positive and negative feedback
+
+Most tests use positional feedback parameters (`$param1`, `$param2`, etc.). Some newer feedback entries use named parameters, especially `IndexTest`, `TriggerTest`, and `ProcedureTest`.
 
 ### Result Structure
 
 - **Root Level:**
   - `result_type`: Always `"OK_V3"`
   - `points`: Percentage score (0-100)
-  - `producer`: Version string (e.g., `"silmused 1.4.5"`)
+  - `producer`: Version string (e.g., `"silmused 1.7.8"`)
   - `finished_at`: ISO 8601 timestamp
   - `tests`: Array of test results
 
@@ -741,6 +867,16 @@ Silmused uses a JSON-based translation system located in `silmused/locale/`. Tra
 }
 ```
 
+Some templates use named placeholders instead of positional placeholders:
+
+```json
+{
+  "trigger_test": {
+    "trigger_exists_negative_feedback": "Wrong, trigger '$trigger_name' was not found"
+  }
+}
+```
+
 ### Supported Languages
 
 - **English** (`en`) - Default, located in `silmused/locale/en.json`
@@ -761,10 +897,13 @@ Translation messages are organized by test type:
 - `query_structure_test` - QueryStructureTest messages
 - `query_data_test` - QueryDataTest messages
 - `sys_fail` - System error messages
+- `custom_feedback` - Custom feedback wrapper
+
+Newer feedback keys include required/banned `elements` messages for functions, procedures, views, materialized views, and query structure tests, plus expanded `sys_fail` messages for invalid dumps, empty query files, invalid test format, undefined database objects, ambiguous columns, round-function type errors, missing result indexes, and `llm_check` failures.
 
 ### Message Templates
 
-Messages support parameter substitution using `$param1` through `$param5`:
+Messages support parameter substitution using `$param1`, `$param2`, and so on. Named placeholders are also supported for messages that pass semantic parameter names.
 
 **Example:**
 ```json
@@ -804,6 +943,35 @@ DataTest(
 
 When `custom_feedback` is provided, it replaces both positive and negative feedback messages.
 
+Internally, custom feedback is routed through the `custom_feedback.custom_feedback` locale key, so custom messages participate in the same translation and formatting flow as default feedback.
+
+## Development & Test Suite
+
+Automated regression tests live in `automated-tests/`:
+
+- `automated-tests/test_core/` - Unit tests for core classes such as `Runner`, `Translator`, `ChecksLayer`, `ExecuteLayer`, `TitleLayer`, and `TestDefinition`.
+- `automated-tests/test_feedback/` - Feedback tests for every test type and system failure feedback.
+- `automated-tests/integration/` - Integration-style tests using mocked PostgreSQL connections.
+
+Run the test suite with pytest:
+
+```bash
+pytest automated-tests
+```
+
+Run focused subsets when developing feedback or integration behavior:
+
+```bash
+pytest automated-tests/test_feedback -v
+pytest automated-tests/integration -v
+```
+
+Example test cases are no longer fully bundled as normal tracked files. The `silmused/test_cases` path is managed as a Git submodule backed by the private `silmused-test-cases` repository. After cloning, initialize submodules if you need those examples:
+
+```bash
+git submodule update --init
+```
+
 ## Best Practices
 
 1. **Always use lowercase for table/column names** - Silmused expects lowercase names
@@ -816,6 +984,9 @@ When `custom_feedback` is provided, it replaces both positive and negative feedb
 8. **Use string concatenation for complex WHERE clauses** - When dealing with column names containing spaces or special characters
 9. **For query tests, always use `name='query_test'`** - This is the automatically created table name
 10. **Use `test_id` for row ordering in query tests** - The `test_id` column is automatically added for row ordering
+11. **Use `elements` sparingly** - It is best for checking required or banned SQL constructs, not for validating complete query correctness
+12. **Use `debug='DEBUG'` while developing tests** - Remove or disable debug output before production grading runs
+13. **Use `expected_value_query` for dynamic fixtures** - Prefer it when expected values depend on the imported database state
 
 ## Troubleshooting
 
@@ -842,8 +1013,20 @@ When `custom_feedback` is provided, it replaces both positive and negative feedb
 **Problem:** Constraint tests not finding constraints
 - **Solution:** Check constraint names and types - they must match exactly (case-sensitive)
 
+**Problem:** Query/view/function/procedure element checks give unexpected failures
+- **Solution:** Remember that `should_exist=True` means required elements and `should_exist=False` means banned elements. Lists are checked item by item.
+
+**Problem:** `column_name` lists fail in data tests
+- **Solution:** `DataTest` and `QueryDataTest` expect a single string column name. Use `column_name_fallback` for acceptable alternatives.
+
+**Problem:** Need to inspect generated SQL or raw results
+- **Solution:** Add `debug='DEBUG'` or `debug='ALL'` to the test while developing.
+
+**Problem:** LLM check fails with unfair-solution feedback
+- **Solution:** Verify that `llm_check=True` is intentional and that the generated query returns rows when `should_exist=True`, or no rows when `should_exist=False`.
+
 ## Additional Resources
 
-- Check `silmused/test_cases/` for example test files
-- Review `demo.py` and `query_demo.py` for complete working examples
+- Review `demo.py`, `query_demo.py`, and `demo_test_cases.py` for complete working examples
+- Review `automated-tests/` for feedback, core, and integration regression tests
 

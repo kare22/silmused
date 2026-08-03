@@ -10,6 +10,11 @@ from silmused.tests.ConstraintTest import ConstraintTest
 class TestConstraintTestFeedback:
     """Tests for ConstraintTest feedback generation."""
 
+    def mock_column_constraint_results(self, mock_cursor, column_name='id', constraint_rows=None):
+        """Mock ConstraintTest's column lookup followed by constraint lookup."""
+        key_column_row = (None, None, None, None, None, None, column_name)
+        mock_cursor.fetchall.side_effect = [[key_column_row], constraint_rows or []]
+
     def test_table_constraint_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when table has constraints."""
         mock_cursor.fetchall.return_value = [('users', 'pk_users', 'PRIMARY KEY')]
@@ -42,7 +47,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column has constraints."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -59,7 +64,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_should_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column has no constraints."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor)
         
         test = ConstraintTest(
             name='users',
@@ -166,7 +171,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint name exists."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -182,7 +187,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_should_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint name does not exist."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor)
         
         test = ConstraintTest(
             name='users',
@@ -198,7 +203,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_type_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint type exists."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -214,7 +219,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_type_should_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint type does not exist."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor)
         
         test = ConstraintTest(
             name='users',
@@ -230,7 +235,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_and_type_should_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint name and type exist."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -247,7 +252,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_and_type_should_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint name and type do not exist."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor)
         
         test = ConstraintTest(
             name='users',
@@ -294,7 +299,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column has no constraints (should_not_exist)."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor, column_name='name')
         
         test = ConstraintTest(
             name='users',
@@ -310,7 +315,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_should_not_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column has constraints (should_not_exist)."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -326,7 +331,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint name does not exist (should_not_exist)."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor)
         
         test = ConstraintTest(
             name='users',
@@ -343,7 +348,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_should_not_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint name exists (should_not_exist)."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -360,7 +365,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_type_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint type does not exist (should_not_exist)."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor, column_name='name')
         
         test = ConstraintTest(
             name='users',
@@ -377,7 +382,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_type_should_not_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint type exists (should_not_exist)."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
@@ -394,7 +399,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_and_type_should_not_exist_positive_feedback(self, mock_cursor):
         """Test positive feedback when column constraint name and type do not exist (should_not_exist)."""
-        mock_cursor.fetchall.return_value = []
+        self.mock_column_constraint_results(mock_cursor, column_name='name')
         
         test = ConstraintTest(
             name='users',
@@ -412,7 +417,7 @@ class TestConstraintTestFeedback:
 
     def test_table_column_constraint_name_and_type_should_not_exist_negative_feedback(self, mock_cursor):
         """Test negative feedback when column constraint name and type exist (should_not_exist)."""
-        mock_cursor.fetchall.return_value = [('users', 'id', 'pk_users', 'PRIMARY KEY')]
+        self.mock_column_constraint_results(mock_cursor, constraint_rows=[('users', 'pk_users', 'PRIMARY KEY')])
         
         test = ConstraintTest(
             name='users',
