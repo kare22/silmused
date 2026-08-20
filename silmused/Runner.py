@@ -189,14 +189,16 @@ class Runner:
 
     def _message_to_feedback(self, message):
         if 'params' in message:
-            dynamic_params = {
-                f"param{index + 1}": (
-                    param if not isinstance(param, list)
-                    else self.translator.translate_param_separation(param)
-                )
-                for index, param in enumerate(message['params'])
-            }
-
+            if isinstance(message['params'], dict):
+                dynamic_params = message['params']
+            else:
+                dynamic_params = {
+                    f"param{index + 1}": (
+                        param if not isinstance(param, list)
+                        else self.translator.translate_param_separation(param)
+                    )
+                    for index, param in enumerate(message['params'])
+                }
             feedback = self.translator.translate(message['test_type'], message['test_key'], **dynamic_params)
         else:
             feedback = self.translator.translate(message['test_type'], message['test_key'])

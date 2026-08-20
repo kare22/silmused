@@ -8,8 +8,11 @@ class TestDefinition:
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
                  expected_type=None, expected_count=None, pre_query=None, after_query=None, custom_feedback=None,
                  elements=None, column_name_fallback=None, expected_value_query=None, llm_check=None, debug=None):
-        if arguments is not None and not isinstance(arguments, list):
-            raise Exception('Parameter "arguments" must be a list')
+        if arguments is not None:
+            if not isinstance(arguments, list):
+                raise Exception('Parameter "arguments" must be a list')
+            if len(arguments) == 0:
+                raise Exception('Parameter "arguments" cannot be an empty list')
         # if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
         #    raise Exception('Parameter "expected_count" must be an integer or list')
 
