@@ -145,7 +145,7 @@ class DataTest(TestDefinition):
                             False,
                             "",
                             {"test_type": self.test_type,
-                             "test_key": "view_query_no_result",
+                             "test_key": "table_query_no_result",
                              "params": [self.expected_value, self.name]},
                         )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
@@ -307,7 +307,7 @@ class DataTest(TestDefinition):
                             False,
                             "",
                             {"test_type": self.test_type,
-                             "test_key": "table_query_no_result",
+                             "test_key": "view_query_no_result",
                              "params": [self.expected_value, self.name]},
                         )
                     if self.expected_value == 'NULL' or self.expected_value == 'None':
