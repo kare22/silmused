@@ -10,7 +10,9 @@ class ExecuteLayer:
         try:
             cursor.execute(self.query)
 
-            if self.debug is not None: print(f"query: {self.query}")
+            if self.debug is not None:
+                print(f"query: {self.query}")
+                print(f"result: {cursor.fetchall()}")
 
             return {
                 'type': 'execution',
@@ -20,7 +22,8 @@ class ExecuteLayer:
         except:
             cursor.execute('ROLLBACK')
 
-            if self.debug is not None: print(f"sys_error: {sys.exc_info()}")
+            if self.debug is not None:
+                print(f"sys_error: {sys.exc_info()}")
 
             return {
                 'type': 'execution',
