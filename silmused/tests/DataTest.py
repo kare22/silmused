@@ -1,5 +1,5 @@
 from silmused.tests.TestDefinition import TestDefinition
-
+from silmused.utils import *
 
 # TODO split this into TableDataTest and ViewDataTest, so that feedback code would be more readable
 # But this will just duplicate code...
@@ -190,15 +190,16 @@ class DataTest(TestDefinition):
                                      "params": [self.name, self.column_name]},
                                 )
                         elif self.expected_value_group == "strings":
+                            assessment_result, real_result = check_all_results(result, self.expected_value)
                             if len(result) > 0:
                                 return super().response(
-                                    result[0][0] in self.expected_value,
+                                    assessment_result,
                                     {"test_type": self.test_type,
                                      "test_key": "table_expected_value_group_strings_positive_feedback",
-                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
                                     {"test_type": self.test_type,
                                      "test_key": "table_expected_value_group_strings_negative_feedback",
-                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
                                 )
                             else:
                                 return super().response(
@@ -353,14 +354,15 @@ class DataTest(TestDefinition):
                                 )
                         elif self.expected_value_group == "strings":
                             if len(result) > 0:
+                                assessment_result, real_result = check_all_results(result, self.expected_value)
                                 return super().response(
-                                    result[0][0] in self.expected_value,
+                                    assessment_result,
                                     {"test_type": self.test_type,
                                      "test_key": "view_expected_value_group_strings_positive_feedback",
-                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
                                     {"test_type": self.test_type,
                                      "test_key": "view_expected_value_group_strings_negative_feedback",
-                                     "params": [str(result[0][0]), self.expected_value, self.column_name]},
+                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
                                 )
                             else:
                                 return super().response(

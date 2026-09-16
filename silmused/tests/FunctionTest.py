@@ -1,5 +1,5 @@
 from silmused.tests.TestDefinition import TestDefinition
-from silmused.utils import list_to_string
+from silmused.utils import *
 
 
 class FunctionTest(TestDefinition):
@@ -117,6 +117,9 @@ class FunctionTest(TestDefinition):
             result = cursor.fetchall()
             self.expected_value = result[0][0]
 
+        if isinstance(self.elements, list):
+            self.query = self._check_separately_for_all_elements(cursor)
+
         cursor.execute(self.query)
         result = cursor.fetchall()
         if self.debug is not None: self.debug_output(result)
@@ -166,14 +169,15 @@ class FunctionTest(TestDefinition):
                          "params": [len(result), self.expected_min_value, self.expected_max_value]},
                     )
                 elif self.expected_value_group == "strings":
+                    assessment_result, real_result = check_all_results(result, self.expected_value)
                     return super().response(
-                        result[0][0] in self.expected_value,
+                        assessment_result,
                         {"test_type": self.test_type,
                          "test_key": "function_expected_value_group_strings_positive_feedback",
-                         "params": [str(result[0][0]), self.expected_value]},
+                         "params": [real_result, self.expected_value]},
                         {"test_type": self.test_type,
                          "test_key": "function_expected_value_group_strings_negative_feedback",
-                         "params": [str(result[0][0]), self.expected_value]},
+                         "params": [real_result, self.expected_value]},
                     )
                 return super().response(
                     len(result) == self.expected_count,
@@ -204,14 +208,15 @@ class FunctionTest(TestDefinition):
                          "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value]},
                     )
                 elif self.expected_value_group == "strings":
+                    assessment_result, real_result = check_all_results(result, self.expected_value)
                     return super().response(
-                        result[0][0] in self.expected_value,
+                        assessment_result,
                         {"test_type": self.test_type,
                          "test_key": "function_expected_value_group_strings_positive_feedback",
-                         "params": [str(result[0][0]), self.expected_value]},
+                         "params": [real_result, self.expected_value]},
                         {"test_type": self.test_type,
                          "test_key": "function_expected_value_group_strings_negative_feedback",
-                         "params": [str(result[0][0]), self.expected_value]},
+                         "params": [real_result, self.expected_value]},
                     )
             if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
                 return super().response(
