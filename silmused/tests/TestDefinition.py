@@ -97,7 +97,7 @@ class TestDefinition:
             if message_success is None:
                 message_statement = 'Correct'
             elif self.custom_feedback is not None:
-                message_statement = {"test_type": "custom_feedback",
+                message_statement = {"test_type": "custom",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]}
             else:
@@ -106,7 +106,7 @@ class TestDefinition:
             if message_failure is None:
                 message_statement = 'Wrong'
             elif self.custom_feedback is not None:
-                message_statement = {"test_type": "custom_feedback",
+                message_statement = {"test_type": "custom",
                                      "test_key": "custom_feedback",
                                      "params": [self.custom_feedback]}
             else:
@@ -226,13 +226,13 @@ class TestDefinition:
     def _llm_check(self, result):
         if not self.should_exist and len(result) > 0:
             if self.custom_feedback is None:
-                raise Exception({'test_type': 'sys_fail', 'test_key': 'llm_check_fail'})
+                raise Exception({'test_type': 'custom', 'test_key': 'llm_check_fail'})
             else:
-                raise Exception({'test_type': 'sys_fail', 'test_key': 'custom_feedback',
+                raise Exception({'test_type': 'custom', 'test_key': 'custom_feedback',
                                  "params": [self.custom_feedback]})
         if self.should_exist and len(result) == 0:
             if self.custom_feedback is None:
-                raise Exception({'test_type': 'sys_fail', 'test_key': 'llm_check_fail'})
+                raise Exception({'test_type': 'custom', 'test_key': 'llm_check_fail'})
             else:
-                raise Exception({'test_type': 'sys_fail', 'test_key': 'custom_feedback',
+                raise Exception({'test_type': 'custom', 'test_key': 'custom_feedback',
                                  "params": [self.custom_feedback]})

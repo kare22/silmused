@@ -42,9 +42,9 @@
 		"custom_feedback": "'$param1'"
 	},
 	"custom": {
-		"custom_feedback": "'$param1'",
-		"or": "or"
-
+		"custom_feedback": "$param1",
+		"or": "or",
+		"llm_check_fail": "This task appears to have been completed using an unfair approach."
 	},
 	"data_test": {
 		"table_not_expected_value_should_exist_positive_feedback": "Correct, results were found for table '$param1'",
@@ -204,7 +204,6 @@
 		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
 		"empty_query_file": "Error: No query found from file",
 		"incorrect_test_format": "Error: Choose Test or Query format!",
-		"llm_check_fail": "This task appears to have been completed using an unfair approach.",
 		"custom_feedback": "'$param1'"
 	},
 	"trigger_test": {

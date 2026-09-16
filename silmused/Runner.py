@@ -250,7 +250,7 @@ class Runner:
         if self.results is None:
             return tests, points_max, points_actual
         for result in self.results:
-            if isinstance(self.results, dict) and self.results['test_key'] == 'llm_check_fail':
+            if isinstance(self.results, dict):
                 pre_evaluate_error = self._message_to_feedback(self.results)
             else:
                 if result.get('type') == 'execution':
@@ -293,6 +293,7 @@ class Runner:
                     "pre_evaluate_error": pre_evaluate_error,
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "points": 0,
+                    "tests": tests
                 }, ensure_ascii=False)
             # TODO Put all logic in points variable
             praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
@@ -318,11 +319,11 @@ class Runner:
                 }
             return json.dumps(output, ensure_ascii=False)
         except:
-            print(sys.exc_info())
             return json.dumps({
               "result_type": "OK_V3",
               "producer": f"silmused {__version__}",
               "pre_evaluate_error": sys.exc_info(),
               "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
               "points": 0,
+              "tests": []
             }, ensure_ascii=False)
