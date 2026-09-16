@@ -50,8 +50,8 @@ class TriggerTest(TestDefinition):
         cursor.execute(self.query)
         result = cursor.fetchall()
 
-
-        if self.debug is not None: self.debug_output(result)
+        if self.debug is not None:
+            self.debug_output(result)
 
         if self.should_exist:
             if self.manipulation is not None:

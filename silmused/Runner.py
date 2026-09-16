@@ -154,7 +154,7 @@ class Runner:
             return results
         except Exception as exception:
             if isinstance(exception.args[0], dict):
-                print(self._message_to_feedback(exception.args[0]))
+                return exception.args[0]
             else:
                 print(f"Sql TEST RUN failed: {exception}")
         finally:
@@ -243,45 +243,57 @@ class Runner:
 
     def _results_to_object(self):
         tests = []
+        pre_evaluate_error = ''
 
         points_max = 0
         points_actual = 0
         if self.results is None:
             return tests, points_max, points_actual
         for result in self.results:
-            if result.get('type') == 'execution':
-                continue
-            elif result.get('type') == 'message':
-                tests.append({
-                    "title": str(result.get('message')),
-                    "status": 'PASS'
-                })
-                continue
-
-            output = {}
-
-            if result.get('type') == 'checks_layer':
-                checks_points_max, checks_points_actual, checks_outputs, output_pass = self._checks_to_object(result.get('checks'))
-                points_max += checks_points_max
-                points_actual += checks_points_actual
-                output["checks"] = checks_outputs
-                output["status"] = 'PASS' if output_pass else 'FAIL'
+            if isinstance(self.results, dict) and self.results['test_key'] == 'llm_check_fail':
+                pre_evaluate_error = self._message_to_feedback(self.results)
             else:
-                points = result.get('points') if result.get('points') is not None else 0
-                points_max += points
-                points_actual += points if result.get('is_success') else 0
-                output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
+                if result.get('type') == 'execution':
+                    continue
+                elif result.get('type') == 'message':
+                    tests.append({
+                        "title": str(result.get('message')),
+                        "status": 'PASS'
+                    })
+                    continue
 
-            output["title"] = result.get('title')
-            if result.get('message') is not None:
-                output["exception_message"] = str(result.get('message'))
+                output = {}
 
-            tests.append(output)
-        return tests, points_max, points_actual
+                if result.get('type') == 'checks_layer':
+                    checks_points_max, checks_points_actual, checks_outputs, output_pass = self._checks_to_object(result.get('checks'))
+                    points_max += checks_points_max
+                    points_actual += checks_points_actual
+                    output["checks"] = checks_outputs
+                    output["status"] = 'PASS' if output_pass else 'FAIL'
+                else:
+                    points = result.get('points') if result.get('points') is not None else 0
+                    points_max += points
+                    points_actual += points if result.get('is_success') else 0
+                    output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
+
+                output["title"] = result.get('title')
+                if result.get('message') is not None:
+                    output["exception_message"] = str(result.get('message'))
+
+                tests.append(output)
+        return tests, points_max, points_actual, pre_evaluate_error
 
     def get_results(self):
         try:
-            tests, points_max, points_actual = self._results_to_object()
+            tests, points_max, points_actual, pre_evaluate_error = self._results_to_object()
+            if len(pre_evaluate_error) > 0:
+                return json.dumps({
+                    "result_type": "OK_V3",
+                    "producer": f"silmused {__version__}",
+                    "pre_evaluate_error": pre_evaluate_error,
+                    "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "points": 0,
+                }, ensure_ascii=False)
             # TODO Put all logic in points variable
             praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
             if praks:
@@ -310,6 +322,7 @@ class Runner:
             return json.dumps({
               "result_type": "OK_V3",
               "producer": f"silmused {__version__}",
+              "pre_evaluate_error": sys.exc_info(),
               "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
               "points": 0,
             }, ensure_ascii=False)

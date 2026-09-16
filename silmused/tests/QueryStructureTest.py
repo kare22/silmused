@@ -178,7 +178,6 @@ class QueryStructureTest(TestDefinition):
             if self.description is not None: print(f"description: {self.description}")
             if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
             if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
-            if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
             if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
             if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
             if self.elements is not None: print(f"elements: {self.elements}")

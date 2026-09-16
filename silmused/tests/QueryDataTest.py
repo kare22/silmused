@@ -273,10 +273,12 @@ class QueryDataTest(TestDefinition):
             if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
             if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
             if self.points is not None: print(f"points: {self.points}")
-            if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
-            if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
-            if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
-            if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
+            if isinstance(self.expected_value, list):
+                if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
+                if not isinstance(self.expected_value[0], str):
+                    if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
+                    if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
+                    if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
             if self.test_type is not None: print(f"test_type: {self.test_type}")
         if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")
