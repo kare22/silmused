@@ -40,31 +40,32 @@ class Runner:
 
         self.results = []
         self.translator = Translator(locale=lang)
+        self.pre_evaluate_error = None
 
         if self.test_query == 'test':
             if self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
                 self.results = self._run_tests()
             elif self._file_is_valid_pg_insert():
-                self._create_db_from_psql_insert()
+                self.pre_evaluate_error = self._create_db_from_psql_insert() if self.pre_evaluate_error is None else self.pre_evaluate_error
                 self.results = self._run_tests()
             else:
-                print(self.translator.translate("sys_fail", "incorrect_dump_file"))
+                self.pre_evaluate_error = {"test_type": "sys_fail", "test_key": "incorrect_dump_file"}
         elif self.test_query == 'query':
             if len(self.query_sql) == 0:
-                print(self.translator.translate("sys_fail", "empty_query_file"))
+                self.pre_evaluate_error = {"test_type": "sys_fail", "test_key": "empty_query_file"}
             elif self._file_is_valid_pg_dump():
                 self._create_db_from_psql_dump()
-                self._create_query_view()
+                self.pre_evaluate_error = self._create_query_view()
                 self.results = self._run_tests()
             elif self._file_is_valid_pg_insert():
-                self._create_db_from_psql_insert()
-                self._create_query_view()
+                self.pre_evaluate_error = self._create_db_from_psql_insert()
+                self.pre_evaluate_error = self._create_query_view() if self.pre_evaluate_error is None else self.pre_evaluate_error
                 self.results = self._run_tests()
             else:
-                print(self.translator.translate("sys_fail", "incorrect_dump_file"))
+                self.pre_evaluate_error = {"test_type": "sys_fail", "test_key": "incorrect_dump_file"}
         else:
-            print(self.translator.translate("sys_fail", "incorrect_test_format"))
+            self.pre_evaluate_error = {"test_type": "sys_fail", "test_key": "incorrect_test_format"}
 
     def _file_is_valid_pg_dump(self):
         if not os.path.isfile(self.file_path):
@@ -97,14 +98,13 @@ class Runner:
         if not self.file_path.lower().endswith('.sql'):
             return False
 
-        #if len(self.encoding) > 0:
+        # if len(self.encoding) > 0:
         try:
             with open(self.file_path, 'r', encoding=self.encoding) as file:
                 lines = file.readlines()
                 return any(line.strip().startswith("INSERT") for line in lines)
         except IOError:
             return False
-
 
     def _create_db_from_psql_insert(self):
         connection = self._connect(db_name='postgres')
@@ -114,7 +114,9 @@ class Runner:
         try:
             cursor.execute(f"CREATE DATABASE {self.db_name};")
         except Exception as exception:
-            print(f"CREATE DATABASE failed: {exception}")
+            return {"test_type": "sys_fail",
+                    "test_key": "create_db_failed",
+                    "params": {"exception": exception}}
         finally:
             cursor.close()
             connection.close()
@@ -123,7 +125,7 @@ class Runner:
         cursor = connection.cursor()
 
         try:
-            #if len(self.encoding) > 0:
+            # if len(self.encoding) > 0:
             with open(self.file_path, 'r', encoding=self.encoding) as file:
                 sql_script = file.read()
 
@@ -136,7 +138,9 @@ class Runner:
             cursor.execute(sql_script)
             connection.commit()
         except Exception as exception:
-            print(f"Sql INSERT import failed: {exception}")
+            return {"test_type": "sys_fail",
+                    "test_key": "sql_insert_import",
+                    "params": {"exception": exception}}
         finally:
             cursor.close()
             connection.close()
@@ -154,9 +158,14 @@ class Runner:
             return results
         except Exception as exception:
             if isinstance(exception.args[0], dict):
-                return exception.args[0]
+                self.pre_evaluate_error = self._message_to_feedback(exception.args[0])
             else:
-                print(f"Sql TEST RUN failed: {exception}")
+                self.pre_evaluate_error = (
+                    self._message_to_feedback(
+                        {"test_type": "sys_fail",
+                         "test_key": "sql_test_run",
+                         "params": {"exception": exception}}
+                    ))
         finally:
             cursor.close()
             connection.close()
@@ -170,8 +179,10 @@ class Runner:
             cursor.execute("alter table query_test add column test_id serial;")
             cursor.execute("insert into query_test select * from query_view;")
             connection.commit()
-        except Exception as exception:
-            print(f"Running SQL failed: {exception}")
+        except:
+            return {"test_type": "sys_fail",
+                    "test_key": "incorrect_query",
+                    "params": {"query": self.query_sql}}
         finally:
             cursor.close()
             connection.close()
@@ -214,7 +225,6 @@ class Runner:
         outputs = []
         output_pass = True
 
-
         # TODO should be recursive
         points_max = 0
         points_actual = 0
@@ -249,58 +259,48 @@ class Runner:
 
     def _results_to_object(self):
         tests = []
-        pre_evaluate_error = ''
 
         points_max = 0
         points_actual = 0
         if self.results is None:
             return tests, points_max, points_actual
         for result in self.results:
-            if isinstance(self.results, dict):
-                pre_evaluate_error = self._message_to_feedback(self.results)
+            #if isinstance(self.results, dict):
+            #    self.pre_evaluate_error = self._message_to_feedback(self.results)
+            #else:
+            if result.get('type') == 'execution':
+                continue
+            elif result.get('type') == 'message':
+                tests.append({
+                    "title": str(result.get('message')),
+                    "status": 'PASS'
+                })
+                continue
+
+            output = {}
+            if result.get('type') == 'checks_layer':
+                checks_points_max, checks_points_actual, checks_outputs, output_pass = self._checks_to_object(
+                    result.get('checks'))
+                points_max += checks_points_max
+                points_actual += checks_points_actual
+                output["checks"] = checks_outputs
+                output["status"] = 'PASS' if output_pass else 'FAIL'
             else:
-                if result.get('type') == 'execution':
-                    continue
-                elif result.get('type') == 'message':
-                    tests.append({
-                        "title": str(result.get('message')),
-                        "status": 'PASS'
-                    })
-                    continue
+                points = result.get('points') if result.get('points') is not None else 0
+                points_max += points
+                points_actual += points if result.get('is_success') else 0
+                output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
 
-                output = {}
+            output["title"] = result.get('title')
+            if result.get('message') is not None:
+                output["exception_message"] = str(result.get('message'))
 
-                if result.get('type') == 'checks_layer':
-                    checks_points_max, checks_points_actual, checks_outputs, output_pass = self._checks_to_object(result.get('checks'))
-                    points_max += checks_points_max
-                    points_actual += checks_points_actual
-                    output["checks"] = checks_outputs
-                    output["status"] = 'PASS' if output_pass else 'FAIL'
-                else:
-                    points = result.get('points') if result.get('points') is not None else 0
-                    points_max += points
-                    points_actual += points if result.get('is_success') else 0
-                    output["status"] = 'PASS' if result.get('is_success') else 'FAIL'
-
-                output["title"] = result.get('title')
-                if result.get('message') is not None:
-                    output["exception_message"] = str(result.get('message'))
-
-                tests.append(output)
-        return tests, points_max, points_actual, pre_evaluate_error
+            tests.append(output)
+        return tests, points_max, points_actual
 
     def get_results(self):
         try:
-            tests, points_max, points_actual, pre_evaluate_error = self._results_to_object()
-            if len(pre_evaluate_error) > 0:
-                return json.dumps({
-                    "result_type": "OK_V3",
-                    "producer": f"silmused {__version__}",
-                    "pre_evaluate_error": pre_evaluate_error,
-                    "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "points": 0,
-                    "tests": tests
-                }, ensure_ascii=False)
+            tests, points_max, points_actual = self._results_to_object()
             # TODO Put all logic in points variable
             praks = True if len(tests) > 0 and points_max == 0 and points_actual == 0 else False
             if praks:
@@ -312,6 +312,7 @@ class Runner:
                     "result_type": "OK_V3",
                     "points": round(100 * points_actual / points_max),
                     "producer": f"silmused {__version__}",
+                    "pre_evaluate_error": self._message_to_feedback(self.pre_evaluate_error) if self.pre_evaluate_error is not None else None,
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "tests": tests
                 }
@@ -320,16 +321,17 @@ class Runner:
                     "result_type": "OK_V3",
                     "points": 0,
                     "producer": f"silmused {__version__}",
+                    "pre_evaluate_error": self._message_to_feedback(self.pre_evaluate_error) if self.pre_evaluate_error is not None else None,
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "tests": tests
                 }
             return json.dumps(output, ensure_ascii=False)
         except:
             return json.dumps({
-              "result_type": "OK_V3",
-              "producer": f"silmused {__version__}",
-              "pre_evaluate_error": sys.exc_info(),
-              "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-              "points": 0,
-              "tests": []
+                "result_type": "OK_V3",
+                "producer": f"silmused {__version__}",
+                "pre_evaluate_error": sys.exc_info(),
+                "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "points": 0,
+                "tests": []
             }, ensure_ascii=False)

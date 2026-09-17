@@ -204,7 +204,10 @@
 		"incorrect_dump_file": "Error: File is not a valid PostgresSql dump or insert file!",
 		"empty_query_file": "Error: No query found from file",
 		"incorrect_test_format": "Error: Choose Test or Query format!",
-		"custom_feedback": "'$param1'"
+		"incorrect_query": "Cannot be tested, because of faulty submission query: $query",
+		"create_db": "CREATE DATABASE failed: $exception",
+		"sql_insert_import": "Submitted database has an error: $exception",
+		"sql_test_run": "Sql TEST RUN failed: $exception"
 	},
 	"trigger_test": {
 		"trigger_should_exist_positive_feedback": "Correct, trigger '$trigger_name' was found",
