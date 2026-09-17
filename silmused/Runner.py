@@ -158,14 +158,11 @@ class Runner:
             return results
         except Exception as exception:
             if isinstance(exception.args[0], dict):
-                self.pre_evaluate_error = self._message_to_feedback(exception.args[0])
+                self.pre_evaluate_error = exception.args[0]
             else:
-                self.pre_evaluate_error = (
-                    self._message_to_feedback(
-                        {"test_type": "sys_fail",
-                         "test_key": "sql_test_run",
-                         "params": {"exception": exception}}
-                    ))
+                self.pre_evaluate_error = ({"test_type": "sys_fail", "test_key":
+                                            "sql_test_run",
+                                            "params": {"exception": exception}})
         finally:
             cursor.close()
             connection.close()
@@ -265,9 +262,6 @@ class Runner:
         if self.results is None:
             return tests, points_max, points_actual
         for result in self.results:
-            #if isinstance(self.results, dict):
-            #    self.pre_evaluate_error = self._message_to_feedback(self.results)
-            #else:
             if result.get('type') == 'execution':
                 continue
             elif result.get('type') == 'message':
@@ -314,7 +308,7 @@ class Runner:
                     "producer": f"silmused {__version__}",
                     "pre_evaluate_error": self._message_to_feedback(self.pre_evaluate_error) if self.pre_evaluate_error is not None else None,
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "tests": tests
+                    "tests": tests if self.pre_evaluate_error is None else []
                 }
             else:
                 output = {
@@ -323,7 +317,7 @@ class Runner:
                     "producer": f"silmused {__version__}",
                     "pre_evaluate_error": self._message_to_feedback(self.pre_evaluate_error) if self.pre_evaluate_error is not None else None,
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "tests": tests
+                    "tests": tests if self.pre_evaluate_error is None else []
                 }
             return json.dumps(output, ensure_ascii=False)
         except:
