@@ -1,9 +1,10 @@
 from silmused.tests.TestDefinition import TestDefinition
 from silmused.utils import *
 
-# TODO split this into TableDataTest and ViewDataTest, so that feedback code would be more readable
-# But this will just duplicate code...
+
 class DataTest(TestDefinition):
+    test_type = "table_data_test"
+
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, expected_value_query=None, isView=False, column_name_fallback=None,
                  custom_feedback=None, llm_check=False, debug=None, points=0):
@@ -61,7 +62,8 @@ class DataTest(TestDefinition):
         self.join = join
         self.isView = isView
         self.column_name_fallback = column_name_fallback
-        self.test_type = "data_test"
+        if isView:
+            self.test_type = "view_data_test"
 
     def execute(self, cursor):
         if self.expected_value_query is not None:
@@ -77,332 +79,168 @@ class DataTest(TestDefinition):
         if self.debug is not None: self.debug_output(result)
 
         # Result assessment
-        if not self.isView:
-            if self.expected_value is None:
-                if self.should_exist:
-                    if self.column_name is None:
-                        return super().response(
-                            len(result) > 0,
-                            {"test_type": self.test_type,
-                             "test_key": "table_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.name]},
-                            {"test_type": self.test_type,
-                             "test_key": "table_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.name]},
-                        )
-                    else:
-                        if self.is_count:
-                            return super().response(
-                                result[0][0] > 0,
-                                {"test_type": self.test_type,
-                                 "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
-                                 "params": [self.name, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
-                                 "params": [self.name, self.column_name]},
-
-                            )
-                        else:
-                            # TODO Should check if all results are not None
-                            return super().response(
-                                len(result) > 0 and result[0][0] is not None,
-                                {"test_type": self.test_type,
-                                 "test_key": "table_column_not_expected_value_should_exist_positive_feedback",
-                                 "params": [self.name, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "table_column_not_expected_value_should_exist_negative_feedback",
-                                 "params": [self.name, self.column_name]},
-
-                            )
-
+        if self.expected_value is None:
+            if self.should_exist:
+                if self.column_name is None:
+                    return super().response(
+                        len(result) > 0,
+                        {"test_type": self.test_type,
+                         "test_key": "not_expected_value_should_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "not_expected_value_should_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
                 else:
-                    if self.column_name is None:
+                    if self.is_count:
                         return super().response(
-                            len(result) == 0,
+                            result[0][0] > 0,
                             {"test_type": self.test_type,
-                             "test_key": "table_not_expected_value_should_not_exist_positive_feedback",
-                             "params": [self.name]},
-                            {"test_type": self.test_type,
-                             "test_key": "table_not_expected_value_should_not_exist_negative_feedback",
-                             "params": [self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": self.test_type,
-                             "test_key": "table_column_not_expected_value_should_not_exist_positive_feedback",
+                             "test_key": "column_not_expected_value_should_exist_positive_feedback",
                              "params": [self.name, self.column_name]},
                             {"test_type": self.test_type,
-                             "test_key": "table_column_not_expected_value_should_not_exist_negative_feedback",
+                             "test_key": "column_not_expected_value_should_exist_negative_feedback",
                              "params": [self.name, self.column_name]},
 
                         )
-            # expected value is not None
-            else:
-                if self.should_exist:
-                    if len(result) == 0:
-                        return super().response(
-                            False,
-                            "",
-                            {"test_type": self.test_type,
-                             "test_key": "table_query_no_result",
-                             "params": [self.expected_value, self.name]},
-                        )
-                    if self.expected_value == 'NULL' or self.expected_value == 'None':
-                        if result[0][0] is None and len(result) > 0:
-                            return super().response(
-                                result[0][0] is None,
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.name, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                            )
-                        else:
-                            return super().response(
-                                False,
-                                '',
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_no_result_negative_feedback",
-                                 "params": [self.name, self.column_name]},
-                            )
-                    elif self.expected_value_list:
-                        if self.expected_value_group == "numbers":
-                            if len(result) > 0:
-                                return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                                    {"test_type": self.test_type,
-                                     "test_key": "table_expected_value_group_numbers_positive_feedback",
-                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                                self.name, self.column_name]},
-                                    {"test_type": self.test_type,
-                                     "test_key": "table_expected_value_group_numbers_negative_feedback",
-                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                                self.name, self.column_name]},
-                                )
-                            else:
-                                return super().response(
-                                    False,
-                                    '',
-                                        {"test_type": self.test_type,
-                                     "test_key": "table_expected_value_group_numbers_no_result_negative_feedback",
-                                     "params": [self.name, self.column_name]},
-                                )
-                        elif self.expected_value_group == "strings":
-                            assessment_result, real_result = check_all_results(result, self.expected_value)
-                            if len(result) > 0:
-                                return super().response(
-                                    assessment_result,
-                                    {"test_type": self.test_type,
-                                     "test_key": "table_expected_value_group_strings_positive_feedback",
-                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
-                                    {"test_type": self.test_type,
-                                     "test_key": "table_expected_value_group_strings_negative_feedback",
-                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
-                                )
-                            else:
-                                return super().response(
-                                    False,
-                                    '',
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
-                                     "params": [self.name, self.column_name]},
-                                )
                     else:
-                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
-                            return super().response(
-                                result[0][0] == self.expected_value,
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                            )
-                        else:
-                            return super().response(
-                                str(result[0][0]) == str(self.expected_value),
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "table_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                            )
+                        return super().response(
+                            len(result) > 0 and result[0][0] is not None,
+                            {"test_type": self.test_type,
+                             "test_key": "column_not_expected_value_should_exist_positive_feedback",
+                             "params": [self.name, self.column_name]},
+                            {"test_type": self.test_type,
+                             "test_key": "column_not_expected_value_should_exist_negative_feedback",
+                             "params": [self.name, self.column_name]},
+
+                        )
+
+            else:
+                if self.column_name is None:
+                    return super().response(
+                        len(result) == 0,
+                        {"test_type": self.test_type,
+                         "test_key": "not_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.name]},
+                        {"test_type": self.test_type,
+                         "test_key": "not_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.name]},
+                    )
                 else:
                     return super().response(
-                        str(result[0][0]) != str(self.expected_value),
+                        len(result) == 0,
                         {"test_type": self.test_type,
-                         "test_key": "table_expected_value_should_not_exist_positive_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                         "test_key": "column_not_expected_value_should_not_exist_positive_feedback",
+                         "params": [self.name, self.column_name]},
                         {"test_type": self.test_type,
-                         "test_key": "table_expected_value_should_not_exist_negative_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                         "test_key": "column_not_expected_value_should_not_exist_negative_feedback",
+                         "params": [self.name, self.column_name]},
+
                     )
-        # isView = True
+        # expected value is not None
         else:
-            if self.expected_value is None:
-                if self.should_exist:
-                    if self.column_name is None:
+            if self.should_exist:
+                if len(result) == 0:
+                    return super().response(
+                        False,
+                        "",
+                        {"test_type": self.test_type,
+                         "test_key": "query_no_result",
+                         "params": [self.expected_value, self.name]},
+                    )
+                if self.expected_value == 'NULL' or self.expected_value == 'None':
+                    if result[0][0] is None and len(result) > 0:
                         return super().response(
-                            len(result) > 0,
+                            result[0][0] is None,
                             {"test_type": self.test_type,
-                             "test_key": "view_not_expected_value_should_exist_positive_feedback",
-                             "params": [self.name]},
+                             "test_key": "expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.name, self.column_name]},
                             {"test_type": self.test_type,
-                             "test_key": "view_not_expected_value_should_exist_negative_feedback",
-                             "params": [self.name]},
-
+                             "test_key": "expected_value_should_exist_negative_feedback",
+                             "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
                         )
                     else:
-                        if self.is_count:
-                            return super().response(
-                                result[0][0] > 0,
-                                {"test_type": self.test_type,
-                                 "test_key": "view_column_not_expected_value_should_exist_positive_feedback",
-                                 "params": [self.name, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "view_column_not_expected_value_should_exist_negative_feedback",
-                                 "params": [self.name, self.column_name]},
-
-                            )
-                        else:
-                            # TODO Should check if all results are not None
-                            return super().response(
-                                len(result) > 0 and result[0][0] is not None,
-                                {"test_type": self.test_type,
-                                 "test_key": "view_column_not_expected_value_should_exist_positive_feedback",
-                                 "params": [self.name, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "view_column_not_expected_value_should_exist_negative_feedback",
-                                 "params": [self.name, self.column_name]},
-
-                            )
-                else:
-                    if self.column_name is None:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": self.test_type,
-                             "test_key": "view_not_expected_value_should_not_exist_positive_feedback",
-                             "params": [self.name]},
-                            {"test_type": self.test_type,
-                             "test_key": "view_not_expected_value_should_not_exist_negative_feedback",
-                             "params": [self.name]},
-                        )
-                    else:
-                        return super().response(
-                            len(result) == 0,
-                            {"test_type": self.test_type,
-                             "test_key": "view_column_not_expected_value_should_not_exist_positive_feedback",
-                             "params": [self.name, self.column_name]},
-                            {"test_type": self.test_type,
-                             "test_key": "view_column_not_expected_value_should_not_exist_negative_feedback",
-                             "params": [self.name, self.column_name]},
-                        )
-            # expected value is not None
-            else:
-                if self.should_exist:
-                    if len(result) == 0:
                         return super().response(
                             False,
-                            "",
+                            '',
                             {"test_type": self.test_type,
-                             "test_key": "view_query_no_result",
-                             "params": [self.expected_value, self.name]},
+                             "test_key": "expected_value_should_exist_no_result_negative_feedback",
+                             "params": [self.name, self.column_name]},
                         )
-                    if self.expected_value == 'NULL' or self.expected_value == 'None':
-                        if result[0][0] is None and len(result) > 0:
+                elif self.expected_value_list:
+                    if self.expected_value_group == "numbers":
+                        if len(result) > 0:
                             return super().response(
-                                result[0][0] is None,
+                                self.expected_min_value <= result[0][0] <= self.expected_max_value,
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.name, self.column_name]},
+                                 "test_key": "expected_value_group_numbers_positive_feedback",
+                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                            self.name, self.column_name]},
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_negative_feedback",
-                                 "params": ['NULL', str(result[0][0]), self.name, self.column_name]},
+                                 "test_key": "expected_value_group_numbers_negative_feedback",
+                                 "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
+                                            self.name, self.column_name]},
                             )
                         else:
                             return super().response(
                                 False,
                                 '',
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_no_result_negative_feedback",
+                                 "test_key": "expected_value_group_numbers_no_result_negative_feedback",
                                  "params": [self.name, self.column_name]},
                             )
-                    elif self.expected_value_list:
-                        if self.expected_value_group == "numbers":
-                            if len(result) > 0:
-                                return super().response(
-                                    self.expected_min_value <= result[0][0] <= self.expected_max_value,
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_numbers_positive_feedback",
-                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                                self.name, self.column_name]},
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_numbers_negative_feedback",
-                                     "params": [str(result[0][0]), self.expected_min_value, self.expected_max_value,
-                                                self.name, self.column_name]},
-                                )
-                            else:
-                                return super().response(
-                                    False,
-                                    '',
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
-                                     "params": [self.name, self.column_name]},
-                                )
-                        elif self.expected_value_group == "strings":
-                            if len(result) > 0:
-                                assessment_result, real_result = check_all_results(result, self.expected_value)
-                                return super().response(
-                                    assessment_result,
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_strings_positive_feedback",
-                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_strings_negative_feedback",
-                                     "params": [real_result, self.expected_value, self.name, self.column_name]},
-                                )
-                            else:
-                                return super().response(
-                                    False,
-                                    '',
-                                    {"test_type": self.test_type,
-                                     "test_key": "view_expected_value_group_numbers_no_result_negative_feedback",
-                                     "params": [self.name, self.column_name]},
-                                )
-                    else:
-                        if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                    elif self.expected_value_group == "strings":
+                        assessment_result, real_result = check_all_results(result, self.expected_value)
+                        if len(result) > 0:
                             return super().response(
-                                result[0][0] == self.expected_value,
+                                assessment_result,
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.column_name]},
+                                 "test_key": "expected_value_group_strings_positive_feedback",
+                                 "params": [real_result, self.expected_value, self.name, self.column_name]},
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                                 "test_key": "expected_value_group_strings_negative_feedback",
+                                 "params": [real_result, self.expected_value, self.name, self.column_name]},
                             )
                         else:
                             return super().response(
-                                str(result[0][0]) == str(self.expected_value),
+                                False,
+                                '',
                                 {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_positive_feedback",
-                                 "params": [self.expected_value, self.column_name]},
-                                {"test_type": self.test_type,
-                                 "test_key": "view_expected_value_should_exist_negative_feedback",
-                                 "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                                 "test_key": "expected_value_group_numbers_no_result_negative_feedback",
+                                 "params": [self.name, self.column_name]},
                             )
                 else:
-                    return super().response(
-                        str(result[0][0]) != str(self.expected_value),
-                        {"test_type": self.test_type,
-                         "test_key": "view_expected_value_should_not_exist_positive_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                        {"test_type": self.test_type,
-                         "test_key": "view_expected_value_should_not_exist_negative_feedback",
-                         "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
-                    )
+                    if not isinstance(result[0][0], str) and not isinstance(self.expected_value, str):
+                        return super().response(
+                            result[0][0] == self.expected_value,
+                            {"test_type": self.test_type,
+                             "test_key": "expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.column_name]},
+                            {"test_type": self.test_type,
+                             "test_key": "expected_value_should_exist_negative_feedback",
+                             "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                        )
+                    else:
+                        return super().response(
+                            str(result[0][0]) == str(self.expected_value),
+                            {"test_type": self.test_type,
+                             "test_key": "expected_value_should_exist_positive_feedback",
+                             "params": [self.expected_value, self.column_name]},
+                            {"test_type": self.test_type,
+                             "test_key": "expected_value_should_exist_negative_feedback",
+                             "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                        )
+            else:
+                return super().response(
+                    str(result[0][0]) != str(self.expected_value),
+                    {"test_type": self.test_type,
+                     "test_key": "expected_value_should_not_exist_positive_feedback",
+                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                    {"test_type": self.test_type,
+                     "test_key": "expected_value_should_not_exist_negative_feedback",
+                     "params": [self.expected_value, str(result[0][0]), self.name, self.column_name]},
+                )
+
         return super().response(
             str(result[0][0]) != str(self.expected_value),
             {"test_type": self.test_type,
@@ -430,6 +268,7 @@ class DataTest(TestDefinition):
             print(f"query: {self.query}")
             print(f"result: {result}")
         if self.debug == 'ALL':
+            if self.test_type is not None: print(f"test_type: {self.test_type}")
             if self.name is not None: print(f"name: {self.name}")
             if self.arguments is not None: print(f"arguments: {self.arguments}")
             if self.column_name is not None: print(f"column_name: {self.column_name}")
@@ -449,9 +288,9 @@ class DataTest(TestDefinition):
             if isinstance(self.expected_value, list):
                 if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
                 if not isinstance(self.expected_value[0], str):
-                    if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
+                    if self.expected_value_group is not None: print(
+                        f"expected_value_group: {self.expected_value_group}")
                     if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
                     if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
-            if self.test_type is not None: print(f"test_type: {self.test_type}")
         if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

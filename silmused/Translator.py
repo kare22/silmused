@@ -39,7 +39,7 @@ class Translator():
         if test_type not in self.data[self.locale]:
             return "Test_type not supported: " + test_type + " FOR locale: " + self.locale
         if test_key not in self.data[self.locale][test_type]:
-            return "Test_key not supported: " + test_key + " FOR test_type: " + test_type
+            return "Test_key not supported: " + test_key + " FOR test_type: " + test_type + " FOR locale: " + self.locale
 
         # print(self.data[self.locale][test_type])
         text = self.data[self.locale][test_type].get(test_key, test_key)
