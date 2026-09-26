@@ -299,41 +299,136 @@ class TestDataTestFeedback:
         assert result['message']['params']['expected_max_value'] == 10
         assert result['message']['params']['actual_value'] == 15
 
-    def test_expected_value_group_strings_positive_feedback(self, mock_cursor, data_test_class):
-        """Test positive feedback when value is in string list."""
-        mock_cursor.fetchall.return_value = [('active', 'inactive', 'pending')]
+    def test_expected_values_group_positive_feedback_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',), ('pending',)]
 
         test = data_test_class(
             name='users',
             column_name='status',
             where="id = 1",
             expected_value=['active', 'inactive', 'pending'],
-            title='expected_value_group_strings_positive_feedback',
-            points=10
+            title='expected_values_group_positive_feedback',
+            allow_extra_values=True,
+            points=10,
+            debug='DEBUG'
         )
 
         result = test.run(mock_cursor)
+        print(result)
         assert result['is_success'] is True
-        assert result['message']['test_key'] == 'expected_value_group_strings_positive_feedback'
+        assert result['message']['test_key'] == 'expected_values_group_positive_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
 
-    def test_expected_value_group_strings_negative_feedback(self, mock_cursor, data_test_class):
-        """Test negative feedback when value is not in string list."""
-        mock_cursor.fetchall.return_value = [('deleted',)]
+    def test_expected_values_group_negative_feedback_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list."""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',),('testing',)]
 
         test = data_test_class(
             name='users',
             column_name='status',
             where="id = 1",
             expected_value=['active', 'inactive', 'pending'],
-            title='table_expected_value_group_strings_negative_feedback',
-            points=10
+            title='expected_values_group_missing_negative_feedback',
+            allow_extra_values=True,
+            points=10,
+            debug='DEBUG'
         )
 
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'expected_value_group_strings_negative_feedback'
+        assert result['message']['test_key'] == 'expected_values_group_missing_negative_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['expected_values'] == ['pending']
+
+    def test_expected_values_group_positive_feedback_not_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',), ('pending',)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=['active', 'inactive', 'pending'],
+            title='expected_values_group_positive_feedback',
+            allow_extra_values=False,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_values_group_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+
+    def test_expected_values_group_missing_negative_feedback_not_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=['active', 'inactive', 'pending'],
+            title='expected_values_group_missing_negative_feedback',
+            allow_extra_values=False,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_missing_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['expected_values'] == ['pending']
+
+    def test_expected_values_group_unexpected_negative_feedback_not_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',), ('pending',), ('testing',)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=['active', 'inactive', 'pending'],
+            title='expected_values_group_unexpected_negative_feedback',
+            allow_extra_values=False,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_unexpected_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['unexpected_values'] == ['testing']
+
+    def test_expected_values_group_missing_and_unexpected_negative_feedback_not_allow_extra_values(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [('active',), ('inactive',), ('testing',)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=['active', 'inactive', 'pending'],
+            title='expected_values_group_missing_and_unexpected_negative_feedback',
+            allow_extra_values=False,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_missing_and_unexpected_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['expected_values'] == ['pending']
+        assert result['message']['params']['unexpected_values'] == ['testing']
 
     def test_expected_value_should_exist_no_result_negative_feedback(self, mock_cursor, data_test_class):
         """Test negative feedback when no result is found for expected value."""

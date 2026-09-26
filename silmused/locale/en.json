@@ -188,8 +188,10 @@
 		"expected_value_group_numbers_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
 		"expected_value_group_numbers_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
 
-		"expected_value_group_strings_positive_feedback": "Correct, actual value '$actual_value' is in the list of expected values '$expected_values' in table '$table_name' and column '$column_name'",
-		"expected_value_group_strings_negative_feedback": "Wrong, actual value '$actual_value' is not in the list of expected values '$expected_values' in table '$table_name' and column '$column_name'",
+		"expected_values_group_positive_feedback": "Correct, the view '$table_name' column '$column_name' contains the expected values",
+		"expected_values_group_missing_negative_feedback": "Wrong, the view '$table_name' column '$column_name' is missing the following expected values: '$expected_values'",
+		"expected_values_group_unexpected_negative_feedback": "Wrong, the view '$table_name' column '$column_name' contains the following unexpected values: '$unexpected_values'",
+		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the view '$table_name' column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
 
 		"test_query_returned_no_rows": "Wrong, the test query returned no rows for table '$table_name', so the expected value '$expected_value' could not be checked",
 
@@ -262,8 +264,10 @@
 		"expected_value_group_numbers_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
 		"expected_value_group_numbers_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
 
-		"expected_value_group_strings_positive_feedback": "Correct, actual value '$actual_value' is in the list of expected values '$expected_values' in view '$view_name' and column '$column_name'",
-		"expected_value_group_strings_negative_feedback": "Wrong, actual value '$actual_value' is not in the list of expected values '$expected_values' in view '$view_name' and column '$column_name'",
+		"expected_values_group_positive_feedback": "Correct, the view '$view_name' column '$column_name' contains the expected values",
+		"expected_values_group_missing_negative_feedback": "Wrong, the view '$view_name' column '$column_name' is missing the following expected values: '$expected_values'",
+		"expected_values_group_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' contains the following unexpected values: '$unexpected_values'",
+		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
 
 		"no_feedback": "Automated feedback error: no feedback was found.",
 		"test_query_returned_no_rows": "Wrong, the test query returned no rows for view '$view_name', so the expected value '$expected_value' could not be checked"
