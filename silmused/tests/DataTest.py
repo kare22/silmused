@@ -1,5 +1,6 @@
 from silmused.tests.TestDefinition import TestDefinition
 from silmused.utils import *
+from numbers import Number
 
 
 class DataTest(TestDefinition):
@@ -20,15 +21,15 @@ class DataTest(TestDefinition):
             raise Exception('Parameter "column_name_fallback" must be a list')
         if isinstance(expected_value, list):
             self.expected_value_list = True
-            if isinstance(expected_value[0], str):
-                self.expected_value_group = "strings"
+            if not isinstance(expected_value[0], Number) or len(expected_value) > 2:
+                check_matching_value_types(expected_value, type(expected_value[0]))
+                self.expected_value_group = "group"
             else:
-                self.expected_value_group = "numbers"
+                check_matching_value_types(expected_value, Number)
+                self.expected_value_group = "range"
                 min_value = None
                 max_value = None
                 for value in expected_value:
-                    if isinstance(value, str):
-                        raise Exception('Ranged expected value cannot be a string')
                     if min_value is None:
                         min_value = value
                     elif value < min_value:
@@ -163,23 +164,23 @@ class DataTest(TestDefinition):
                                     "expected_value": self.expected_value, "actual_value": str(result[0][0])}},
                     )
                 elif self.expected_value_list:
-                    if self.expected_value_group == "numbers":
+                    if self.expected_value_group == "range":
                         return super().response(
                             self.expected_min_value <= result[0][0] <= self.expected_max_value,
                             {"test_type": self.test_type,
-                             "test_key": "expected_value_group_numbers_positive_feedback",
+                             "test_key": "expected_value_range_positive_feedback",
                              "params": {self.name_parameter: self.name, "column_name": self.column_name,
                                         "expected_min_value": self.expected_min_value,
                                         "expected_max_value": self.expected_max_value,
                                         "actual_value": result[0][0]}},
                             {"test_type": self.test_type,
-                             "test_key": "expected_value_group_numbers_negative_feedback",
+                             "test_key": "expected_value_range_negative_feedback",
                              "params": {self.name_parameter: self.name, "column_name": self.column_name,
                                         "expected_min_value": self.expected_min_value,
                                         "expected_max_value": self.expected_max_value,
                                         "actual_value": result[0][0]}},
                         )
-                    elif self.expected_value_group == "strings":
+                    elif self.expected_value_group == "group":
                         assessment_result = check_all_results(result, self.expected_value, self.allow_extra_values)
                         if len(assessment_result["unexpected_value"]) > 0 and len(assessment_result["expected_value"]) > 0:
                             return super().response(

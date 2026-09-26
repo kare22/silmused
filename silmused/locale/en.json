@@ -185,8 +185,8 @@
 		"expected_value_should_not_exist_positive_feedback": "Correct, actual value '$actual_value' differs from expected value '$expected_value' in table '$table_name' and column '$column_name'",
 		"expected_value_should_not_exist_negative_feedback": "Wrong, expected value '$expected_value' should not have been found in table '$table_name' and column '$column_name'",
 
-		"expected_value_group_numbers_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
-		"expected_value_group_numbers_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
+		"expected_value_range_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
+		"expected_value_range_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in table '$table_name' and column '$column_name'",
 
 		"expected_values_group_positive_feedback": "Correct, the view '$table_name' column '$column_name' contains the expected values",
 		"expected_values_group_missing_negative_feedback": "Wrong, the view '$table_name' column '$column_name' is missing the following expected values: '$expected_values'",
@@ -261,8 +261,8 @@
 		"expected_value_should_not_exist_positive_feedback": "Correct, actual value '$actual_value' differs from expected value '$expected_value' in view '$view_name' and column '$column_name'",
 		"expected_value_should_not_exist_negative_feedback": "Wrong, expected value '$expected_value' should not have been found in view '$view_name' and column '$column_name'",
 
-		"expected_value_group_numbers_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
-		"expected_value_group_numbers_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
+		"expected_value_range_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
+		"expected_value_range_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in view '$view_name' and column '$column_name'",
 
 		"expected_values_group_positive_feedback": "Correct, the view '$view_name' column '$column_name' contains the expected values",
 		"expected_values_group_missing_negative_feedback": "Wrong, the view '$view_name' column '$column_name' is missing the following expected values: '$expected_values'",

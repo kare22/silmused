@@ -255,7 +255,7 @@ class TestDataTestFeedback:
         assert result['message']['params']['column_name'] == 'name'
         assert result['message']['params']['expected_value'] == 'John'
 
-    def test_expected_value_group_numbers_positive_feedback(self, mock_cursor, data_test_class):
+    def test_expected_value_range_positive_feedback(self, mock_cursor, data_test_class):
         """Test positive feedback when value is in number range."""
         mock_cursor.fetchall.return_value = [(5,)]
 
@@ -263,21 +263,21 @@ class TestDataTestFeedback:
             name='users',
             column_name='name',
             where="id = 1",
-            expected_value=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            title='expected_value_group_numbers_positive_feedback',
+            expected_value=[1, 10],
+            title='expected_value_range_positive_feedback',
             points=10
         )
 
         result = test.run(mock_cursor)
         assert result['is_success'] is True
-        assert result['message']['test_key'] == 'expected_value_group_numbers_positive_feedback'
+        assert result['message']['test_key'] == 'expected_value_range_positive_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
         assert result['message']['params']['column_name'] == 'name'
         assert result['message']['params']['expected_min_value'] == 1
         assert result['message']['params']['expected_max_value'] == 10
         assert result['message']['params']['actual_value'] == 5
 
-    def test_expected_value_group_numbers_negative_feedback(self, mock_cursor, data_test_class):
+    def test_expected_value_range_negative_feedback(self, mock_cursor, data_test_class):
         """Test negative feedback when value is not in number range."""
         mock_cursor.fetchall.return_value = [(15,)]
 
@@ -285,21 +285,21 @@ class TestDataTestFeedback:
             name='users',
             column_name='name',
             where="id = 1",
-            expected_value=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            title='expected_value_group_numbers_negative_feedback',
+            expected_value=[1, 10],
+            title='expected_value_range_negative_feedback',
             points=10
         )
 
         result = test.run(mock_cursor)
         assert result['is_success'] is False
-        assert result['message']['test_key'] == 'expected_value_group_numbers_negative_feedback'
+        assert result['message']['test_key'] == 'expected_value_range_negative_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
         assert result['message']['params']['column_name'] == 'name'
         assert result['message']['params']['expected_min_value'] == 1
         assert result['message']['params']['expected_max_value'] == 10
         assert result['message']['params']['actual_value'] == 15
 
-    def test_expected_values_group_positive_feedback_allow_extra_values(self, mock_cursor, data_test_class):
+    def test_expected_values_group_positive_feedback_allow_extra_values_strings(self, mock_cursor, data_test_class):
         """Test positive feedback when value is in string list and extra values are allowed"""
         mock_cursor.fetchall.return_value = [('active',), ('inactive',), ('pending',)]
 
@@ -321,7 +321,7 @@ class TestDataTestFeedback:
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
         assert result['message']['params']['column_name'] == 'status'
 
-    def test_expected_values_group_negative_feedback_allow_extra_values(self, mock_cursor, data_test_class):
+    def test_expected_values_group_negative_feedback_allow_extra_values_strings(self, mock_cursor, data_test_class):
         """Test positive feedback when value is in string list."""
         mock_cursor.fetchall.return_value = [('active',), ('inactive',),('testing',)]
 
@@ -429,6 +429,49 @@ class TestDataTestFeedback:
         assert result['message']['params']['column_name'] == 'status'
         assert result['message']['params']['expected_values'] == ['pending']
         assert result['message']['params']['unexpected_values'] == ['testing']
+
+    def test_expected_values_group_positive_feedback_allow_extra_values_numbers(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [(1,), (2,), (3,)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=[1, 2, 3],
+            title='expected_values_group_positive_feedback',
+            allow_extra_values=True,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        print(result)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_values_group_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+
+    def test_expected_values_group_negative_feedback_allow_extra_values_numbers(self, mock_cursor, data_test_class):
+        """Test positive feedback when value is in string list."""
+        mock_cursor.fetchall.return_value = [(1,), (2,), (4,)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=[1, 2, 3],
+            title='expected_values_group_missing_negative_feedback',
+            allow_extra_values=True,
+            points=10,
+            debug='DEBUG'
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_missing_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['expected_values'] == [3]
 
     def test_expected_value_should_exist_no_result_negative_feedback(self, mock_cursor, data_test_class):
         """Test negative feedback when no result is found for expected value."""

@@ -186,8 +186,8 @@
 		"expected_value_should_not_exist_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' leitud väärtus '$actual_value' ei võrdu oodatud väärtusega '$expected_value'",
 		"expected_value_should_not_exist_negative_feedback": "Vale, väärtust '$expected_value' ei oleks tohtinud tabeli '$table_name' veerust '$column_name' leida",
 
-		"expected_value_group_numbers_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
-		"expected_value_group_numbers_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
 
 		"expected_values_group_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' leidusid kõik ja ainult oodatud väärtused",
 		"expected_values_group_missing_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' ei leitud järgmisi oodatud väärtusi: '$expected_values'",
@@ -262,8 +262,8 @@
 		"expected_value_should_not_exist_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' leitud väärtus '$actual_value' ei võrdu oodatud väärtusega '$expected_value'",
 		"expected_value_should_not_exist_negative_feedback": "Vale, väärtust '$expected_value' ei oleks tohtinud vaate '$view_name' veerust '$column_name' leida",
 
-		"expected_value_group_numbers_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
-		"expected_value_group_numbers_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
 
 		"expected_values_group_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' leidusid kõik ja ainult oodatud väärtused",
 		"expected_values_group_missing_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' ei leitud järgmisi oodatud väärtusi: '$expected_values'",

@@ -4,15 +4,19 @@ def list_to_string(array):
     return ", ".join(f"'{item}'" if isinstance(item, str) else str(item) for item in array)
 
 
+def check_matching_value_types(input_list, input_type):
+    for inp in input_list:
+        if not isinstance(inp, input_type):
+            raise AttributeError(f"Expected value {inp} datatype: {type(inp)} doesn't match the required type: {input_type}")
+
+
 def extract_value_from_tuple(input_list):
     out_list = []
     for expected in input_list:
-        if isinstance(expected, str):
-            out_list.append(expected)
-        elif isinstance(expected, tuple):
+        if isinstance(expected, tuple):
             out_list.append(expected[0])
         else:
-            raise AttributeError(f"Expected value is not a string or tuple: {expected}, but type: {type(expected)}")
+            out_list.append(expected)
     return out_list
 
 
