@@ -167,17 +167,17 @@
 		"sql_test_run": "Sql TEST RUN failed: $exception"
 	},
 	"table_data_test": {
-		"not_expected_value_should_exist_positive_feedback": "Correct, results were found in table '$table_name'",
-    	"not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results in table '$table_name', but none were found",
+		"rows_should_exist_positive_feedback": "Correct, results were found in table '$table_name'",
+    	"rows_should_exist_negative_feedback": "Wrong, expected to find results in table '$table_name', but none were found",
 
-		"column_not_expected_value_should_exist_positive_feedback": "Correct, results were found in table '$table_name' and column '$column_name'",
-		"column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results in table '$table_name' and column '$column_name', but none were found",
+		"column_value_should_exist_positive_feedback": "Correct, results were found in table '$table_name' and column '$column_name'",
+		"column_value_should_exist_negative_feedback": "Wrong, expected to find results in table '$table_name' and column '$column_name', but none were found",
 
-		"not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found in table '$table_name'",
-		"not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in table '$table_name', but results were found",
+		"rows_should_not_exist_positive_feedback": "Correct, no results were found in table '$table_name'",
+		"rows_should_not_exist_negative_feedback": "Wrong, expected to find no results in table '$table_name', but results were found",
 
-		"column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found in table '$table_name' and column '$column_name'",
-		"column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in table '$table_name' and column '$column_name', but results were found",
+		"column_value_should_not_exist_positive_feedback": "Correct, no results were found in table '$table_name' and column '$column_name'",
+		"column_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in table '$table_name' and column '$column_name', but results were found",
 
 		"expected_value_should_exist_positive_feedback": "Correct, expected value '$expected_value' was found in table '$table_name' and column '$column_name'",
 		"expected_value_should_exist_negative_feedback": "Wrong, expected value '$expected_value', but found '$actual_value' in table '$table_name' and column '$column_name'",
@@ -194,8 +194,7 @@
 		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the view '$table_name' column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
 
 		"test_query_returned_no_rows": "Wrong, the test query returned no rows for table '$table_name', so the expected value '$expected_value' could not be checked",
-
-		"no_feedback": "Automated feedback error: no feedback was found."
+		"test_query_returned_more_rows_than_expected": "Wrong, expected the test query to return a single row, but '$unexpected_row_count' rows were returned."
 	},
 	"trigger_test": {
 		"trigger_should_exist_positive_feedback": "Correct, trigger '$trigger_name' was found",
@@ -243,17 +242,17 @@
 		"custom_feedback": "'$param1'"
 	},
 	"view_data_test": {
-		"not_expected_value_should_exist_positive_feedback": "Correct, results were found in view '$view_name'",
-		"not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results in view '$view_name', but none were found",
+		"rows_should_exist_positive_feedback": "Correct, results were found in view '$view_name'",
+		"rows_should_exist_negative_feedback": "Wrong, expected to find results in view '$view_name', but none were found",
 
-		"column_not_expected_value_should_exist_positive_feedback": "Correct, results were found in view '$view_name' and column '$column_name'",
-		"column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results in view '$view_name' and column '$column_name', but none were found",
+		"column_value_should_exist_positive_feedback": "Correct, results were found in view '$view_name' and column '$column_name'",
+		"column_value_should_exist_negative_feedback": "Wrong, expected to find results in view '$view_name' and column '$column_name', but none were found",
 
-		"not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found in view '$view_name'",
-		"not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in view '$view_name', but results were found",
+		"rows_should_not_exist_positive_feedback": "Correct, no results were found in view '$view_name'",
+		"rows_should_not_exist_negative_feedback": "Wrong, expected to find no results in view '$view_name', but results were found",
 
-		"column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found in view '$view_name' and column '$column_name'",
-		"column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in view '$view_name' and column '$column_name', but results were found",
+		"column_value_should_not_exist_positive_feedback": "Correct, no results were found in view '$view_name' and column '$column_name'",
+		"column_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in view '$view_name' and column '$column_name', but results were found",
 
 		"expected_value_should_exist_positive_feedback": "Correct, expected value '$expected_value' was found in view '$view_name' and column '$column_name'",
 		"expected_value_should_exist_negative_feedback": "Wrong, expected value '$expected_value', but found '$actual_value' in view '$view_name' and column '$column_name'",
@@ -269,8 +268,8 @@
 		"expected_values_group_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' contains the following unexpected values: '$unexpected_values'",
 		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
 
-		"no_feedback": "Automated feedback error: no feedback was found.",
-		"test_query_returned_no_rows": "Wrong, the test query returned no rows for view '$view_name', so the expected value '$expected_value' could not be checked"
+		"test_query_returned_no_rows": "Wrong, the test query returned no rows for view '$view_name', so the expected value '$expected_value' could not be checked",
+		"test_query_returned_more_rows_than_expected": "Wrong, expected the test query to return a single row, but '$unexpected_row_count' rows were returned."
 	}
 
 }

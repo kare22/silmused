@@ -168,17 +168,17 @@
 		"sql_test_run": "Automaatkontrolli päring ebaõnnestus: $exception"
 	},
 	"table_data_test": {
-		"not_expected_value_should_exist_positive_feedback": "Õige, tabelist '$table_name' leiti andmeid",
-		"not_expected_value_should_exist_negative_feedback": "Vale, tabelist '$table_name' oodati andmeid, kuid neid ei leitud",
+		"rows_should_exist_positive_feedback": "Õige, tabelist '$table_name' leiti andmeid",
+		"rows_should_exist_negative_feedback": "Vale, tabelist '$table_name' oodati andmeid, kuid neid ei leitud",
 
-		"column_not_expected_value_should_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' leiti andmeid",
-		"column_not_expected_value_should_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
+		"column_value_should_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' leiti andmeid",
+		"column_value_should_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
 
-		"not_expected_value_should_not_exist_positive_feedback": "Õige, tabelist '$table_name' ei leitud andmeid",
-		"not_expected_value_should_not_exist_negative_feedback": "Vale, tabelist '$table_name' ei oodatud andmeid, kuid neid leiti",
+		"rows_should_not_exist_positive_feedback": "Õige, tabelist '$table_name' ei leitud andmeid",
+		"rows_should_not_exist_negative_feedback": "Vale, tabelist '$table_name' ei oodatud andmeid, kuid neid leiti",
 
-		"column_not_expected_value_should_not_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' ei leitud andmeid",
-		"column_not_expected_value_should_not_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
+		"column_value_should_not_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' ei leitud andmeid",
+		"column_value_should_not_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
 
 		"expected_value_should_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' leiti oodatud väärtus '$expected_value'",
 		"expected_value_should_exist_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' oodati väärtust '$expected_value', kuid leiti '$actual_value'",
@@ -195,8 +195,7 @@
 		"expected_values_group_missing_and_unexpected_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' puudusid oodatud väärtused: '$expected_values'. Lisaks leiti lubamatuid väärtusi: '$unexpected_values'",
 
 		"test_query_returned_no_rows": "Vale, tabeli '$table_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
-
-		"no_feedback": "Kontrolli viga: tagasisidet ei leitud."
+		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
 	},
 	"trigger_test": {
 		"trigger_should_exist_positive_feedback": "Õige, triger '$trigger_name' on olemas",
@@ -244,17 +243,17 @@
 		"custom_feedback": "'$param1'"
 	},
 	"view_data_test": {
-		"not_expected_value_should_exist_positive_feedback": "Õige, vaatest '$view_name' leiti andmeid",
-		"not_expected_value_should_exist_negative_feedback": "Vale, vaatest '$view_name' oodati andmeid, kuid neid ei leitud",
+		"rows_should_exist_positive_feedback": "Õige, vaatest '$view_name' leiti andmeid",
+		"rows_should_exist_negative_feedback": "Vale, vaatest '$view_name' oodati andmeid, kuid neid ei leitud",
 
-		"column_not_expected_value_should_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' leiti andmeid",
-		"column_not_expected_value_should_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
+		"column_value_should_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' leiti andmeid",
+		"column_value_should_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
 
-		"not_expected_value_should_not_exist_positive_feedback": "Õige, vaatest '$view_name' ei leitud andmeid",
-		"not_expected_value_should_not_exist_negative_feedback": "Vale, vaatest '$view_name' ei oodatud andmeid, kuid neid leiti",
+		"rows_should_not_exist_positive_feedback": "Õige, vaatest '$view_name' ei leitud andmeid",
+		"rows_should_not_exist_negative_feedback": "Vale, vaatest '$view_name' ei oodatud andmeid, kuid neid leiti",
 
-		"column_not_expected_value_should_not_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' ei leitud andmeid",
-		"column_not_expected_value_should_not_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
+		"column_value_should_not_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' ei leitud andmeid",
+		"column_value_should_not_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
 
 		"expected_value_should_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' leiti oodatud väärtus '$expected_value'",
 		"expected_value_should_exist_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' oodati väärtust '$expected_value', kuid leiti '$actual_value'",
@@ -270,7 +269,7 @@
 		"expected_values_group_unexpected_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' leiti lubamatuid väärtusi: '$unexpected_values'",
 		"expected_values_group_missing_and_unexpected_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' puudusid oodatud väärtused: '$expected_values'. Lisaks leiti lubamatuid väärtusi: '$unexpected_values'",
 
-		"no_feedback": "Kontrolli viga: tagasisidet ei leitud.",
-		"test_query_returned_no_rows": "Vale, vaate '$view_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida"
+		"test_query_returned_no_rows": "Vale, vaate '$view_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
+		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
 	}
 }
