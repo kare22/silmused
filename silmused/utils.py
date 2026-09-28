@@ -4,6 +4,12 @@ def list_to_string(array):
     return ", ".join(f"'{item}'" if isinstance(item, str) else str(item) for item in array)
 
 
+def normalize_expected_value(value):
+    if value == "NULL" or value == "None":
+        return None
+    return value
+
+
 def check_matching_value_types(input_list, input_type):
     for inp in input_list:
         if not isinstance(inp, input_type):
@@ -12,11 +18,14 @@ def check_matching_value_types(input_list, input_type):
 
 def extract_value_from_tuple(input_list):
     out_list = []
-    for expected in input_list:
-        if isinstance(expected, tuple):
-            out_list.append(expected[0])
-        else:
-            out_list.append(expected)
+    if input_list is None:
+        out_list.append(input_list)
+    else:
+        for expected in input_list:
+            if isinstance(expected, tuple):
+                out_list.append(expected[0])
+            else:
+                out_list.append(expected)
     return out_list
 
 
