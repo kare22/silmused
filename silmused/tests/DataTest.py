@@ -47,6 +47,7 @@ class DataTest(TestDefinition):
                 self.expected_max_value = max_value
         else:
             self.expected_value_list = False
+            self.expected_value_group = None
 
         super().__init__(
             name=name,
@@ -70,6 +71,7 @@ class DataTest(TestDefinition):
         self.isView = isView
         self.column_name_fallback = column_name_fallback
         self.allow_extra_values = allow_extra_values
+        self.expected_value_query_result = None
         if isView:
             self.test_type = "view_data_test"
             self.name_parameter = "view_name"
@@ -77,8 +79,12 @@ class DataTest(TestDefinition):
     def execute(self, cursor):
         if self.expected_value_query is not None:
             cursor.execute(self.expected_value_query)
-            result = cursor.fetchall()
-            self.expected_value = result
+            expected_value_query_result = cursor.fetchall()
+            expected_values = extract_value_from_tuple(expected_value_query_result)
+            self.expected_value = expected_values
+            self.expected_value_list = True
+            self.expected_value_group = "group"
+
         if self.column_name_fallback is not None:
             self.column_name = self._check_alternative_columns(cursor)
             self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
@@ -324,6 +330,7 @@ class DataTest(TestDefinition):
             if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
             if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
             if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
+            if self.expected_value_query is not None: print(f"expected_value_query_result: {self.expected_value_query_result}")
             if self.isView is not None: print(f"isView: {self.isView}")
             if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
             if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
