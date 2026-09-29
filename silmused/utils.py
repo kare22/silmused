@@ -50,20 +50,16 @@ def check_all_results(actual_list, expected_list, allow_extra_values):
             not_found.append(exp)
 
     if allow_extra_values:
-        if len(not_found) > 0:
-            assessment = False
-        else:
-            assessment = True
+        assessment = len(not_found) == 0
         unexpected_value = []
-    elif not allow_extra_values:
-        if len(found) < len(expected) and len(unexpected_value) > 0:
-            assessment = False
-        elif len(unexpected_value) > 0:
-            assessment = False
-        elif len(found) < len(expected):
-            assessment = False
-        else:
-            assessment = True
+    else:
+        assessment = (
+                len(not_found) == 0
+                and len(unexpected_value) == 0
+        )
 
-    result = {"assessment": assessment, "expected_value": not_found, "unexpected_value": unexpected_value}
-    return result
+    return {
+        "assessment": assessment,
+        "expected_value": not_found,
+        "unexpected_value": unexpected_value
+    }

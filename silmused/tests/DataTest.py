@@ -3,9 +3,7 @@ from silmused.utils import *
 from numbers import Number
 
 
-# TODO Expected_value_group is not working when the expected values are float #33
 # TODO Expand expected_value_query to accept string or numeric lists #84
-# TODO column_name_fallback is buggy #7
 
 class DataTest(TestDefinition):
     test_type = "table_data_test"
@@ -26,7 +24,10 @@ class DataTest(TestDefinition):
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if not isinstance(expected_value[0], Number) or len(expected_value) > 2:
-                check_matching_value_types(expected_value, type(expected_value[0]))
+                if isinstance(expected_value[0], Number):
+                    check_matching_value_types(expected_value, Number)
+                else:
+                    check_matching_value_types(expected_value, type(expected_value[0]))
                 self.expected_value_group = "group"
             else:
                 check_matching_value_types(expected_value, Number)
@@ -270,9 +271,11 @@ class DataTest(TestDefinition):
         actual_value = result[0][0]
         expected_value = normalize_expected_value(self.expected_value)
 
+        assessment = actual_value == expected_value
+
         if self.should_exist:
             return super().response(
-                actual_value == expected_value,
+                assessment,
                 {"test_type": self.test_type,
                  "test_key": "expected_value_should_exist_positive_feedback",
                  "params": {self.name_parameter: self.name, "column_name": self.column_name,
@@ -283,7 +286,7 @@ class DataTest(TestDefinition):
                             "expected_value": self.expected_value, "actual_value": actual_value}},
             )
         return super().response(
-            actual_value != expected_value,
+            not assessment,
             {"test_type": self.test_type,
              "test_key": "expected_value_should_not_exist_positive_feedback",
              "params": {self.name_parameter: self.name, "column_name": self.column_name,

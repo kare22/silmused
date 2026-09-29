@@ -528,6 +528,30 @@ class TestDataTestFeedback:
 
         assert_feedback_translates_in_all_locales(result)
 
+    def test_expected_values_group_positive_feedback_not_allow_extra_values_float_in_range(self, mock_cursor,
+                                                                                              data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [(2.50000001,)]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=[1, 2.6],
+            title='expected_values_group_positive_feedback',
+            allow_extra_values=False,
+            points=10,
+        )
+
+        result = test.run(mock_cursor)
+        print(result)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_value_range_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+
+        assert_feedback_translates_in_all_locales(result)
+
     def test_test_query_returned_no_rows(self, mock_cursor, data_test_class):
         """Test negative feedback when expected value is not found."""
         mock_cursor.fetchall.return_value = []
@@ -771,19 +795,42 @@ class TestDataTestFeedback:
 
         assert_feedback_translates_in_all_locales(result)
 
+    # Expected value group tests for float values and numeric tolerance #33
+    def test_expected_values_group_positive_feedback_not_allow_extra_values_float_values(self, mock_cursor,
+                                                                                         data_test_class):
+        """Test positive feedback when value is in string list and extra values are allowed"""
+        mock_cursor.fetchall.return_value = [(1,), (2.5,), (3,)]
 
-def test_legacy_is_view_still_works(mock_cursor):
-    mock_cursor.fetchall.return_value = [('result1',)]
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            where="id = 1",
+            expected_value=[1, 2.5, 3],
+            title='expected_values_group_positive_feedback',
+            allow_extra_values=False,
+            points=10,
+        )
 
-    test = DataTest(
-        name='user_view',
-        isView=True,
-        points=10
-    )
+        result = test.run(mock_cursor)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_values_group_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
 
-    result = test.run(mock_cursor)
+        assert_feedback_translates_in_all_locales(result)
 
-    assert result['message']['test_type'] == 'view_data_test'
+    def test_legacy_is_view_still_works(self, mock_cursor):
+        mock_cursor.fetchall.return_value = [('result1',)]
+
+        test = DataTest(
+            name='user_view',
+            isView=True,
+            points=10
+        )
+
+        result = test.run(mock_cursor)
+
+        assert result['message']['test_type'] == 'view_data_test'
 
 
 def assert_feedback_translates_in_all_locales(result):
