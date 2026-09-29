@@ -22,27 +22,19 @@ class TestDefinition:
         if expected_value is not None and expected_count is not None:
             raise Exception('Both expected_value and check_count cannot be specified in a single test')
 
-        query_builder = query
-
-        # TODO right now a single join is possible (without a hack)
-        if join is not None:
-            query_builder += f" JOIN {join}"
-
-        if where is not None:
-            query_builder += f" WHERE ({where})"
-
         self.title = title
         self.points = points
         self.name = name
         self.column_name = column_name
         self.where = where
+        self.join = join
         self.description = description
         self.arguments = arguments  # TODO arguments could be a class
         self.expected_value = expected_value
         self.expected_character_maximum_length = expected_character_maximum_length
         self.expected_type = expected_type
         self.expected_count = expected_count
-        self.query = query_builder
+        self.query = self.query_builder(query)
         self.pre_query = pre_query
         self.after_query = after_query
         self.should_exist = should_exist
@@ -52,6 +44,16 @@ class TestDefinition:
         self.expected_value_query = expected_value_query
         self.llm_check = llm_check
         self.debug = debug.upper() if debug is not None else debug
+
+    def query_builder(self, query):
+        query_builder = query
+        # TODO right now a single join is possible (without a hack)
+        if self.join is not None:
+            query_builder += f" JOIN {self.join}"
+
+        if self.where is not None:
+            query_builder += f" WHERE ({self.where})"
+        return query_builder
 
     # TODO should be callable only inside the scope
     def execute(self, cursor):
@@ -236,3 +238,39 @@ class TestDefinition:
             else:
                 raise Exception({'test_type': 'custom', 'test_key': 'custom_feedback',
                                  "params": [self.custom_feedback]})
+
+    def resolve_object_name(self, expected_name, available_objects, object_resolvers):
+
+        # 1. Correct name always has highest priority
+        if expected_name in available_objects:
+            return expected_name
+
+        resolver = object_resolvers.get(expected_name, {})
+
+        # 2. Known fallback names
+        for fallback in resolver.get("fallbacks", []):
+            if fallback in available_objects:
+                return fallback
+
+        # 3. Regex
+        pattern = resolver.get("pattern")
+
+        if pattern is not None:
+            matches = [
+                object_name
+                for object_name in available_objects
+                if re.fullmatch(pattern, object_name, re.IGNORECASE)
+            ]
+
+            if len(matches) == 1:
+                return matches[0]
+
+        # 4. Position
+        position = resolver.get("position")
+
+        if position is not None:
+            for object_name, object_position in available_objects.items():
+                if object_position == position:
+                    return object_name
+
+        return None

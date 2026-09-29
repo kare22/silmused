@@ -3,6 +3,7 @@ Tests for DataTest feedback messages.
 Tests all feedback keys from the data_test section of locale files.
 """
 import pytest
+import re
 from unittest.mock import MagicMock
 from silmused.tests.DataTest import DataTest
 from silmused.tests.ViewDataTest import ViewDataTest
@@ -1087,6 +1088,51 @@ class TestDataTestFeedback:
 
         assert_feedback_translates_in_all_locales(result)
 
+    def test_column_resolvers_use_fallbacks(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [("id",1), ("synnkuupaev",2), ("synnikoht",3)],
+            [("1990-01-01",)]
+        ]
+
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            where="$birth_place = 'Tartu'",
+            expected_value="1990-01-01",
+            column_resolvers={
+                "birth_date": {
+                    "fallbacks": ["synnkuupaev"]
+                },
+                "birth_place": {
+                    "fallbacks": ["synnikoht"]
+                }
+            },
+            points=10
+        )
+
+        result = test.run(mock_cursor)
+        print(result)
+
+        assert result["is_success"] is True
+        executed_queries = [
+            call.args[0]
+            for call in mock_cursor.execute.call_args_list
+        ]
+        assert any(
+            "SELECT synnkuupaev FROM persons" in query
+            for query in executed_queries
+        )
+
+        assert any(
+            "synnikoht = 'Tartu'" in query
+            for query in executed_queries
+        )
+
+        assert mock_cursor.execute.call_args_list[-1].args[0] == (
+            "SELECT synnkuupaev FROM persons "
+            "WHERE (synnikoht = 'Tartu')"
+        )
+
     def test_legacy_is_view_still_works(self, mock_cursor):
         mock_cursor.fetchall.return_value = [('result1',)]
 
@@ -1099,6 +1145,283 @@ class TestDataTestFeedback:
         result = test.run(mock_cursor)
 
         assert result['message']['test_type'] == 'view_data_test'
+
+    # Column_resolver_test - should be somewhere else, but will be here atm
+    def test_resolve_column_name_uses_fallback(self, mock_cursor, data_test_class):
+        available_columns = [
+            "id",
+            "synnkuupaev",
+            "synnikoht"
+        ]
+
+        column_resolvers = {
+            "birth_date": {
+                "fallbacks": ["synnkuupaev"]
+            },
+            "birth_place": {
+                "fallbacks": ["synnikoht"]
+            }
+        }
+
+        result = resolve_column_name(
+            "birth_date",
+            available_columns,
+            column_resolvers
+        )
+
+        assert result == "synnkuupaev"
+
+    def test_resolve_column_name_prefers_expected_name(self, mock_cursor, data_test_class):
+        available_columns = [
+            "birth_date",
+            "synnkuupaev"
+        ]
+
+        column_resolvers = {
+            "birth_date": {
+                "fallbacks": ["synnkuupaev"]
+            }
+        }
+
+        result = resolve_column_name(
+            "birth_date",
+            available_columns,
+            column_resolvers
+        )
+
+        assert result == "birth_date"
+
+    def test_column_resolver_pattern_multiple_matches_returns_none(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "pattern": r"^birth_?.*date$"
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "birthdate": 2,
+            "birth_old_date": 3,
+            "name": 4
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result is None
+
+    def test_column_resolver_prefers_exact_name_over_pattern(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "pattern": r"^birth_?.*date$"
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "birth_date": 2,
+            "birth_old_date": 3,
+            "name": 4
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result == "birth_date"
+
+    def test_column_resolver_position(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "position": 3
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "name": 2,
+            "synnkuupaev": 3,
+            "birth_place": 4
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result == "synnkuupaev"
+
+    def test_column_resolver_prefers_exact_name_over_position(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "position": 3
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "birth_date": 2,
+            "synnkuupaev": 3
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result == "birth_date"
+
+    def test_column_resolver_prefers_fallback_over_position(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "fallbacks": ["synnkuupaev"],
+                    "position": 2
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "birth_datee": 2,
+            "synnkuupaev": 3
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result == "synnkuupaev"
+
+    def test_column_resolver_prefers_pattern_over_position(
+            self,
+            data_test_class
+    ):
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            column_resolvers={
+                "birth_date": {
+                    "pattern": r"^birth_?.*date$",
+                    "position": 2
+                }
+            }
+        )
+
+        available_columns = {
+            "id": 1,
+            "birth_dat": 2,
+            "birth_old_date": 3,
+            "name": 4
+        }
+
+        result = test.resolve_object_name(
+            "birth_date",
+            available_columns,
+            test.column_resolvers
+        )
+
+        assert result == "birth_old_date"
+
+    def test_column_resolvers_are_used_in_final_query(
+            self,
+            mock_cursor,
+            data_test_class
+    ):
+        mock_cursor.fetchall.side_effect = [
+            # information_schema.columns
+            [
+                ("id", 1),
+                ("synnkuupaev", 2),
+                ("synnikoht", 3)
+            ],
+
+            # Actual DataTest query
+            [
+                ("1990-01-01",)
+            ]
+        ]
+
+        test = data_test_class(
+            name="persons",
+            column_name="birth_date",
+            where="$birth_place = 'Tartu'",
+            expected_value="1990-01-01",
+            column_resolvers={
+                "birth_date": {
+                    "fallbacks": ["synnkuupaev"]
+                },
+                "birth_place": {
+                    "fallbacks": ["synnikoht"]
+                }
+            },
+            points=10
+        )
+
+        result = test.run(mock_cursor)
+
+        assert result["is_success"] is True
+
+        executed_queries = [
+            call.args[0]
+            for call in mock_cursor.execute.call_args_list
+        ]
+
+        data_queries = [
+            query
+            for query in executed_queries
+            if "FROM persons" in query
+               and "information_schema.columns" not in query
+        ]
+
+        assert len(data_queries) == 1
+
+        final_query = data_queries[0]
+
+        assert "SELECT synnkuupaev FROM persons" in final_query
+        assert "synnikoht = 'Tartu'" in final_query
 
 
 def assert_feedback_translates_in_all_locales(result):
@@ -1117,3 +1440,39 @@ def assert_feedback_translates_in_all_locales(result):
         assert "$" not in feedback, (
             f"Unresolved parameter in locale '{locale}': {feedback}"
         )
+
+
+def resolve_column_name(expected_name, available_columns, column_resolvers):
+    # 1. Correct name always has highest priority
+    if expected_name in available_columns:
+        return expected_name
+
+    resolver = column_resolvers.get(expected_name, {})
+
+    # 2. Known fallback names
+    for fallback in resolver.get("fallbacks", []):
+        if fallback in available_columns:
+            return fallback
+
+    # 3. Regex
+    pattern = resolver.get("pattern")
+
+    if pattern is not None:
+        matches = [
+            column
+            for column in available_columns
+            if re.fullmatch(pattern, column, re.IGNORECASE)
+        ]
+
+        if len(matches) == 1:
+            return matches[0]
+
+    # 4. Position
+    position = resolver.get("position")
+
+    if position is not None:
+        for column, column_position in available_columns.items():
+            if column_position == position:
+                return column
+
+    return None

@@ -1,16 +1,15 @@
 from silmused.tests.TestDefinition import TestDefinition
 from silmused.utils import *
 from numbers import Number
+import re
 
-
-# TODO Expand expected_value_query to accept string or numeric lists #84
 
 class DataTest(TestDefinition):
     test_type = "table_data_test"
     name_parameter = "table_name"
 
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
-                 expected_value=None, expected_value_query=None, isView=False, column_name_fallback=None,
+                 expected_value=None, expected_value_query=None, isView=False, column_resolvers=None,
                  custom_feedback=None, llm_check=False, allow_extra_values=False, debug=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
@@ -19,8 +18,8 @@ class DataTest(TestDefinition):
             raise Exception('Parameter "expected_value_query" must be a string')
         if column_name is not None:
             self.is_count = False if column_name.lower().find("count") == -1 else True
-        if column_name_fallback is not None and not isinstance(column_name_fallback, list):
-            raise Exception('Parameter "column_name_fallback" must be a list')
+        if column_resolvers is not None and not isinstance(column_resolvers, dict):
+            raise Exception('Parameter "column_resolvers" must be a dict')
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if not isinstance(expected_value[0], Number) or len(expected_value) > 2:
@@ -69,7 +68,7 @@ class DataTest(TestDefinition):
         self.where = where
         self.join = join
         self.isView = isView
-        self.column_name_fallback = column_name_fallback
+        self.column_resolvers = column_resolvers
         self.allow_extra_values = allow_extra_values
         self.expected_value_query_result = None
         if isView:
@@ -85,10 +84,9 @@ class DataTest(TestDefinition):
             self.expected_value_list = True
             self.expected_value_group = "group"
 
-        if self.column_name_fallback is not None:
-            self.column_name = self._check_alternative_columns(cursor)
-            self.query = (f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}" +
-                          f" WHERE ({self.where})") if self.where is not None else ""
+        if self.column_resolvers is not None:
+            self._replace_assessment_objects(cursor)
+
         cursor.execute(self.query)
         result = cursor.fetchall()
 
@@ -303,15 +301,46 @@ class DataTest(TestDefinition):
                         "expected_value": self.expected_value, "actual_value": actual_value}},
         )
 
-    def _check_alternative_columns(self, cursor):
-        for c_name in self.column_name_fallback:
-            query = (f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.name}' "
-                     f"AND column_name ILIKE '{c_name}'")
-            cursor.execute(query)
-            result = cursor.fetchall()
-            if len(result[0][0]) > 0:
-                return result[0][0]
-        return self.column_name
+    def _replace_assessment_objects(self, cursor):
+        cursor.execute(
+            f"SELECT column_name, ordinal_position "
+            f"FROM information_schema.columns "
+            f"WHERE table_schema = 'public' "
+            f"AND table_name = '{self.name}' "
+            f"ORDER BY ordinal_position"
+        )
+        available_columns = dict(cursor.fetchall())
+
+        columns_to_resolve = set()
+
+        if self.column_name is not None:
+            columns_to_resolve.add(self.column_name)
+
+        if self.where is not None:
+            placeholders = re.findall(
+                r"\$([A-Za-z_][A-Za-z0-9_]*)",
+                self.where
+            )
+
+            columns_to_resolve.update(placeholders)
+
+        resolved_columns = {}
+
+        for column_name in columns_to_resolve:
+            resolved_name = self.resolve_object_name(column_name, available_columns, self.column_resolvers)
+
+            if resolved_name is not None:
+                resolved_columns[column_name] = resolved_name
+
+        self.column_name = resolved_columns.get(self.column_name, self.column_name)
+        resolved_where = self.where
+
+        if resolved_where is not None:
+            for original_name, resolved_name in resolved_columns.items():
+                resolved_where = resolved_where.replace(f"${original_name}", resolved_name)
+        self.where = resolved_where
+        self.query = self.query_builder(
+            f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}")
 
     def debug_output(self, result):
         print('DATA TEST DEBUG: ')
@@ -330,7 +359,8 @@ class DataTest(TestDefinition):
             if self.expected_value is not None: print(f"expected_value: {self.expected_value}")
             if self.expected_count is not None: print(f"expected_count: {self.expected_count}")
             if self.expected_value_query is not None: print(f"expected_value_query: {self.expected_value_query}")
-            if self.expected_value_query is not None: print(f"expected_value_query_result: {self.expected_value_query_result}")
+            if self.expected_value_query is not None: print(
+                f"expected_value_query_result: {self.expected_value_query_result}")
             if self.isView is not None: print(f"isView: {self.isView}")
             if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
             if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
