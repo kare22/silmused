@@ -2,7 +2,6 @@ import sys
 import re
 
 
-# TODO this should not be usable without a child
 class TestDefinition:
     def __init__(self, name, points, title='', where=None, join=None, column_name=None, should_exist=True, query='',
                  description=None, arguments=None, expected_value=None, expected_character_maximum_length=None,
@@ -13,8 +12,6 @@ class TestDefinition:
                 raise Exception('Parameter "arguments" must be a list')
             if len(arguments) == 0:
                 raise Exception('Parameter "arguments" cannot be an empty list')
-        # if expected_count is not None and (not isinstance(expected_count, int) or not isinstance(expected_count, list)):
-        #    raise Exception('Parameter "expected_count" must be an integer or list')
 
         if not isinstance(points, int) and not isinstance(points, float):
             raise Exception('Parameter "points" must be either an integer or a float')
@@ -29,7 +26,7 @@ class TestDefinition:
         self.where = where
         self.join = join
         self.description = description
-        self.arguments = arguments  # TODO arguments could be a class
+        self.arguments = arguments
         self.expected_value = expected_value
         self.expected_character_maximum_length = expected_character_maximum_length
         self.expected_type = expected_type
@@ -47,7 +44,7 @@ class TestDefinition:
 
     def query_builder(self, query):
         query_builder = query
-        # TODO right now a single join is possible (without a hack)
+        # right now a single join is possible (without a hack)
         if self.join is not None:
             query_builder += f" JOIN {self.join}"
 
@@ -55,7 +52,6 @@ class TestDefinition:
             query_builder += f" WHERE ({self.where})"
         return query_builder
 
-    # TODO should be callable only inside the scope
     def execute(self, cursor):
         raise NotImplementedError('Method "execute" not implemented')
 
@@ -64,12 +60,9 @@ class TestDefinition:
             cursor.execute(self.query)
             self._llm_check(cursor.fetchall())
         try:
-            # TODO could executing of pre and/or after queries be handled here?
-            # print(self.query)
+            # could executing of pre and/or after queries be handled here?
             return self.execute(cursor)
         except:
-            # TODO better handler for rollback?
-            # print(sys.exc_info())
             cursor.execute('ROLLBACK')
             if self.debug is not None:
                 if self.debug == 'DEBUG' or self.debug == 'ALL':
@@ -93,7 +86,6 @@ class TestDefinition:
                 is_sys_fail=True
             )
 
-    # TODO should be callable only inside the scope
     def response(self, is_success, message_success=None, message_failure=None, points=None, is_sys_fail=None):
         if is_success:
             if message_success is None:

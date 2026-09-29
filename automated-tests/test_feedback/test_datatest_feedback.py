@@ -545,7 +545,6 @@ class TestDataTestFeedback:
         )
 
         result = test.run(mock_cursor)
-        print(result)
         assert result['is_success'] is True
         assert result['message']['test_key'] == 'expected_value_range_positive_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
@@ -1079,7 +1078,6 @@ class TestDataTestFeedback:
         )
 
         result = test.run(mock_cursor)
-        print(result)
         assert result['is_success'] is False
         assert result['message']['test_key'] == 'expected_values_group_unexpected_negative_feedback'
         assert result['message']['params'][data_test_class.name_parameter] == 'users'
@@ -1111,7 +1109,6 @@ class TestDataTestFeedback:
         )
 
         result = test.run(mock_cursor)
-        print(result)
 
         assert result["is_success"] is True
         executed_queries = [
