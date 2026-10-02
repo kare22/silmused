@@ -13,7 +13,8 @@ def normalize_expected_value(value):
 def check_matching_value_types(input_list, input_type):
     for inp in input_list:
         if not isinstance(inp, input_type):
-            raise AttributeError(f"Expected value {inp} datatype: {type(inp)} doesn't match the required type: {input_type}")
+            raise AttributeError(
+                f"Expected value {inp} datatype: {type(inp)} doesn't match the required type: {input_type}")
 
 
 def extract_value_from_tuple(input_list):
@@ -63,3 +64,16 @@ def check_all_results(actual_list, expected_list, allow_extra_values):
         "expected_value": not_found,
         "unexpected_value": unexpected_value
     }
+
+
+# Used mainly for should_exist = False
+def find_matching_values(actual_list, expected_list):
+    actual_values = extract_value_from_tuple(actual_list)
+
+    found_values = []
+
+    for actual in actual_values:
+        if actual in expected_list:
+            found_values.append(actual)
+
+    return found_values

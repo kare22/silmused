@@ -1086,6 +1086,97 @@ class TestDataTestFeedback:
 
         assert_feedback_translates_in_all_locales(result)
 
+    def test_expected_value_range_should_not_exist_positive_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [(0,), ]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=[1,10],
+            should_exist=False,
+            points=10,
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_value_range_should_not_exist_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['actual_value'] == 0
+        assert result['message']['params']['expected_min_value'] == 1
+        assert result['message']['params']['expected_max_value'] == 10
+
+        assert_feedback_translates_in_all_locales(result)
+
+    def test_expected_value_range_should_not_exist_negative_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [(2,), ]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=[1,10],
+            should_exist=False,
+            points=10,
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_value_range_should_not_exist_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['actual_value'] == 2
+        assert result['message']['params']['expected_min_value'] == 1
+        assert result['message']['params']['expected_max_value'] == 10
+
+        assert_feedback_translates_in_all_locales(result)
+
+    def test_expected_values_group_should_not_exist_positive_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [(2,), ]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=[1, 10, 5],
+            should_exist=False,
+            points=10,
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_values_group_should_not_exist_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+
+        assert_feedback_translates_in_all_locales(result)
+
+    def test_expected_values_group_should_not_exist_negative_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [(1,), ]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=[1, 10, 5],
+            should_exist=False,
+            points=10,
+        )
+
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_should_not_exist_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['found_values'] == [1]
+
+        assert_feedback_translates_in_all_locales(result)
+
     def test_column_resolvers_use_fallbacks(self, mock_cursor, data_test_class):
         mock_cursor.fetchall.side_effect = [
             [("id",1), ("synnkuupaev",2), ("synnikoht",3)],

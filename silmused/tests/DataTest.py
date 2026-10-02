@@ -162,17 +162,23 @@ class DataTest(TestDefinition):
 
     def _assess_range(self, result):
         if len(result) == 0:
+            if self.should_exist:
+                return super().response(
+                    False,
+                    "",
+                    {
+                        "test_type": self.test_type,
+                        "test_key": "test_query_returned_no_rows",
+                        "params": {self.name_parameter: self.name, "expected_value": self.expected_value}}
+                )
             return super().response(
-                False,
-                "",
-                {
-                    "test_type": self.test_type,
-                    "test_key": "test_query_returned_no_rows",
-                    "params": {
-                        self.name_parameter: self.name,
-                        "expected_value": self.expected_value
-                    }
-                }
+                True,
+                {"test_type": self.test_type,
+                 "test_key": "expected_value_range_should_not_exist_positive_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                            "expected_min_value": self.expected_min_value,
+                            "expected_max_value": self.expected_max_value}},
+                {}
             )
         elif len(result) > 1:
             return super().response(
@@ -188,63 +194,118 @@ class DataTest(TestDefinition):
                 }
             )
         actual_value = result[0][0]
-        return super().response(
-            self.expected_min_value <= actual_value <= self.expected_max_value,
-            {"test_type": self.test_type,
-             "test_key": "expected_value_range_positive_feedback",
-             "params": {self.name_parameter: self.name, "column_name": self.column_name,
-                        "expected_min_value": self.expected_min_value,
-                        "expected_max_value": self.expected_max_value,
-                        "actual_value": actual_value}},
-            {"test_type": self.test_type,
-             "test_key": "expected_value_range_negative_feedback",
-             "params": {self.name_parameter: self.name, "column_name": self.column_name,
-                        "expected_min_value": self.expected_min_value,
-                        "expected_max_value": self.expected_max_value,
-                        "actual_value": actual_value}})
+        is_in_range = (self.expected_min_value <= actual_value <= self.expected_max_value)
+        if self.should_exist:
+            return super().response(
+                is_in_range,
+                {"test_type": self.test_type,
+                 "test_key": "expected_value_range_positive_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                            "expected_min_value": self.expected_min_value,
+                            "expected_max_value": self.expected_max_value,
+                            "actual_value": actual_value}},
+                {"test_type": self.test_type,
+                 "test_key": "expected_value_range_negative_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                            "expected_min_value": self.expected_min_value,
+                            "expected_max_value": self.expected_max_value,
+                            "actual_value": actual_value}})
+        else:
+            return super().response(
+                not is_in_range,
+                {"test_type": self.test_type,
+                 "test_key": "expected_value_range_should_not_exist_positive_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                            "expected_min_value": self.expected_min_value,
+                            "expected_max_value": self.expected_max_value,
+                            "actual_value": actual_value}},
+                {"test_type": self.test_type,
+                 "test_key": "expected_value_range_should_not_exist_negative_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                            "expected_min_value": self.expected_min_value,
+                            "expected_max_value": self.expected_max_value,
+                            "actual_value": actual_value}})
 
     def _assess_value_group(self, result):
-        expected_values = [
-            normalize_expected_value(value)
-            for value in self.expected_value
-        ]
-        assessment_result = check_all_results(result, expected_values, self.allow_extra_values)
+        if len(result) == 0:
+            if self.should_exist:
+                return super().response(
+                    False,
+                    "",
+                    {
+                        "test_type": self.test_type,
+                        "test_key": "test_query_returned_no_rows",
+                        "params": {
+                            self.name_parameter: self.name,
+                            "expected_value": self.expected_value
+                        }
+                    }
+                )
+            return super().response(
+                True,
+                {
+                    "test_type": self.test_type,
+                    "test_key": "expected_values_group_should_not_exist_positive_feedback",
+                    "params": {
+                        self.name_parameter: self.name,
+                        "column_name": self.column_name
+                    }
+                },
+                {}
+            )
+        if self.should_exist:
+            expected_values = [
+                normalize_expected_value(value)
+                for value in self.expected_value
+            ]
+            assessment_result = check_all_results(result, expected_values, self.allow_extra_values)
 
-        if len(assessment_result["unexpected_value"]) > 0 and len(assessment_result["expected_value"]) > 0:
+            if len(assessment_result["unexpected_value"]) > 0 and len(assessment_result["expected_value"]) > 0:
+                return super().response(
+                    assessment_result['assessment'],
+                    {},
+                    {"test_type": self.test_type,
+                     "test_key": "expected_values_group_missing_and_unexpected_negative_feedback",
+                     "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                                "expected_values": assessment_result["expected_value"],
+                                "unexpected_values": assessment_result["unexpected_value"]}},
+                )
+            elif len(assessment_result["unexpected_value"]) > 0:
+                return super().response(
+                    assessment_result['assessment'],
+                    {},
+                    {"test_type": self.test_type,
+                     "test_key": "expected_values_group_unexpected_negative_feedback",
+                     "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                                "unexpected_values": assessment_result["unexpected_value"]}},
+                )
+            elif len(assessment_result["expected_value"]) > 0:
+                return super().response(
+                    assessment_result['assessment'],
+                    {},
+                    {"test_type": self.test_type,
+                     "test_key": "expected_values_group_missing_negative_feedback",
+                     "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                                "expected_values": assessment_result["expected_value"]}},
+                )
             return super().response(
                 assessment_result['assessment'],
-                {},
                 {"test_type": self.test_type,
-                 "test_key": "expected_values_group_missing_and_unexpected_negative_feedback",
-                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
-                            "expected_values": assessment_result["expected_value"],
-                            "unexpected_values": assessment_result["unexpected_value"]}},
+                 "test_key": "expected_values_group_positive_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name}},
+                {},
             )
-        elif len(assessment_result["unexpected_value"]) > 0:
+        else:
+            found_values = find_matching_values(result, self.expected_value)
             return super().response(
-                assessment_result['assessment'],
-                {},
+                len(found_values) == 0,
                 {"test_type": self.test_type,
-                 "test_key": "expected_values_group_unexpected_negative_feedback",
-                 "params": {self.name_parameter: self.name, "column_name": self.column_name,
-                            "unexpected_values": assessment_result["unexpected_value"]}},
-            )
-        elif len(assessment_result["expected_value"]) > 0:
-            return super().response(
-                assessment_result['assessment'],
-                {},
+                 "test_key": "expected_values_group_should_not_exist_positive_feedback",
+                 "params": {self.name_parameter: self.name, "column_name": self.column_name}},
                 {"test_type": self.test_type,
-                 "test_key": "expected_values_group_missing_negative_feedback",
+                 "test_key": "expected_values_group_should_not_exist_negative_feedback",
                  "params": {self.name_parameter: self.name, "column_name": self.column_name,
-                            "expected_values": assessment_result["expected_value"]}},
-            )
-        return super().response(
-            assessment_result['assessment'],
-            {"test_type": self.test_type,
-             "test_key": "expected_values_group_positive_feedback",
-             "params": {self.name_parameter: self.name, "column_name": self.column_name}},
-            {},
-        )
+                            "found_values": found_values}})
 
     def _assess_single_value(self, result):
         if len(result) == 0:
