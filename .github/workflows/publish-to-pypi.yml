@@ -2,7 +2,7 @@ name: Publish to PyPI
 
 on:
   release:
-    types: 
+    types:
       - published
 
 jobs:
@@ -30,7 +30,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
       - run: python -m build
-      - env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
+      - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload dist/*
