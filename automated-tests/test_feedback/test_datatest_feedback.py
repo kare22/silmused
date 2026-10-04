@@ -9,6 +9,8 @@ from silmused.tests.DataTest import DataTest
 from silmused.tests.ViewDataTest import ViewDataTest
 from silmused.Translator import Translator
 
+pytestmark = pytest.mark.ci
+
 
 @pytest.fixture(params=[DataTest, ViewDataTest])
 def data_test_class(request):

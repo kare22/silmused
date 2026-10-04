@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.QueryStructureTest import QueryStructureTest
 
+pytestmark = pytest.mark.ci
 
 class TestQueryStructureTestFeedback:
     """Tests for QueryStructureTest feedback generation."""

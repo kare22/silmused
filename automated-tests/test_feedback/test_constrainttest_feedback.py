@@ -6,6 +6,8 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.ConstraintTest import ConstraintTest
 
+pytestmark = pytest.mark.ci
+
 
 class TestConstraintTestFeedback:
     """Tests for ConstraintTest feedback generation."""

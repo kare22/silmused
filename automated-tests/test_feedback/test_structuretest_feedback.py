@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.StructureTest import StructureTest
 
+pytestmark = pytest.mark.ci
 
 class TestStructureTestFeedback:
     """Tests for StructureTest feedback generation."""
