@@ -98,7 +98,7 @@ Silmused supports two main testing modes:
 
 - Python: 3.12
 - psycopg2: 2.9.9
-- Silmused: 1.7.8
+- Silmused: ![PyPI version](https://img.shields.io/pypi/v/silmused)
 
 ## Architecture Overview
 

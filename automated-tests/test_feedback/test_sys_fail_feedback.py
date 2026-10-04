@@ -7,6 +7,7 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.TestDefinition import TestDefinition as _TestDefinition
 
+pytestmark = pytest.mark.ci
 
 class FailingTest(_TestDefinition):
     """Test class that raises specific exceptions for testing error handling."""

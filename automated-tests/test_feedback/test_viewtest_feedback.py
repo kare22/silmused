@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.ViewTest import ViewTest
 
+pytestmark = pytest.mark.ci
 
 class TestViewTestFeedback:
     """Tests for ViewTest feedback generation."""

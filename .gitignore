@@ -2,9 +2,10 @@
 __pycache__
 .pytest_cache/
 silmused.egg-info
-venv
+.venv*
 demo.py
 *.sql
 *.json
 silmused/test_cases/query_tests/eurovisioon/euro_querys.py
 silmused/test_cases/query_tests/male/male_querys.py
+dist*

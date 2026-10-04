@@ -44,52 +44,10 @@
 	"custom": {
 		"custom_feedback": "$param1",
 		"or": "või",
+		"and": "ja",
 		"llm_check_fail": "Ülesanne pole sooritatud ausalt!"
 	},
-	"data_test": {
-		"table_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas tabelis '$param1'",
-		"table_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas tabelis '$param1'",
-		"table_column_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas tabelis '$param1' ja veerus '$param2'",
-		"table_column_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas tabelis '$param1' ja veerus '$param2'",
-		"table_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas tabelis '$param1'",
-		"table_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas tabelis '$param1'",
-		"table_column_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas tabelis '$param1' ja veerus '$param2'",
-		"table_column_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas tabelis '$param1' ja veerus '$param2'",
-		"table_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus '$param1' tabelis '$param2' ja veerus '$param2'",
-		"table_expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust '$param1', leiti hoopis '$param2' tabelis '$param3' ja veerus '$param4'",
-		"table_expected_value_should_exist_no_result_negative_feedback": "Vale, tulemust ei leitud testist tabelis '$param1' veerus '$param2'",
-		"table_expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus '$param1' ei võrdu '$param2' tabelis '$param3' ja veerus '$param4'",
-		"table_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus '$param1' ei tohi võrduda väärtusega '$param2' tabelis '$param3' ja veerus '$param4'",
-		"view_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas vaates '$param1'",
-		"view_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas vaates '$param1'",
-		"view_column_not_expected_value_should_exist_positive_feedback": "Õige, andmed on olemas vaates '$param1' ja veerus '$param2'",
-		"view_column_not_expected_value_should_exist_negative_feedback": "Vale, andmeid ei ole olemas vaates '$param1' ja veerus '$param2'",
-		"view_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas vaates '$param1'",
-		"view_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas vaates '$param1'",
-		"view_column_not_expected_value_should_not_exist_positive_feedback": "Õige, andmeid ei ole olemas vaates '$param1' ja veerus '$param2'",
-		"view_column_not_expected_value_should_not_exist_negative_feedback": "Vale, andmed on olemas vaates '$param1' ja veerus '$param2'",
-		"view_expected_value_should_exist_positive_feedback": "Õige, on olemas väärtus '$param1' vaates '$param2' ja veerus '$param2'",
-		"view_expected_value_should_exist_negative_feedback": "Vale, ei ole olemas väärtust '$param1', leiti hoopis '$param2' vaates '$param3' ja veerus '$param4'",
-		"view_expected_value_should_exist_no_result_negative_feedback": "Vale, tulemust ei leitud testist vaates '$param1' veerus '$param2'",
-		"view_expected_value_should_not_exist_positive_feedback": "Õige, leitud väärtus '$param1' ei võrdu '$param2' vaates '$param3' ja veerus '$param4'",
-		"view_expected_value_should_not_exist_negative_feedback": "Vale, leitud väärtus '$param1' ei tohi võrduda väärtusega '$param2' vaates '$param3' ja veerus '$param4'",
-		"table_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus '$param1' vahemikus '$param2' ja '$param3' tabelis '$param4' veerus '$param5'",
-		"table_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust '$param1' vahemikus '$param2' ja '$param3' tabelis '$param4' veerus '$param5'",
-		"table_expected_value_group_numbers_no_result_negative_feedback": "Vale, tulemust ei leitud testist tabelis '$param1' veerus '$param2'",
-		"table_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus '$param1' nimekirjas '$param2' tabelis '$param3' veerus '$param4'",
-		"table_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust '$param1' nimekirjas '$param2' tabelis '$param3' veerus '$param4'",
-		"table_expected_value_group_strings_no_result_negative_feedback": "Vale, tulemust ei leitud testist tabelis '$param1' veerus '$param2'",
-		"view_expected_value_group_numbers_positive_feedback": "Õige, on olemas väärtus '$param1' vahemikus '$param2' ja '$param3' vaates '$param4' veerus '$param5'",
-		"view_expected_value_group_numbers_negative_feedback": "Vale, ei ole olemas väärtust '$param1' vahemikus '$param2' ja '$param3' vaates '$param4' veerus '$param5'",
-		"view_expected_value_group_numbers_no_result_negative_feedback": "Vale, tulemust ei leitud testist vaates '$param1' veerus '$param2'",
-		"view_expected_value_group_strings_positive_feedback": "Õige, on olemas väärtus '$param1' nimekirjas '$param2' vaates '$param3' veerus '$param4'",
-		"view_expected_value_group_strings_negative_feedback": "Vale, ei ole olemas väärtust '$param1' nimekirjas '$param2' vaates '$param3' veerus '$param4'",
-		"view_expected_value_group_strings_no_result_negative_feedback": "Vale, tulemust ei leitud testist vaates '$param1' veerus '$param2'",
-		"custom_feedback": "'$param1'",
-		"no_feedback": "Kontrolli viga, tagasiside ei leitud.",
-		"table_query_no_result": "Vale, tulemust '$param1' ei leitud tabelis '$param2'",
-		"view_query_no_result": "Vale, tulemust '$param1' ei leitud vaates '$param2'"
-	},
+
 	"default_feedback": {
 		"default_positive_feedback": "Õige tulemus",
 		"default_negative_feedback": "Vale tulemus"
@@ -209,6 +167,42 @@
 		"sql_insert_import": "Esitatud andmebaasi fail on vigane: $exception",
 		"sql_test_run": "Automaatkontrolli päring ebaõnnestus: $exception"
 	},
+	"table_data_test": {
+		"rows_should_exist_positive_feedback": "Õige, tabelist '$table_name' leiti andmeid",
+		"rows_should_exist_negative_feedback": "Vale, tabelist '$table_name' oodati andmeid, kuid neid ei leitud",
+
+		"column_value_should_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' leiti andmeid",
+		"column_value_should_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
+
+		"rows_should_not_exist_positive_feedback": "Õige, tabelist '$table_name' ei leitud andmeid",
+		"rows_should_not_exist_negative_feedback": "Vale, tabelist '$table_name' ei oodatud andmeid, kuid neid leiti",
+
+		"column_value_should_not_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' ei leitud andmeid",
+		"column_value_should_not_exist_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
+
+		"expected_value_should_exist_positive_feedback": "Õige, tabeli '$table_name' veerust '$column_name' leiti oodatud väärtus '$expected_value'",
+		"expected_value_should_exist_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' oodati väärtust '$expected_value', kuid leiti '$actual_value'",
+
+		"expected_value_should_not_exist_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' leitud väärtus '$actual_value' ei võrdu oodatud väärtusega '$expected_value'",
+		"expected_value_should_not_exist_negative_feedback": "Vale, väärtust '$expected_value' ei oleks tohtinud tabeli '$table_name' veerust '$column_name' leida",
+
+		"expected_value_range_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
+
+		"expected_value_range_should_not_exist_positive_feedback": "Õige, tabelis '$table_name' ja veerus '$column_name' jääb väärtus '$actual_value' keelatud vahemikust '$expected_min_value' kuni '$expected_max_value' välja",
+		"expected_value_range_should_not_exist_negative_feedback": "Vale, tabelis '$table_name' ja veerus '$column_name' jääb väärtus '$actual_value' keelatud vahemikku '$expected_min_value' kuni '$expected_max_value'",
+
+		"expected_values_group_positive_feedback": "Õige, tabeli '$table_name' veerus '$column_name' leidusid kõik ja ainult oodatud väärtused",
+		"expected_values_group_missing_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' ei leitud järgmisi oodatud väärtusi: '$expected_values'",
+		"expected_values_group_unexpected_negative_feedback": "Vale, tabeli '$table_name' veerust '$column_name' leiti lubamatuid väärtusi: '$unexpected_values'",
+		"expected_values_group_missing_and_unexpected_negative_feedback": "Vale, tabeli '$table_name' veerus '$column_name' puudusid oodatud väärtused: '$expected_values'. Lisaks leiti lubamatuid väärtusi: '$unexpected_values'",
+
+		"expected_values_group_should_not_exist_positive_feedback": "Õige, tabelis '$table_name' ja veerus '$column_name' ei leitud keelatud väärtusi",
+		"expected_values_group_should_not_exist_negative_feedback": "Vale, tabelis '$table_name' ja veerus '$column_name' leiti järgmised keelatud väärtused: '$found_values'",
+
+		"test_query_returned_no_rows": "Vale, tabeli '$table_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
+		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
+	},
 	"trigger_test": {
 		"trigger_should_exist_positive_feedback": "Õige, triger '$trigger_name' on olemas",
 		"trigger_should_exist_negative_feedback": "Vale, triger '$trigger_name' ei ole olemas",
@@ -253,5 +247,41 @@
 		"mat_view_banned_elements_positive_feedback": "Õige, keelatud argumente '$param1' ei ole kasutatud materialiseeritud vaates '$param2'",
 		"mat_view_banned_elements_negative_feedback": "Vale, keelatud argumente '$param1' on kasutatud materialiseeritud vaates '$param2'",
 		"custom_feedback": "'$param1'"
+	},
+	"view_data_test": {
+		"rows_should_exist_positive_feedback": "Õige, vaatest '$view_name' leiti andmeid",
+		"rows_should_exist_negative_feedback": "Vale, vaatest '$view_name' oodati andmeid, kuid neid ei leitud",
+
+		"column_value_should_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' leiti andmeid",
+		"column_value_should_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' oodati andmeid, kuid neid ei leitud",
+
+		"rows_should_not_exist_positive_feedback": "Õige, vaatest '$view_name' ei leitud andmeid",
+		"rows_should_not_exist_negative_feedback": "Vale, vaatest '$view_name' ei oodatud andmeid, kuid neid leiti",
+
+		"column_value_should_not_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' ei leitud andmeid",
+		"column_value_should_not_exist_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' ei oodatud andmeid, kuid neid leiti",
+
+		"expected_value_should_exist_positive_feedback": "Õige, vaate '$view_name' veerust '$column_name' leiti oodatud väärtus '$expected_value'",
+		"expected_value_should_exist_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' oodati väärtust '$expected_value', kuid leiti '$actual_value'",
+
+		"expected_value_should_not_exist_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' leitud väärtus '$actual_value' ei võrdu oodatud väärtusega '$expected_value'",
+		"expected_value_should_not_exist_negative_feedback": "Vale, väärtust '$expected_value' ei oleks tohtinud vaate '$view_name' veerust '$column_name' leida",
+
+		"expected_value_range_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' jääb vahemikku '$expected_min_value' kuni '$expected_max_value'",
+		"expected_value_range_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' olev väärtus '$actual_value' ei jää vahemikku '$expected_min_value' kuni '$expected_max_value'",
+
+		"expected_value_range_should_not_exist_positive_feedback": "Õige, vaates '$view_name' ja veerus '$column_name' jääb väärtus '$actual_value' keelatud vahemikust '$expected_min_value' kuni '$expected_max_value' välja",
+		"expected_value_range_should_not_exist_negative_feedback": "Vale, vaates '$view_name' ja veerus '$column_name' jääb väärtus '$actual_value' keelatud vahemikku '$expected_min_value' kuni '$expected_max_value'",
+
+		"expected_values_group_positive_feedback": "Õige, vaate '$view_name' veerus '$column_name' leidusid kõik ja ainult oodatud väärtused",
+		"expected_values_group_missing_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' ei leitud järgmisi oodatud väärtusi: '$expected_values'",
+		"expected_values_group_unexpected_negative_feedback": "Vale, vaate '$view_name' veerust '$column_name' leiti lubamatuid väärtusi: '$unexpected_values'",
+		"expected_values_group_missing_and_unexpected_negative_feedback": "Vale, vaate '$view_name' veerus '$column_name' puudusid oodatud väärtused: '$expected_values'. Lisaks leiti lubamatuid väärtusi: '$unexpected_values'",
+
+		"expected_values_group_should_not_exist_positive_feedback": "Õige, vaates '$view_name' ja veerus '$column_name' ei leitud keelatud väärtusi",
+		"expected_values_group_should_not_exist_negative_feedback": "Vale, vaates '$view_name' ja veerus '$column_name' leiti järgmised keelatud väärtused: '$found_values'",
+
+		"test_query_returned_no_rows": "Vale, vaate '$view_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
+		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
 	}
 }

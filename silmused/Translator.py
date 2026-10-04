@@ -39,7 +39,7 @@ class Translator():
         if test_type not in self.data[self.locale]:
             return "Test_type not supported: " + test_type + " FOR locale: " + self.locale
         if test_key not in self.data[self.locale][test_type]:
-            return "Test_key not supported: " + test_key + " FOR test_type: " + test_type
+            return "Test_key not supported: " + test_key + " FOR test_type: " + test_type + " FOR locale: " + self.locale
 
         # print(self.data[self.locale][test_type])
         text = self.data[self.locale][test_type].get(test_key, test_key)
@@ -50,11 +50,19 @@ class Translator():
         text = self.data[self.locale][test_type].get(test_key, test_key)
         return text
 
-    def translate_param_separation(self, param_list):
-        or_lang = self._get_lang_param_separator("custom", "or")
+    def translate_param_separation(self, param_list, optional=False):
+        if optional:
+            lang_separator = self._get_lang_param_separator("custom", "or")
+        else:
+            lang_separator = self._get_lang_param_separator("custom", "and")
         output = ''
         for (index, param) in enumerate(param_list):
-            operator = '' if index == 0 else f"' {or_lang} '"
+            if index == 0:
+                operator = ''
+            elif index == len(param_list) - 1:
+                operator = f"' {lang_separator} '"
+            else:
+                operator = "', '"
             output += f"{operator}{param}"
         return output
 

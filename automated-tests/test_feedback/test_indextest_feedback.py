@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import MagicMock
 from silmused.tests.IndexTest import IndexTest
 
+pytestmark = pytest.mark.ci
 
 class TestIndexTestFeedback:
     """Tests for IndexTest feedback generation."""
