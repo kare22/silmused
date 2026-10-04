@@ -41,6 +41,7 @@ class Runner:
         self.results = []
         self.translator = Translator(locale=lang)
         self.pre_evaluate_error = None
+        self.llm_check_fail = False
 
         if self.test_query == 'test':
             if self._file_is_valid_pg_dump():
@@ -159,6 +160,8 @@ class Runner:
         except Exception as exception:
             if isinstance(exception.args[0], dict):
                 self.pre_evaluate_error = exception.args[0]
+                if 'llm_check_fail' in exception.args[0]['test_key']:
+                    self.llm_check_fail = True
             else:
                 self.pre_evaluate_error = ({"test_type": "sys_fail", "test_key":
                                             "sql_test_run",
@@ -316,6 +319,7 @@ class Runner:
                     "points": 0,
                     "producer": f"silmused {__version__}",
                     "pre_evaluate_error": self._message_to_feedback(self.pre_evaluate_error) if self.pre_evaluate_error is not None else None,
+                    "flag_for_review": "true" if self.llm_check_fail else "",
                     "finished_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "tests": tests if self.pre_evaluate_error is None else []
                 }
