@@ -86,3 +86,34 @@ def find_matching_values(actual_list, expected_list):
             found_values.append(actual)
 
     return found_values
+
+
+# used to check the order of results
+def check_results_order(actual_list, expected_list):
+    actual = extract_value_from_tuple(actual_list)
+    expected = extract_value_from_tuple(expected_list)
+
+    wrong_positions = []
+
+    if len(actual) != len(expected):
+        return {
+            "assessment": False,
+            "wrong_positions": [],
+            "expected_value": expected,
+            "actual_value": actual
+        }
+
+    for index, expected_value in enumerate(expected):
+        if actual[index] != expected_value:
+            wrong_positions.append({
+                "position": index + 1,
+                "expected": expected_value,
+                "actual": actual[index]
+            })
+
+    return {
+        "assessment": len(wrong_positions) == 0,
+        "wrong_positions": wrong_positions,
+        "expected_value": expected,
+        "actual_value": actual
+    }

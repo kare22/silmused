@@ -10,7 +10,7 @@ class DataTest(TestDefinition):
 
     def __init__(self, name, title=None, column_name=None, should_exist=True, where=None, join=None, description=None,
                  expected_value=None, expected_value_query=None, isView=False, column_resolvers=None,
-                 custom_feedback=None, llm_check=False, allow_extra_values=False, debug=None, points=0):
+                 custom_feedback=None, llm_check=False, allow_extra_values=False, check_order=False, debug=None, points=0):
 
         if column_name is not None and not isinstance(column_name, str):
             raise Exception('Parameter "column_name" must be a string')
@@ -20,6 +20,12 @@ class DataTest(TestDefinition):
             self.is_count = False if column_name.lower().find("count") == -1 else True
         if column_resolvers is not None and not isinstance(column_resolvers, dict):
             raise Exception('Parameter "column_resolvers" must be a dict')
+        if check_order:
+            if allow_extra_values:
+                raise ValueError('Parameters "Check_order" and "allow_extra_values" cannot be used together')
+            if not should_exist:
+                raise ValueError('When parameters "Check_order" is True then "should_exist" must also be True')
+
         if isinstance(expected_value, list):
             self.expected_value_list = True
             if not isinstance(expected_value[0], Number) or len(expected_value) > 2:
@@ -73,6 +79,7 @@ class DataTest(TestDefinition):
         self.column_resolvers = column_resolvers
         self.allow_extra_values = allow_extra_values
         self.expected_value_query_result = None
+        self.check_order = check_order
         if isView:
             self.test_type = "view_data_test"
             self.name_parameter = "view_name"
@@ -260,6 +267,19 @@ class DataTest(TestDefinition):
                 normalize_expected_value(value)
                 for value in self.expected_value
             ]
+            if self.check_order:
+                assessment_result = check_results_order(result, expected_values)
+                if assessment_result['assessment'] or len(assessment_result['wrong_positions']) > 0:
+                    return super().response(
+                        assessment_result['assessment'],
+                        {"test_type": self.test_type,
+                         "test_key": "expected_values_group_in_order_positive_feedback",
+                         "params": {self.name_parameter: self.name, "column_name": self.column_name}},
+                        {"test_type": self.test_type,
+                         "test_key": "expected_values_group_in_order_negative_feedback",
+                         "params": {self.name_parameter: self.name, "column_name": self.column_name,
+                                    "wrong_positions": assessment_result["wrong_positions"]}},
+                    )
             assessment_result = check_all_results(result, expected_values, self.allow_extra_values)
 
             if len(assessment_result["unexpected_value"]) > 0 and len(assessment_result["expected_value"]) > 0:
@@ -436,5 +456,6 @@ class DataTest(TestDefinition):
             if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
             if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
             if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
+            if self.check_order is not None: print(f"check_order: {self.check_order}")
         if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

@@ -149,3 +149,21 @@ class TestTranslator:
         assert isinstance(result, str)
         assert len(result) > 0
 
+    def test_translate_param_positions(self):
+        """Test transalation when provided positional feedback"""
+        translator = Translator(locale='et')
+        result = translator.translate_param_positions([
+            {
+                "position": 2,
+                "expected_value": "B",
+                "actual_value": "C"
+            },
+            {
+                "position": 3,
+                "expected_value": "C",
+                "actual_value": "B"
+            }
+        ])
+        assert len(result) > 0
+        assert '; ' in result
+        assert result == "2. kohal oodati väärtust 'B', kuid leiti 'C'; 3. kohal oodati väärtust 'C', kuid leiti 'B'"

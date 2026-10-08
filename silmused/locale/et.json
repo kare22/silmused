@@ -45,7 +45,8 @@
 		"custom_feedback": "$param1",
 		"or": "või",
 		"and": "ja",
-		"llm_check_fail": "Ülesanne pole sooritatud ausalt!"
+		"llm_check_fail": "Ülesanne pole sooritatud ausalt!",
+		"expected_position_feedback": "$position. kohal oodati väärtust '$expected_value', kuid leiti '$actual_value'"
 	},
 
 	"default_feedback": {
@@ -126,6 +127,9 @@
 
 		"expected_values_group_should_not_exist_positive_feedback": "Õige, päringu veerus '$column_name' ei leitud keelatud väärtusi",
 		"expected_values_group_should_not_exist_negative_feedback": "Vale, päringu veerus '$column_name' leiti järgmised keelatud väärtused: '$found_values'",
+
+		"expected_values_group_in_order_positive_feedback": "Õige, päringu tulemus on järjestatud vastavalt ootustele",
+		"expected_values_group_in_order_negative_feedback": "Vale, päringu tulemuste järjekord ei vasta ootustele: $wrong_positions",
 
 		"test_query_returned_no_rows": "Vale, kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
 		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
@@ -212,6 +216,9 @@
 		"expected_values_group_should_not_exist_positive_feedback": "Õige, tabelis '$table_name' ja veerus '$column_name' ei leitud keelatud väärtusi",
 		"expected_values_group_should_not_exist_negative_feedback": "Vale, tabelis '$table_name' ja veerus '$column_name' leiti järgmised keelatud väärtused: '$found_values'",
 
+		"expected_values_group_in_order_positive_feedback": "Õige, tabelis '$table_name' ja veerus '$column_name' on tulemus järjestatud vastavalt ootustele",
+		"expected_values_group_in_order_negative_feedback": "Vale, tabelis '$table_name' ja veerus '$column_name' tulemuste järjekord ei vasta ootustele: $wrong_positions",
+
 		"test_query_returned_no_rows": "Vale, tabeli '$table_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
 		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."
 	},
@@ -292,6 +299,9 @@
 
 		"expected_values_group_should_not_exist_positive_feedback": "Õige, vaates '$view_name' ja veerus '$column_name' ei leitud keelatud väärtusi",
 		"expected_values_group_should_not_exist_negative_feedback": "Vale, vaates '$view_name' ja veerus '$column_name' leiti järgmised keelatud väärtused: '$found_values'",
+
+		"expected_values_group_in_order_positive_feedback": "Õige, vaates '$view_name' ja veerus '$column_name' on tulemus järjestatud vastavalt ootustele",
+		"expected_values_group_in_order_negative_feedback": "Vale, vaates '$view_name' ja veerus '$column_name' tulemuste järjekord ei vasta ootustele: $wrong_positions",
 
 		"test_query_returned_no_rows": "Vale, vaate '$view_name' kontrollpäring ei tagastanud ühtegi rida, mistõttu ei saanud oodatud väärtust '$expected_value' kontrollida",
 		"test_query_returned_more_rows_than_expected": "Vale, kontrollpäring pidi tagastama ühe rea, kuid tagastas '$unexpected_row_count' rida."

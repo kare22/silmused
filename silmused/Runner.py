@@ -200,22 +200,23 @@ class Runner:
 
     def _message_to_feedback(self, message):
         if 'params' in message:
+            dynamic_params = {}
             if isinstance(message['params'], dict):
-                dynamic_params = {
-                    f"{key}": (
-                        param if not isinstance(param, list)
-                        else self.translator.translate_param_separation(param)
-                    )
-                    for key, param in message['params'].items()
-                }
+                for key, param in message['params'].items():
+                    if isinstance(param, list):
+                        if key == 'wrong_positions':
+                            dynamic_params[key] = self.translator.translate_param_positions(param)
+                        else:
+                            dynamic_params[key] = self.translator.translate_param_separation(param)
+                    else:
+                        dynamic_params[key] = param
             else:
-                dynamic_params = {
-                    f"param{index + 1}": (
-                        param if not isinstance(param, list)
-                        else self.translator.translate_param_separation(param)
-                    )
-                    for index, param in enumerate(message['params'])
-                }
+                for index, param in enumerate(message['params']):
+                    if isinstance(param, list):
+                        dynamic_params[f"param{index + 1}"] = self.translator.translate_param_separation(param)
+                    else:
+                        dynamic_params[f"param{index + 1}"] = param
+
             feedback = self.translator.translate(message['test_type'], message['test_key'], **dynamic_params)
         else:
             feedback = self.translator.translate(message['test_type'], message['test_key'])

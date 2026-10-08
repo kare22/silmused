@@ -66,6 +66,20 @@ class Translator():
             output += f"{operator}{param}"
         return output
 
+    def _get_custom_feedback_with_parameters(self, test_type, test_key, **kwargs):
+        text = self.data[self.locale][test_type].get(test_key, test_key)
+        return Template(text).safe_substitute(**kwargs)
+
+    def translate_param_positions(self, position_list):
+        print(position_list)
+        output = ''
+        for (index, feedback) in enumerate(position_list):
+            if index == 0:
+                output = self._get_custom_feedback_with_parameters("custom", "expected_position_feedback", **feedback)
+            else:
+                output += f"; {self._get_custom_feedback_with_parameters("custom", "expected_position_feedback", **feedback)}"
+        return output
+
 
 def str_to_datetime(dt_str, format='%Y-%m-%d'):
     return datetime.strptime(dt_str, format)

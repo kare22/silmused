@@ -1180,6 +1180,51 @@ class TestDataTestFeedback:
 
         assert_feedback_translates_in_all_locales(result)
 
+    # expected_value_group check_order=Truw
+    def test_expected_values_group_in_order_positive_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [("A",), ("B",), ("C",)]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=["A", "B", "C"],
+            check_order=True,
+            points=10,
+        )
+        result = test.run(mock_cursor)
+        assert result['is_success'] is True
+        assert result['message']['test_key'] == 'expected_values_group_in_order_positive_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+
+        assert_feedback_translates_in_all_locales(result)
+
+    def test_expected_values_group_in_order_negative_feedback(self, mock_cursor, data_test_class):
+        mock_cursor.fetchall.side_effect = [
+            [("A",), ("C",), ("B",)]  # DataTest query result
+        ]
+
+        test = data_test_class(
+            name='users',
+            column_name='status',
+            expected_value=["A", "B", "C"],
+            check_order=True,
+            points=10,
+        )
+        result = test.run(mock_cursor)
+        assert result['is_success'] is False
+        assert result['message']['test_key'] == 'expected_values_group_in_order_negative_feedback'
+        assert result['message']['params'][data_test_class.name_parameter] == 'users'
+        assert result['message']['params']['column_name'] == 'status'
+        assert result['message']['params']['wrong_positions'] == [
+            {'position': 2, 'expected': 'B', 'actual': 'C'},
+            {'position': 3, 'expected': 'C', 'actual': 'B'}
+        ]
+
+        assert_feedback_translates_in_all_locales(result)
+
     def test_column_resolvers_use_fallbacks(self, mock_cursor, data_test_class):
         mock_cursor.fetchall.side_effect = [
             [("id",1), ("synnkuupaev",2), ("synnikoht",3)],
