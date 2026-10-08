@@ -7,12 +7,13 @@ import re
 from unittest.mock import MagicMock
 from silmused.tests.DataTest import DataTest
 from silmused.tests.ViewDataTest import ViewDataTest
+from silmused.tests.QueryDataTest import QueryDataTest
 from silmused.Translator import Translator
 
 pytestmark = pytest.mark.ci
 
 
-@pytest.fixture(params=[DataTest, ViewDataTest])
+@pytest.fixture(params=[DataTest, ViewDataTest, QueryDataTest])
 def data_test_class(request):
     return request.param
 

@@ -47,6 +47,8 @@ class DataTest(TestDefinition):
         else:
             self.expected_value_list = False
             self.expected_value_group = None
+            self.expected_min_value = None
+            self.expected_max_value = None
 
         super().__init__(
             name=name,
@@ -405,7 +407,7 @@ class DataTest(TestDefinition):
 
     def debug_output(self, result):
         print('DATA TEST DEBUG: ')
-        if self.debug == 'DEBUG':
+        if self.debug in ['DEBUG','ALL']:
             if self.title is not None: print(f"Test title: {self.title}")
             print(f"query: {self.query}")
             print(f"result: {result}")
@@ -429,13 +431,10 @@ class DataTest(TestDefinition):
             if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
             if self.llm_check is not None: print(f"llm_check: {self.llm_check}")
             if self.points is not None: print(f"points: {self.points}")
-            if isinstance(self.expected_value, list):
-                if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
-                if self.allow_extra_values is not None: print(f"allow_extra_values: {self.allow_extra_values}")
-                if not isinstance(self.expected_value[0], str):
-                    if self.expected_value_group is not None: print(
-                        f"expected_value_group: {self.expected_value_group}")
-                    if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
-                    if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
+            if self.expected_value_list is not None: print(f"expected_value_list: {self.expected_value_list}")
+            if self.allow_extra_values is not None: print(f"allow_extra_values: {self.allow_extra_values}")
+            if self.expected_value_group is not None: print(f"expected_value_group: {self.expected_value_group}")
+            if self.expected_min_value is not None: print(f"expected_min_value: {self.expected_min_value}")
+            if self.expected_max_value is not None: print(f"expected_max_value: {self.expected_max_value}")
         if self.debug not in ['DEBUG', 'ALL']:
             print(f"Warning! {self.debug} is not valid debug level, choose 'DEBUG' or 'ALL'")

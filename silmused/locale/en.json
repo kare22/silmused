@@ -94,28 +94,40 @@
 		"custom_feedback": "'$param1'"
 	},
 	"query_data_test": {
-		"query_not_expected_value_should_exist_positive_feedback": "Correct, results were found for query",
-		"query_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for query, but none were found",
-		"query_column_not_expected_value_should_exist_positive_feedback": "Correct, results were found in column '$param1'",
-		"query_column_not_expected_value_should_exist_negative_feedback": "Wrong, expected to find results for query in column '$param1', but none were found",
-		"query_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for query",
-		"query_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for query",
-		"query_column_not_expected_value_should_not_exist_positive_feedback": "Correct, no results were found for query in column '$param1'",
-		"query_column_not_expected_value_should_not_exist_negative_feedback": "Wrong, expected to find no results for query in column '$param1', but were found",
-		"query_expected_value_should_exist_positive_feedback": "Correct value '$param1' found for query in column '$param2'",
-		"query_expected_value_should_exist_negative_feedback": "Wrong, expected to find '$param1' instead of '$param2' for query in column '$param3'",
-		"query_expected_value_should_exist_no_result_negative_feedback": "Wrong, no result was found for test query in column '$param1'",
-		"query_expected_value_should_not_exist_positive_feedback": "Correct, '$param1' does not equal '$param2' in query column '$param3'",
-		"query_expected_value_should_not_exist_negative_feedback": "Wrong, expected '$param1' to not equal '$param2' in query column '$param3'",
-		"query_expected_value_group_numbers_positive_feedback": "Correct, value '$param1' was found between '$param2' and '$param3' in column '$param4'",
-		"query_expected_value_group_numbers_negative_feedback": "Wrong, value '$param1' was not found between '$param2' and '$param3' in column '$param4'",
-		"query_expected_value_group_numbers_no_result_negative_feedback": "Wrong, no result was found for test query in column '$param1'",
-		"query_expected_value_group_strings_positive_feedback": "Correct, value '$param1' was found in list '$param2' in column '$param3'",
-		"query_expected_value_group_strings_negative_feedback": "Wrong, value '$param1' was not found in list '$param2' in column '$param3'",
-		"query_expected_value_group_strings_no_result_negative_feedback": "Wrong, no result was found for test query in column '$param1'",
-		"query_no_result": "Wrong, query returns no result",
-		"custom_feedback": "'$param1'",
-		"no_feedback": "Automated feedback error, no feedback was found."
+		"rows_should_exist_positive_feedback": "Correct, results were found in query",
+		"rows_should_exist_negative_feedback": "Wrong, expected to find results in query, but none were found",
+
+		"column_value_should_exist_positive_feedback": "Correct, results were found in query column '$column_name'",
+		"column_value_should_exist_negative_feedback": "Wrong, expected to find results in query column '$column_name', but none were found",
+
+		"rows_should_not_exist_positive_feedback": "Correct, no results were found in query",
+		"rows_should_not_exist_negative_feedback": "Wrong, expected to find no results in query, but results were found",
+
+		"column_value_should_not_exist_positive_feedback": "Correct, no results were found in query column '$column_name'",
+		"column_value_should_not_exist_negative_feedback": "Wrong, expected to find no results in query column '$column_name', but results were found",
+
+		"expected_value_should_exist_positive_feedback": "Correct, expected value '$expected_value' was found in query column '$column_name'",
+		"expected_value_should_exist_negative_feedback": "Wrong, expected value '$expected_value', but found '$actual_value' in query column '$column_name'",
+
+		"expected_value_should_not_exist_positive_feedback": "Correct, actual value '$actual_value' differs from expected value '$expected_value' in query column '$column_name'",
+		"expected_value_should_not_exist_negative_feedback": "Wrong, expected value '$expected_value' should not have been found in query column '$column_name'",
+
+		"expected_value_range_positive_feedback": "Correct, actual value '$actual_value' is between '$expected_min_value' and '$expected_max_value' in query column '$column_name'",
+		"expected_value_range_negative_feedback": "Wrong, actual value '$actual_value' is not between '$expected_min_value' and '$expected_max_value' in query column '$column_name'",
+
+		"expected_value_range_should_not_exist_positive_feedback": "Correct, value '$actual_value' is outside the forbidden range '$expected_min_value' to '$expected_max_value' in query column '$column_name'",
+		"expected_value_range_should_not_exist_negative_feedback": "Wrong, value '$actual_value' is inside the forbidden range '$expected_min_value' to '$expected_max_value' in query column '$column_name'",
+
+		"expected_values_group_positive_feedback": "Correct, the query column '$column_name' contains the expected values",
+		"expected_values_group_missing_negative_feedback": "Wrong, the query column '$column_name' is missing the following expected values: '$expected_values'",
+		"expected_values_group_unexpected_negative_feedback": "Wrong, the query column '$column_name' contains the following unexpected values: '$unexpected_values'",
+		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the query column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
+
+		"expected_values_group_should_not_exist_positive_feedback": "Correct, none of the forbidden values were found in query column '$column_name'",
+		"expected_values_group_should_not_exist_negative_feedback": "Wrong, the following forbidden values were found in query column '$column_name': '$found_values'",
+
+		"test_query_returned_no_rows": "Wrong, the test query returned no rows, so the expected value '$expected_value' could not be checked",
+		"test_query_returned_more_rows_than_expected": "Wrong, expected the test query to return a single row, but '$unexpected_row_count' rows were returned."
 	},
 	"procedure_test": {
 		"procedure_exists_positive_feedback": "Correct, procedure '$procedure_name' was found",
@@ -277,8 +289,8 @@
 		"expected_values_group_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' contains the following unexpected values: '$unexpected_values'",
 		"expected_values_group_missing_and_unexpected_negative_feedback": "Wrong, the view '$view_name' column '$column_name' is missing the following expected values: '$expected_values', and contains the following unexpected values: '$unexpected_values'",
 
-		"expected_values_group_should_not_exist_positive_feedback": "Correct, none of the forbidden values were found in table '$view_name' column '$column_name'",
-		"expected_values_group_should_not_exist_negative_feedback": "Wrong, the following forbidden values were found in table '$view_name' column '$column_name': '$found_values'",
+		"expected_values_group_should_not_exist_positive_feedback": "Correct, none of the forbidden values were found in view '$view_name' column '$column_name'",
+		"expected_values_group_should_not_exist_negative_feedback": "Wrong, the following forbidden values were found in view '$view_name' column '$column_name': '$found_values'",
 
 		"test_query_returned_no_rows": "Wrong, the test query returned no rows for view '$view_name', so the expected value '$expected_value' could not be checked",
 		"test_query_returned_more_rows_than_expected": "Wrong, expected the test query to return a single row, but '$unexpected_row_count' rows were returned."
