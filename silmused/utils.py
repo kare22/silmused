@@ -1,3 +1,6 @@
+from datetime import time
+
+
 def list_to_string(array):
     if array is None:
         return ''
@@ -6,7 +9,13 @@ def list_to_string(array):
 
 def normalize_expected_value(value):
     if value == "NULL" or value == "None":
-        return None
+        return
+    if isinstance(value, str):
+        try:
+            # if expected value is in format '00:02:36'
+            return time.fromisoformat(value)
+        except ValueError:
+            pass
     return value
 
 
