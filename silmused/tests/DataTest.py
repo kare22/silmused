@@ -424,9 +424,10 @@ class DataTest(TestDefinition):
             for original_name, resolved_name in resolved_columns.items():
                 resolved_where = resolved_where.replace(f"${original_name}", resolved_name)
         self.where = resolved_where
+        self.query = self.query_builder(
+            f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}")
         if self.check_order:
-            self.query = self._apply_test_id_order(self.query_builder(
-                f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}"))
+            self.query = self._apply_test_id_order(self.query)
 
     def _apply_test_id_order(self, query):
         # query_test rows carry a serial test_id that reflects the submission's result order
@@ -454,7 +455,7 @@ class DataTest(TestDefinition):
             if self.expected_value_query is not None: print(
                 f"expected_value_query_result: {self.expected_value_query_result}")
             if self.isView is not None: print(f"isView: {self.isView}")
-            if self.column_name_fallback is not None: print(f"column_name_fallback: {self.column_name_fallback}")
+            if self.column_resolvers is not None: print(f"column_resolvers: {self.column_resolvers}")
             if self.should_exist is not None: print(f"should_exist: {self.should_exist}")
             if self.elements is not None: print(f"elements: {self.elements}")
             if self.custom_feedback is not None: print(f"custom_feedback: {self.custom_feedback}")
