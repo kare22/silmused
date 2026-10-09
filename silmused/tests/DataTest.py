@@ -83,6 +83,8 @@ class DataTest(TestDefinition):
         if isView:
             self.test_type = "view_data_test"
             self.name_parameter = "view_name"
+        if self.check_order:
+            self.query = self._apply_test_id_order(self.query)
 
     def execute(self, cursor):
         if self.expected_value_query is not None:
@@ -422,8 +424,15 @@ class DataTest(TestDefinition):
             for original_name, resolved_name in resolved_columns.items():
                 resolved_where = resolved_where.replace(f"${original_name}", resolved_name)
         self.where = resolved_where
-        self.query = self.query_builder(
-            f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}")
+        if self.check_order:
+            self.query = self._apply_test_id_order(self.query_builder(
+                f"SELECT {self.column_name if self.column_name is not None else '*'} FROM {self.name}"))
+
+    def _apply_test_id_order(self, query):
+        # query_test rows carry a serial test_id that reflects the submission's result order
+        if self.check_order and self.test_type == "query_data_test":
+            return f"{query} ORDER BY test_id"
+        return query
 
     def debug_output(self, result):
         print('DATA TEST DEBUG: ')
