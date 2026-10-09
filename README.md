@@ -20,6 +20,7 @@
       + [Test Classes](#test-classes)
          - [StructureTest](#structuretest)
          - [DataTest](#datatest)
+         - [ViewDataTest](#viewdatatest)
          - [ConstraintTest](#constrainttest)
          - [FunctionTest](#functiontest)
          - [ProcedureTest](#proceduretest)
@@ -39,7 +40,7 @@
          - [Expected Value Patterns](#expected-value-patterns)
          - [Column Name Patterns](#column-name-patterns)
          - [Dynamic Expected Values](#dynamic-expected-values)
-         - [Alternative Column Names](#alternative-column-names)
+         - [Resolving Alternative Column Names](#resolving-alternative-column-names)
          - [Elements Checks](#elements-checks)
          - [Debug Mode](#debug-mode)
          - [LLM Check](#llm-check)
@@ -129,7 +130,8 @@ Silmused is built around three main components:
 These test classes inherit from `TestDefinition` and validate database structures:
 
 - `StructureTest` - Tests table/view structure
-- `DataTest` - Tests table/view data content
+- `DataTest` - Tests table data content
+- `ViewDataTest` - Tests view data content
 - `ConstraintTest` - Tests table/column constraints
 - `FunctionTest` - Tests database functions
 - `ProcedureTest` - Tests stored procedures
@@ -142,7 +144,7 @@ These test classes inherit from `TestDefinition` and validate database structure
 These test classes validate SQL query results:
 
 - `QueryStructureTest` - Tests query result structure (columns)
-- `QueryDataTest` - Tests query result data
+- `QueryDataTest` - Tests query result data using the shared `DataTest` behavior
 
 **Important:** Query tests use a special workflow where the input SQL query is executed and results are stored in a temporary table named `query_test` with an additional `test_id` column for row ordering.
 
@@ -239,7 +241,7 @@ Tests table/view structure using `information_schema.columns`.
 
 #### DataTest
 
-Tests table/view data content using direct SQL queries.
+Tests table data content using direct SQL queries.
 
 **Key Features:**
 - Tests data existence
@@ -250,11 +252,33 @@ Tests table/view data content using direct SQL queries.
 - Tests NULL values
 - Supports WHERE clauses
 - Supports JOIN clauses (INNER JOIN)
-- Supports view-specific feedback with `isView=True`
-- Supports alternative column lookup with `column_name_fallback`
+- Supports resolving expected column names with `column_resolvers`
 - Supports `debug` and `llm_check`
 
 **Note:** `DataTest.column_name` must be a string. List-based `column_name` checks are supported by structure-oriented tests such as `StructureTest`, `ViewTest`, and `QueryStructureTest`.
+
+#### ViewDataTest
+
+Tests view data content using the same data assertions as `DataTest`, with view-specific feedback. Use this class instead of passing an `isView` flag to `DataTest`.
+
+**Key Features:**
+- Tests data existence and exact values
+- Tests dynamically computed expected values with `expected_value_query`
+- Tests value ranges and value lists
+- Supports WHERE clauses and JOIN clauses
+- Supports resolving expected column names with `column_resolvers`
+- Supports `debug` and `llm_check`
+
+**Note:** `ViewDataTest.column_name` must be a string.
+
+```python
+ViewDataTest(
+    name='active_users',
+    column_name='email',
+    expected_value='admin@example.com',
+    points=20
+)
+```
 
 #### ConstraintTest
 
@@ -343,7 +367,7 @@ Tests query result structure (columns) using `information_schema.columns` on the
 
 #### QueryDataTest
 
-Tests query result data using direct SQL queries on the `query_test` table.
+Tests query result data using direct SQL queries on the `query_test` table. It inherits from `DataTest`, reusing its data assertions while identifying the tested object as a query for feedback.
 
 **Key Features:**
 - Tests row counts
@@ -352,7 +376,7 @@ Tests query result data using direct SQL queries on the `query_test` table.
 - Tests value ranges
 - Tests value lists
 - Supports WHERE clauses
-- Supports alternative column lookup with `column_name_fallback`
+- Supports resolving expected column names with `column_resolvers`
 - Supports `debug` and `llm_check`
 
 **Note:** `QueryDataTest.column_name` must be a string.
@@ -414,7 +438,7 @@ The Translator class provides internationalization support for feedback messages
 - Currently supports: English (`en.json`) and Estonian (`et.json`)
 
 **Translation Structure:**
-- Organized by test type (e.g., `structure_test`, `data_test`)
+- Organized by test type (e.g., `structure_test`, `table_data_test`, `view_data_test`, `query_data_test`)
 - Each test type has test keys (e.g., `table_should_exist_positive_feedback`)
 - Messages support positional parameters (`$param1`, `$param2`, etc.) and, for some test types, named placeholders such as `$index_name`, `$trigger_name`, and `$procedure_name`
 
@@ -427,12 +451,12 @@ All test classes inherit common parameters from `TestDefinition`. The following 
 | `name`                              | string      | -       | **Yes** | All tests | Table/view/function/procedure/trigger/index name. Use lowercase names unless the underlying SQL object was created with quoted case-sensitive identifiers. |
 | `points`                            | int/float   | `0`     | No | All tests | Points awarded for this test. |
 | `title`                             | string      | `None`  | No | All tests | Test description shown in feedback. |
-| `column_name`                       | string/list | `None`  | No | Varies by test | Column name(s) to test. `DataTest` and `QueryDataTest` accept a string only; `StructureTest`, `ViewTest`, and `QueryStructureTest` also accept lists. |
+| `column_name`                       | string/list | `None`  | No | Varies by test | Column name(s) to test. `DataTest`, `ViewDataTest`, and `QueryDataTest` accept a string only; `StructureTest`, `ViewTest`, and `QueryStructureTest` also accept lists. |
 | `should_exist`                      | boolean     | `True`  | No | Most tests | Whether the tested result should exist. For `elements`, `True` means required elements and `False` means banned elements. |
 | `expected_value`                    | any         | `None`  | No | Data/query/function/view tests | Expected value; can be a single value, `'NULL'`, numeric range/list, or list of strings depending on the test type. |
-| `expected_value_query`              | string      | `None`  | No | `DataTest`, `QueryDataTest`, `FunctionTest` | SQL query executed before the assertion; the first result cell becomes `expected_value`. |
+| `expected_value_query`              | string      | `None`  | No | `DataTest`, `ViewDataTest`, `QueryDataTest`, `FunctionTest` | SQL query executed before the assertion; the first result cell becomes `expected_value`. |
 | `where`                             | string      | `None`  | No | Data/query/function/structure/view tests | WHERE clause for filtering. SQL values use single quotes inside Python double quotes. |
-| `join`                              | string      | `None`  | No | `DataTest`, `QueryDataTest` | JOIN clause. Currently one direct JOIN clause is supported. |
+| `join`                              | string      | `None`  | No | `DataTest`, `ViewDataTest`, `QueryDataTest` | JOIN clause. Currently one direct JOIN clause is supported. |
 | `description`                       | string      | `None`  | No | All tests | Internal description; included in raw test response but not shown in final feedback. |
 | `arguments`                         | list        | `None`  | No | Function/procedure/trigger tests, info_schema selection | Function/procedure arguments, trigger event manipulations, or selected information schema columns. |
 | `expected_type`                     | string      | `None`  | No | `StructureTest` | Expected column type: `'varchar'`, `'integer'`, `'float'`, `'text'`, or `'boolean'`. |
@@ -446,10 +470,9 @@ All test classes inherit common parameters from `TestDefinition`. The following 
 | `constraint_type`                   | string      | `None`  | No | `ConstraintTest` | Constraint type: `'PRIMARY KEY'`, `'FOREIGN KEY'`, `'UNIQUE'`, or `'CHECK'`. |
 | `number_of_parameters`              | int         | `None`  | No | `FunctionTest`, `ProcedureTest` | Expected number of function/procedure parameters. |
 | `isMaterialized`                    | boolean     | `False` | No | `ViewTest` | Whether the target view is materialized. Supports existence and column checks. |
-| `isView`                            | boolean     | `False` | No | `DataTest` | Uses view-specific feedback wording for data tests against views. |
 | `action_timing`                     | string      | `None`  | No | `TriggerTest` | Trigger action timing: `'BEFORE'` or `'AFTER'`. |
 | `elements`                          | str/list    | `None`  | No | `QueryStructureTest`, `ViewTest`, `FunctionTest`, `ProcedureTest` | Required or banned SQL/source fragments. Controlled by `should_exist`. |
-| `column_name_fallback`              | list        | `None`  | No | `DataTest`, `QueryDataTest` | Alternative column name patterns checked with `ILIKE`; the first matching column is used. |
+| `column_resolvers`                  | dict        | `None`  | No | `DataTest`, `ViewDataTest`, `QueryDataTest` | Maps each expected column name to fallback names, a regex pattern, and/or a 1-based column position. Resolution runs before the data query. |
 | `llm_check`                         | boolean     | `False` | No | Most `TestDefinition` tests | Pre-runs the generated query and fails if row existence contradicts `should_exist`. |
 | `debug`                             | string      | `None`  | No | Most tests, `ExecuteLayer` | Enables debug print output. Valid values are `'DEBUG'` and `'ALL'`. |
 
@@ -510,7 +533,7 @@ column_name='email'
 column_name=['email', 'username']  # Tests for multiple columns
 ```
 
-Multiple-column checks are intended for structure-style tests such as `StructureTest`, `ViewTest`, and `QueryStructureTest`. `DataTest` and `QueryDataTest` require `column_name` to be a single string.
+Multiple-column checks are intended for structure-style tests such as `StructureTest`, `ViewTest`, and `QueryStructureTest`. `DataTest`, `ViewDataTest`, and `QueryDataTest` require `column_name` to be a single string.
 
 #### Dynamic Expected Values
 
@@ -525,22 +548,54 @@ DataTest(
 )
 ```
 
-This is supported by `DataTest`, `QueryDataTest`, and `FunctionTest`.
+This is supported by `DataTest`, `ViewDataTest`, `QueryDataTest`, and `FunctionTest`.
 
-#### Alternative Column Names
+#### Resolving Alternative Column Names
 
-Use `column_name_fallback` when student queries may use acceptable alternative column names. Silmused checks the fallback list with `ILIKE` and uses the first matching column.
+Use `column_resolvers` when the expected column name may differ from the name in the tested table, view, or query result. It maps each expected column name to a resolver configuration. The same resolver is used for `column_name` and for column references in `where`, written as `$expected_column`.
 
 ```python
-QueryDataTest(
-    name='query_test',
-    column_name='title',
-    column_name_fallback=['title', 'pealkiri', '%song%'],
-    expected_value='Madness of Love',
-    where='test_id=1',
-    points=20
+DataTest(
+    name='persons',
+    column_name='birth_date',
+    where="$birth_place = 'Tartu'",
+    expected_value='1990-01-01',
+    column_resolvers={
+        'birth_date': {
+            'fallbacks': ['synnkuupaev']
+        },
+        'birth_place': {
+            'fallbacks': ['synnikoht']
+        }
+    },
+    points=10
 )
 ```
+
+For this test, if the table contains `synnkuupaev` and `synnikoht` but not `birth_date` or `birth_place`, the generated query uses those actual column names:
+
+```sql
+SELECT synnkuupaev FROM persons WHERE (synnikoht = 'Tartu')
+```
+
+Each resolver can define one or more of the following options:
+
+| Option | Example | Behavior |
+|--------|---------|----------|
+| `fallbacks` | `['synnkuupaev', 'synnipaev']` | Tries the listed actual column names in order and uses the first exact match. |
+| `pattern` | `r'^birth_?.*date$'` | Matches column names with a case-insensitive, full-string regular expression. It is used only when exactly one column matches. |
+| `position` | `3` | Uses the column at that 1-based ordinal position, if available. |
+
+Resolution follows this priority:
+
+1. If the expected name itself exists, it is always used.
+2. Otherwise, fallback names are checked in list order.
+3. If none match, the regex is tried. It must match exactly one available column; zero or multiple matches do not resolve it.
+4. If no unique regex match is found, the configured position is tried.
+
+For example, `{'birth_date': {'pattern': r'^birth_?.*date$'}}` can match `birthdate` or `birth_old_date` when that is the only matching column. If both columns are present, the pattern is ambiguous and will not choose either; configure an explicit fallback or position instead. Exact expected names take precedence over all resolver options, and configured fallback names take precedence over both pattern and position.
+
+Only names in `column_name` and `$column_name` placeholders in `where` are resolved. The metadata lookup reads columns of the named object in the `public` schema, ordered by ordinal position. A `where` column that needs resolving must use the `$name` placeholder form; ordinary unmarked names are not interpreted as resolver keys.
 
 #### Elements Checks
 
@@ -887,7 +942,8 @@ Some templates use named placeholders instead of positional placeholders:
 Translation messages are organized by test type:
 
 - `structure_test` - StructureTest messages
-- `data_test` - DataTest messages
+- `table_data_test` - DataTest messages
+- `view_data_test` - ViewDataTest messages
 - `constraint_test` - ConstraintTest messages
 - `function_test` - FunctionTest messages
 - `procedure_test` - ProcedureTest messages
@@ -1017,7 +1073,7 @@ git submodule update --init
 - **Solution:** Remember that `should_exist=True` means required elements and `should_exist=False` means banned elements. Lists are checked item by item.
 
 **Problem:** `column_name` lists fail in data tests
-- **Solution:** `DataTest` and `QueryDataTest` expect a single string column name. Use `column_name_fallback` for acceptable alternatives.
+- **Solution:** `DataTest`, `ViewDataTest`, and `QueryDataTest` expect a single string column name. Use `column_resolvers` to map expected names to acceptable alternatives.
 
 **Problem:** Need to inspect generated SQL or raw results
 - **Solution:** Add `debug='DEBUG'` or `debug='ALL'` to the test while developing.
@@ -1029,4 +1085,3 @@ git submodule update --init
 
 - Review `demo.py`, `query_demo.py`, and `demo_test_cases.py` for complete working examples
 - Review `automated-tests/` for feedback, core, and integration regression tests
-
